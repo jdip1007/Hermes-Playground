@@ -122,3 +122,47 @@
   - 源码: gateway/hooks.py (170行), hermes_cli/plugins.py (609行)
   - 核心内容: Gateway Hooks 事件驱动(8种事件+通配符)，Plugin System 三级来源(用户/项目/pip)，PluginContext API(工具注册/消息注入/CLI命令/钩子)，缓存友好上下文注入
 - index.md 更新为 37 页
+
+## [2026-05-07] update | 同步 hermes-agent v0.12.0 + v0.13.0（1960 commits）
+
+源码已 clone 到 /tmp/hermes-agent，所有变更经源码逐项验证。
+
+**新增 changelog**：
+- `changelog/2026-05-07-update.md` —— 跨 v0.12.0 (v2026.4.30 Curator) 和 v0.13.0 (v2026.5.7 Tenacity) 两个版本的全量同步
+
+**主要新增/变更**（已写入 changelog）：
+- **Multi-agent Kanban**：`tools/kanban_tools.py` (871) + `hermes_cli/kanban.py` (2184) + `kanban_db/diagnostics/specify` —— heartbeat / reclaim / zombie / hallucination gate / per-task retry
+- **`/goal` Ralph loop**：`hermes_cli/goals.py` (535)
+- **Checkpoints v2**：`tools/checkpoint_manager.py` (1638) 重写
+- **Provider 插件化**：`providers/base.py:25` ProviderProfile + `plugins/model-providers/` 14 个内置插件（gmi/azure-foundry/kimi-coding/zai/...）
+- **第 20 平台 Google Chat**：`plugins/platforms/google_chat/`，配 `env_enablement_fn` / `cron_deliver_env_var` 通用钩子
+- **Microsoft Teams 插件平台**：`plugins/platforms/teams/`（v0.12.0）
+- **Spotify**：`plugins/spotify/` (66 + 435 + 454 行)
+- **Google Meet plugin**：`plugins/google_meet/`
+- **`video_analyze` 工具**：`tools/vision_tools.py:915, 1123`
+- **xAI Custom Voices**：`tools/tts_tool.py:861, 875`
+- **i18n 7 locale**：`locales/en/zh/ja/de/es/fr/uk/tr.yaml`
+- **MCP SSE transport**：`tools/mcp_tool.py:34, 199, 1301`
+- **`no_agent` cron**：`cron/jobs.py:438, 457`
+- **Web tools 7 后端**：`tools/web_tools.py:129`（+ SearXNG / Brave-Free / DDGS）
+- **Post-write delta lint**：`tools/file_operations.py:1082`
+- **`[[as_document]]` 指令**：`gateway/platforms/base.py:1899-1923`
+- **`transform_llm_output` 钩子**：`run_agent.py:14279`
+- **`X-Hermes-Session-Key` header**：`gateway/platforms/api_server.py:5`
+- **8 个 P0 安全闭环**：redaction 默认 ON、Discord guild-scope (CVSS 8.1)、WhatsApp 默认拒陌生、TOCTOU × 2、Browser SSRF、`debug share` redact、Cron skill 注入扫描
+
+**已更新页面**：
+- README.md（版本 v2026.4.23 → v2026.5.7、changelog 入口、统计）
+- index.md（last updated、tracking version）
+- concepts/messaging-gateway-architecture.md（第 20 平台 Google Chat、Teams、跨平台 allowlist、`[[as_document]]`、`transform_llm_output`）
+- concepts/multi-agent-architecture.md（Kanban 持久看板：第 4 种机制 + 工具与可靠性机制）
+- concepts/smart-model-routing.md（ProviderProfile 插件化 + 新 provider/model + OpenRouter caching）
+- concepts/skills-system-architecture.md（Curator 子命令扩展、Self-improvement loop 升级、`[[as_document]]`）
+- concepts/security-defense-system.md（8 个 P0 闭环表）
+- concepts/web-tools-architecture.md（7 后端 + per-capability split）
+- concepts/mcp-and-plugins.md（SSE / OAuth forward / image MEDIA / keepalive；`transform_llm_output` 钩子）
+- concepts/voice-mode-architecture.md（xAI Custom Voices + `video_analyze`）
+- concepts/cron-scheduling.md（`no_agent` watchdog + 配套 fix）
+- concepts/hook-system-architecture.md（`transform_llm_output` / `env_enablement_fn` / `cron_deliver_env_var`）
+- concepts/cli-architecture.md（`hermes -z`、`/goal`、`/curator archive|prune|list-archived`、i18n 7 locale）
+- concepts/memory-system-architecture.md（API server `X-Hermes-Session-Key`、Hindsight append probe）

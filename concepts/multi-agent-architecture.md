@@ -1,23 +1,50 @@
 ---
 title: Hermes 多 Agent 架构
 created: 2026-04-08
-updated: 2026-04-18
+updated: 2026-05-07
 type: concept
-tags: [architecture, module, agent, delegation, concurrency]
-sources: [tools/delegate_tool.py, tools/mixture_of_agents_tool.py, run_agent.py]
+tags: [architecture, module, agent, delegation, concurrency, kanban]
+sources: [tools/delegate_tool.py, tools/mixture_of_agents_tool.py, tools/kanban_tools.py, hermes_cli/kanban.py, hermes_cli/goals.py, run_agent.py]
 ---
 
 # Hermes 多 Agent 架构
 
 ## 概述
 
-Hermes 的多 Agent 能力分为**三种运行时机制**，全部在 Agent 对话过程中触发，不涉及外部脚本或离线工具：
+Hermes 的多 Agent 能力分为**四种运行时机制**，全部在 Agent 对话过程中触发，不涉及外部脚本或离线工具：
 
 | 机制                    | 触发方式                  | 用途                   |
 | --------------------- | --------------------- | -------------------- |
 | **Delegate Task**     | LLM tool call（模型自主决定） | 并行子任务，最多 3 路         |
 | **Mixture of Agents** | LLM tool call（模型自主决定） | 多模型协同推理              |
 | **Background Review** | 系统计数器自动触发             | 后台提炼经验 → 创建/改进 skill |
+| **Kanban（持久看板）**       | 用户 / agent 通过 `/kanban` 或 tool 创建 | 跨进程、跨 profile、durable 协作（v2026.5.7+） |
+
+> 此外 `/goal`（v2026.5.7+，`hermes_cli/goals.py`）实现 **Ralph loop** —— 不是多 agent，而是单 agent 跨多轮锁定同一目标，直到达成或显式清除。
+
+## Kanban —— 持久多 worker 协作板（v2026.5.7+）
+
+**核心源码**：
+
+| 文件 | 行数 | 作用 |
+|------|------|------|
+| `tools/kanban_tools.py` | 871 | LLM 可调用的工具 (`kanban_create` / `kanban_complete` / `kanban_heartbeat` 等) |
+| `hermes_cli/kanban.py` | 2184 | CLI（`hermes kanban`）+ worker 调度 |
+| `hermes_cli/kanban_db.py` | — | 持久存储（SQLite） |
+| `hermes_cli/kanban_diagnostics.py` | — | task distress 信号通用诊断 |
+| `hermes_cli/kanban_specify.py` | — | 辅助 LLM 帮 triage task（`/specify`） |
+
+**可靠性机制**（@`tools/kanban_tools.py`）：
+
+- **Heartbeat + reclaim**：`kanban_heartbeat`（line 317）同时延长 claim TTL 和记录 worker 心跳。一个 buggy / 阻塞 worker 超过 `DEFAULT_CLAIM_TTL_SECONDS` 自动被 reclaim。
+- **Hallucination gate**：`kanban_complete`（line 263）阻塞那些写了 `created_cards` 但实际没调用 `kanban_create` 的关闭。
+- **Tool ownership**：worker 仅能在已认领的 task 上做破坏性操作（#19713）。
+- **Auto-block on incomplete exit**：worker 不带 complete 退出 → 自动 block + shutdown race fix（#21214）。
+- **Per-task `max_retries`** 覆盖默认重试预算（#21330）。
+- **Multi-profile by design**：board / workspace / worker logs 跨 profile 共享。
+- **Multi-project boards**：一次安装，多块看板。
+
+工具集合（`tools/kanban_tools.py`）：`kanban_complete` (line 514) / `kanban_create` (line 672) / `kanban_block` / `kanban_heartbeat` 等。详见 [[2026-05-07-update]]。
 
 ## 触发机制
 
