@@ -1,10 +1,10 @@
 ---
 title: Smart Model Routing 智能模型路由
 created: 2026-04-08
-updated: 2026-04-29
+updated: 2026-05-12
 type: concept
-tags: [architecture, module, model-routing, performance, caching, anthropic]
-sources: [agent/model_metadata.py, agent/models_dev.py, hermes_cli/model_switch.py, hermes_cli/model_normalize.py]
+tags: [architecture, module, model-routing, performance, caching, anthropic, provider-plugin]
+sources: [agent/model_metadata.py, agent/models_dev.py, hermes_cli/model_switch.py, hermes_cli/model_normalize.py, plugins/model-providers/, providers/base.py]
 ---
 
 # Smart Model Routing — 智能模型路由
@@ -482,8 +482,66 @@ browser:
 - `hermes model` 交互流程：Nous 登录后展示可用工具列表，用户选择启用全部 / 仅未配置的 / 跳过
 - 免费层用户看到升级提示
 
+## ProviderProfile ABC + 插件式 provider（v0.13.0+）
+
+`providers/base.py` 定义 `ProviderProfile` ABC，`plugins/model-providers/` 把所有 provider 实现为**插件**：
+
+```
+plugins/model-providers/
+├── ai-gateway/         (Vercel AI Gateway)
+├── alibaba/  alibaba-coding-plan/
+├── anthropic/  arcee/  azure-foundry/  bedrock/
+├── copilot/  copilot-acp/  custom/  deepseek/  gemini/
+├── gmi/  huggingface/  kilocode/  kimi-coding/  minimax/
+├── nous/  nvidia/  ollama-cloud/  openai-codex/
+├── opencode-zen/  openrouter/  qwen-oauth/  stepfun/
+├── xai/  xiaomi/  zai/
+```
+
+29 个内置 provider 插件。第三方可以 drop in 一个 `plugin.yaml` + `__init__.py` 即可新增 provider，不动核心代码。
+
+### v0.12 / v0.13 新增 provider
+
+| Provider | 版本 | 说明 |
+|----------|------|------|
+| **GMI Cloud** | v0.12 | first-class，原 PR #11955 salvage |
+| **Azure AI Foundry** | v0.12 | auto-detection + 全套 wiring |
+| **LM Studio**（first-class） | v0.12 | 从 custom endpoint alias 升级，独立 auth + doctor checks + `/models` |
+| **MiniMax OAuth** | v0.12 | PKCE 浏览器流程 |
+| **Tencent Tokenhub** | v0.12 | salvage of #16860 |
+| **Step Plan** | v0.11 | salvage #6005 |
+| **NVIDIA NIM** | v0.11 | 原生 |
+| **Arcee AI** | v0.11 | 直连 |
+| **Google Gemini CLI OAuth** | v0.11 | OAuth 推理 |
+| **Vercel ai-gateway** | v0.11 | 含 pricing + dynamic discovery |
+
+### Remote model catalog manifest（v0.12，PR #16033）
+
+OpenRouter 和 Nous Portal 的模型 catalog 不再硬编码：每次启动从远端 manifest 拉取，新模型上架不用等 release。`hermes_cli/model_switch.py` 的 picker 也读这个 catalog。
+
+### Nous OAuth 跨 profile 共享（v0.13，PR #19712）
+
+shared token store：在一个 profile 登录 Nous，所有 profile 都继承同一个 session。
+
+### Native multimodal image routing（v0.12，PR #16506）
+
+图片不再按「provider 默认接受图片」路由，而是按模型实际声明的 vision capability 路由。修复了非 vision 模型被强塞图片导致 400 的问题。
+
+### Cross-session 1h prefix cache for Claude（v0.13+，PR #23828）
+
+详见 [[prompt-caching-optimization]] 的 `prefix_and_2` 章节。Claude on Anthropic / OpenRouter / Nous Portal 三条路径共用 1h 前缀缓存，跨会话冷启动也能命中。
+
+## Nous Portal 作为 model metadata authority（v0.13+，PR #24502, #24509）
+
+最新的 model picker / metadata resolution 把 Nous Portal 视为权威 catalog：
+- Portal flagged 的 free model 即使本地 curated list 过期也会显示（PR #24082）
+- Portal-Claude cache pathway 也覆盖 Portal 上的 Qwen（PR #24151）
+- Paid recommendations 取「Portal 推荐 ∪ 静态列表」并集（PR #24509）
+- `metadata` 路径优先 Nous Portal，再退回 OpenRouter；known provider 跳过 OpenRouter（PR e2b713c）
+
 ## 与其他系统的关系
 
 - [[context-compressor-architecture]] — 使用 get_model_context_length() 确定上下文限制
-- [[prompt-caching-optimization]] — 缓存成本信息来自 models.dev
+- [[prompt-caching-optimization]] — 缓存成本信息来自 models.dev，1h 前缀缓存策略与 model routing 紧密耦合
 - [[auxiliary-client-architecture]] — 辅助模型通过 models.dev 解析上下文长度
+- [[provider-transport-architecture]] — provider 插件返回的 api_mode 决定走哪个 transport

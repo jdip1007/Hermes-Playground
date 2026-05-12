@@ -1,17 +1,17 @@
 ---
 title: Messaging Gateway Architecture
 created: 2026-04-07
-updated: 2026-04-29
+updated: 2026-05-12
 type: concept
-tags: [gateway, architecture, module, telegram, discord, messaging, qq, proxy]
-sources: [gateway/run.py, gateway/platforms/, hermes_cli/config.py]
+tags: [gateway, architecture, module, telegram, discord, messaging, qq, yuanbao, teams, google-chat, line, irc, proxy]
+sources: [gateway/run.py, gateway/platforms/, gateway/platform_registry.py, gateway/config.py, plugins/platforms/, hermes_cli/config.py]
 ---
 
 # 消息网关架构
 
 ## 概述
 
-Gateway 是 Hermes Agent 的**统一消息网关**，支持 14+ 消息平台，从单一进程管理所有平台的连接和消息分发。
+Gateway 是 Hermes Agent 的**统一消息网关**，从单一进程管理所有平台的连接和消息分发。截至 v0.13.0（2026-05-07），共支持 **17 个内置消息平台 + 4 个 bundled 平台插件** = 21 个，并允许第三方插件继续扩展。
 
 ## 架构
 
@@ -52,70 +52,102 @@ gateway/
 
 ## 平台支持
 
+### 内置消息平台（gateway/platforms/）
+
+源代码 `gateway/config.py:82-111` 的 `Platform` Enum 显式列出所有内置 member。下表去除了 `LOCAL` / `WEBHOOK` / `API_SERVER` / `MSGRAPH_WEBHOOK` / `WECOM_CALLBACK` 这些非用户对话平台，剩 **17 个**：
+
 | 平台 | 类型 | 特性 |
 |------|------|------|
-| Telegram | Bot API | 群组/私聊、语音转录、贴纸、代理支持、链接预览控制 |
-| Discord | Bot API | 服务器/私聊、语音频道、Slash Commands、角色权限控制、channel_prompts |
-| Slack | Bot API | Workspace 集成、Thread 支持 |
-| WhatsApp | Bridge (Node.js) | 群组/私聊、允许列表 |
+| Telegram | Bot API | 群组/私聊、语音转录、贴纸、代理支持、链接预览控制、`allowed_chats` |
+| Discord | Bot API | 服务器/私聊、语音频道、Slash Commands、`DISCORD_ALLOWED_ROLES`（v0.13 起 guild-scoped，封堵 CVSS 8.1 跨 guild DM 旁路）、channel_prompts |
+| Slack | Bot API | Workspace 集成、Thread 支持、`strict_mention`、`channel_skill_bindings`、`allowed_channels` |
+| WhatsApp | Bridge (Node.js) | 群组/私聊、允许列表、v0.13 起默认**拒绝陌生人** + 永不在 self-chat 回复 |
 | Signal | Bot API | 加密消息，原生格式化、reply 引用、reactions（v2026.4.23+） |
 | Email | IMAP/SMTP | 邮件交互 |
 | SMS | Twilio | 短信，字符限制 |
 | Home Assistant | WebSocket | 智能家居事件 |
-| Matrix | E2E 加密 | 去中心化消息 |
-| Mattermost | Bot API | 自托管团队消息 |
+| Matrix | E2E 加密 | 去中心化消息、`allowed_rooms` |
+| Mattermost | Bot API | 自托管团队消息、`allowed_channels` |
 | 钉钉 | Stream | 企业消息，QR 扫码认证，require_mention + allowed_users 权限控制 |
-| 飞书/Lark | Stream | 企业消息 |
-| 企业微信 | Stream | 企业微信消息 |
+| 飞书/Lark | Stream | 企业消息、`require_mention`、操作可配置的 bot admission policy（v0.13） |
+| 企业微信 | Stream | 企业微信消息、QR 扫码 bot 创建（v2026.4.18+） |
 | BlueBubbles | REST + Webhook | iMessage（macOS），tapback、已读回执 |
 | 微信/WeChat | iLink Bot API | 长轮询收消息，AES-128-ECB 媒体加密，QR 登录 |
-| QQ Bot | Official API v2 | WebSocket 入站(C2C/群/频道/DM) + REST 出站,语音转录(腾讯 ASR),allowlist + DM 配对 |
-| Webhook | HTTP | 外部事件接收 |
-| **腾讯元宝 Yuanbao** | API | 原生文本+媒体投递，sticker 支持（v2026.4.23+） |
-| **IRC**（插件） | TLS asyncio | 零外部依赖，TLS、PING/PONG、nick collision、NickServ、频道寻址（v2026.4.23+，参考实现） |
+| QQ Bot | Official API v2 | WebSocket 入站(C2C/群/频道/DM) + REST 出站，语音转录（腾讯 ASR），allowlist + DM 配对、v0.13 起原生 approval keyboards + chunked upload + quoted attachments |
+| 腾讯元宝 Yuanbao | API | 原生文本 + 媒体投递、sticker 支持（v2026.4.23+） |
 
-## 平台适配器插件化（v2026.4.23+）
+### Bundled 平台插件（plugins/platforms/）
 
-`gateway/platform_registry.py` 引入 `PlatformRegistry` 单例 + `PlatformEntry` dataclass，让任何人都可以把新平台（IRC、Viber、Line 等）以**纯插件**形式接入，无需改 gateway 核心代码。
+通过 `PlatformRegistry` 接入，行为与内置平台完全一致：
+
+| 插件平台 | 实现 | 引入版本 |
+|----------|------|----------|
+| **IRC** | TLS asyncio，零外部依赖、NickServ、PING/PONG、频道寻址 | v2026.4.23（首个参考实现） |
+| **Microsoft Teams** | Bot Framework + Adaptive Card 审批 | v0.12.0（19th platform） |
+| **Google Chat** | Cloud Pub/Sub pull + Chat REST、每用户 OAuth 文件附件 | v0.13.0（20th platform） |
+| **LINE** | aiohttp webhook + HMAC-SHA256 签名 + reply token / Push API fallback | v0.13.0+ |
+
+第三方插件（`~/.hermes/plugins/`）走相同机制，无需改 gateway 核心。
+
+### 协议 / 内部平台
+
+`LOCAL`（CLI）、`WEBHOOK`、`API_SERVER`、`MSGRAPH_WEBHOOK`、`WECOM_CALLBACK` 是协议接入点，不对应一对一的「消息平台」。
+
+## 平台适配器插件化（v2026.4.23+，v0.13.0 扩展）
+
+`gateway/platform_registry.py` 引入 `PlatformRegistry` 单例 + `PlatformEntry` dataclass，让任何人都可以把新平台（IRC、Teams、Google Chat、LINE 等）以**纯插件**形式接入，无需改 gateway 核心代码。
 
 ```python
-# 插件注册入口
+# 插件注册入口（hermes_cli/plugins.py 提供 ctx.register_platform）
 def register(ctx):
     ctx.register_platform(
-        name="irc",
-        label="IRC",
-        adapter_factory=create_irc_adapter,
-        check_fn=check_irc_available,
-        validate_config=validate_irc_config,
-        required_env=["IRC_NICK", "IRC_PASS"],
-        install_hint="pip install ...",
+        name="line",
+        label="LINE",
+        adapter_factory=create_line_adapter,
+        check_fn=check_line_available,
+        validate_config=validate_line_config,
+        required_env=["LINE_CHANNEL_ACCESS_TOKEN", "LINE_CHANNEL_SECRET"],
+        install_hint="pip install line-bot-sdk",
     )
 ```
+
+### `PlatformEntry` 元数据字段（gateway/platform_registry.py:37-143）
+
+| 字段 | 作用 |
+|------|------|
+| `adapter_factory` / `check_fn` / `validate_config` / `is_connected` | 工厂 + 健康检查 |
+| `required_env` / `install_hint` / `setup_fn` | 安装 / 配置辅助 |
+| `allowed_users_env` / `allow_all_env` | `_is_user_authorized` 集成 |
+| `max_message_length` / `pii_safe` / `emoji` | 显示 / 隐私 / 智能分片 |
+| `allow_update_command` | 是否允许该平台触发 `/update` |
+| `platform_hint` | 注入系统 prompt 的平台行为提示 |
+| `env_enablement_fn` ⭐ | 从 env vars 读取，返回要 seed 到 `PlatformConfig.extra` 的 dict（v0.13） |
+| `cron_deliver_env_var` ⭐ | `*_HOME_CHANNEL` env 名；让 `cron.scheduler` 识别 `deliver=<name>` 为合法目标（v0.13） |
+| `standalone_sender_fn` ⭐ | out-of-process delivery：cron 独立进程时打开临时连接发送，支持 OAuth refresh（v0.13） |
+
+`env_enablement_fn` / `cron_deliver_env_var` / `standalone_sender_fn` 是 v0.13 抽离出来的 platform-plugin hooks，让插件平台**完全平权**：cron deliver、env-only setup 状态显示、out-of-process send 全部正常。
 
 ### 关键改造点
 
 | 模块 | 改造 |
 |------|------|
-| `Platform` enum | `_missing_()` 接受未知字符串，创建缓存的 pseudo-member（`Platform('irc') is Platform('irc')` 永真） |
+| `Platform` enum (`gateway/config.py:82-176`) | `_missing_()` 接受未知字符串，按 `plugins/platforms/` 扫描 + runtime registry 创建缓存 pseudo-member（`Platform('irc') is Platform('irc')` 永真） |
 | `GatewayConfig.from_dict` | 解析 config.yaml 里的插件平台名，不再拒绝未知平台 |
-| `_create_adapter()` in `gateway/run.py` | 先查 registry，未命中再 fall through 到内置 if/elif 链 |
+| `_create_adapter()` in `gateway/run.py` | 先查 registry，未命中再 fall through 到内置 if/elif 链（line 5167） |
 | `get_connected_platforms()` | 把未知平台委托给 registry |
 | `PluginContext.register_platform()` | 镜像 `register_tool()` / `register_hook()` 模式 |
+| `_apply_env_overrides` | 调用 `entry.env_enablement_fn()`，让 `gateway status` 看得到 env-only 配置（v0.13） |
 
-### IRC 参考实现
+### 4 个 bundled 插件参考实现
 
-`plugins/platforms/irc/` 是首个插件平台：
-- 全 async（`asyncio` stdlib，零外部依赖）
-- TLS 连接、PING/PONG 心跳、nick 冲突重命名、NickServ 自动鉴权
-- 频道消息要求 `nick: msg` 寻址，DM 全部派发
-- 输出 Markdown 自动剥离（IRC 不支持），消息分片（IRC 长度限制）
-- 交互式 `setup` 向导（v2026.4.23+）
+| 插件路径 | 标签 | 关键技术 |
+|----------|------|----------|
+| `plugins/platforms/irc/` | IRC | asyncio + TLS + NickServ，零外部依赖 |
+| `plugins/platforms/teams/` | Microsoft Teams | Bot Framework + Adaptive Card 审批 + threading |
+| `plugins/platforms/google_chat/` | Google Chat | Cloud Pub/Sub pull + Chat REST + 每用户 OAuth 文件附件 |
+| `plugins/platforms/line/` | LINE | aiohttp webhook + HMAC-SHA256 + Reply token + Push API fallback |
 
-### 平台插件 12 个集成点全覆盖
-
-`feat: complete plugin platform parity` (2e20f6ae2) + `feat: final platform plugin parity` (e464cde58) 让插件平台和内置平台行为一致：
-- webhook 投递、PLATFORM_HINTS、`get_connected_platforms`、cron 投递、动态 toolset 生成、setup wizard 等
-- bundled 插件平台（如 IRC）启动时自动加载（`feat(plugins): bundled platform plugins auto-load by default`）
+每个目录包含 `__init__.py`、`adapter.py`、`plugin.yaml`（`requires_env` / `optional_env` 字段被 `hermes config` 读取并显示在 UI）。bundled 插件平台启动时自动加载。
 
 ## 平台适配器基类
 

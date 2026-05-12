@@ -122,3 +122,21 @@
   - 源码: gateway/hooks.py (170行), hermes_cli/plugins.py (609行)
   - 核心内容: Gateway Hooks 事件驱动(8种事件+通配符)，Plugin System 三级来源(用户/项目/pip)，PluginContext API(工具注册/消息注入/CLI命令/钩子)，缓存友好上下文注入
 - index.md 更新为 37 页
+
+## [2026-05-12] update | 同步 hermes-agent v0.12.0 + v0.13.0（2026-04-30 ~ 2026-05-12，约 2015 commits）
+- 拉取 NousResearch/hermes-agent main，覆盖窗口 v2026.4.23 → 2026-05-12
+- 新建 changelog 条目 3 个：
+  - changelog/2026-04-30-v0.12.0.md — Curator Release (1,096 commits)
+  - changelog/2026-05-07-v0.13.0.md — Tenacity Release (864 commits, 13 P0, 36 P1)
+  - changelog/2026-05-12-update.md — post-v0.13.0 增量 (55 commits)
+- 修订 concept 页面（每条均逐行源码验证）：
+  - concepts/prompt-caching-optimization.md — 全文重写：新增 prefix_and_2 跨会话 1h 前缀缓存策略（PR #23828），源码 agent/prompt_caching.py 从 72 行扩展到 201 行
+  - concepts/multi-agent-architecture.md — 多 Agent 机制从 3 种扩展到 5+ 种：新增 Kanban（第四节，hermes_cli/kanban.py 2252 行 + kanban_db.py 4839 行 + tools/kanban_tools.py 1139 行）、`/goal` Ralph loop（第五节，hermes_cli/goals.py 593 行）、Autonomous Curator（第六节）
+  - concepts/messaging-gateway-architecture.md — 平台从 14+ 重写为 17 内置 + 4 bundled 插件 = 21；新增 Yuanbao / Microsoft Teams / Google Chat / LINE 适配器；展开 PlatformEntry v0.13 hooks（env_enablement_fn / cron_deliver_env_var / standalone_sender_fn）
+  - concepts/skills-system-architecture.md — Curator 章节大幅扩展，覆盖 v0.12 rubric-based grading、active-update bias、scoped toolsets、报告路径、子命令 archive/prune/list-archived
+  - concepts/hook-system-architecture.md — VALID_HOOKS 更新到 v0.13.0：新增 transform_llm_output（PR #21235）/ transform_tool_result / transform_terminal_output / pre_gateway_dispatch（PR #15050）/ pre_approval_request + post_approval_response（PR #16776）；post_tool_call 增加 duration_ms kwarg（PR #15429）
+  - concepts/cron-scheduling.md — 新增 no_agent watchdog 模式（PR #19709）、context_from 链（PR #15606）、per-job workdir/enabled_toolsets
+  - concepts/smart-model-routing.md — 新增 ProviderProfile ABC + plugins/model-providers/（29 个），v0.12-v0.13 新增 provider 列表（GMI/Azure Foundry/LM Studio first-class/MiniMax OAuth/Tencent Tokenhub），Nous Portal 作为 model metadata authority，Cross-session 1h prefix cache 引用
+  - concepts/gateway-session-management.md — 新增 Session Durability 章节（v0.13 auto-resume after restart，PR #21192/20160/19271/...)
+- README.md：版本徽章 v2026.4.23 → v2026.5.7，最后更新 2026-04-29 → 2026-05-12，新增 3 个 changelog 链接，统计信息更新（5 → 8 个更新日志）
+- 验证方式：每条 wiki 更新都对照 /tmp/hermes-agent 中对应源文件（路径 + 行号 + 函数名），所有新增声明都有 PR 编号或源码定位

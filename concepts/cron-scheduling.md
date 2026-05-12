@@ -1,17 +1,33 @@
 ---
 title: Cron 调度与自动化工作流
 created: 2026-04-07
-updated: 2026-04-07
+updated: 2026-05-12
 type: concept
-tags: [architecture, cron, automation, scheduling]
-sources: [hermes-agent 源码分析 2026-04-07]
+tags: [architecture, cron, automation, scheduling, watchdog]
+sources: [cron/scheduler.py, tools/cronjob_tools.py]
 ---
 
 # Cron 调度与自动化工作流
 
 ## 设计原理
 
-Hermes 内置 Cron 调度器，支持**自然语言定时任务**，可以自动执行重复性工作并将结果推送到任意平台。
+Hermes 内置 Cron 调度器，支持**自然语言定时任务**，可以自动执行重复性工作并将结果推送到任意平台。截至 v0.13.0 支持三种执行模式：
+
+| 模式 | 说明 | 适用场景 |
+|------|------|----------|
+| **agent**（默认） | 完整 Agent 推理，可调用所有工具 | 摘要 / 分析 / 多步研究 |
+| **no_agent**（v0.13.0） | 只跑 shell script，stdout 直接投递；空 stdout 完全静默 | 监控 / 健康检查 / 看门狗 |
+| **prerun-only**（v0.12） | 先跑 prerun script；脚本无输出时跳过 AI 调用 | "有变更才告诉我"类任务 |
+
+`no_agent` 模式（PR #19709）是 watchdog 模式的一等公民：每分钟跑一条 shell，非空输出原样投递到 Discord/Telegram，省掉 LLM 调用，零成本。
+
+其他 v0.12 / v0.13 增强：
+- **`context_from` 字段（v0.12 PR #15606）**：把上一个 cron job 的输出作为下一个 job 的 context，链式工作流
+- **per-job `workdir`（v0.12）**：项目感知的 cron job
+- **per-job `enabled_toolsets`（v0.11 PR #14767）**：限定 toolsets 防止 token 预算爆炸
+- **`croniter` 升级到 core 依赖（v0.12 PR #17577）**：之前是 optional，破坏 fresh install
+- **MCP server 初始化先于 AIAgent 构造（v0.13 PR #21354）**：cron 模式下 MCP 工具不再缺席
+- **prompt injection 扫描 assembled prompt + skill 内容（v0.13 P0 #21350）**：堵住 cron 任务被 prompt injection 操控的漏洞
 
 ## Cron 工具
 

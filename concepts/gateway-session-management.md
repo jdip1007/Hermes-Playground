@@ -1,10 +1,10 @@
 ---
 title: Gateway Session 会话管理架构
 created: 2026-04-08
-updated: 2026-04-08
+updated: 2026-05-12
 type: concept
-tags: [architecture, module, component, gateway, session-store, multi-platform]
-sources: [gateway/session.py, gateway/config.py]
+tags: [architecture, module, component, gateway, session-store, multi-platform, durability]
+sources: [gateway/session.py, gateway/config.py, gateway/run.py]
 ---
 
 # Gateway Session — 网关会话管理架构
@@ -14,6 +14,23 @@ sources: [gateway/session.py, gateway/config.py]
 Gateway Session 位于 `gateway/session.py`（44KB/1081行），管理网关的**会话生命周期**：会话上下文追踪、消息持久化、重置策略评估、动态系统提示注入。
 
 核心理念：**每个平台/用户/线程的组合都有独立的会话，会话知道它从哪里来、要到哪里去。**
+
+## v0.13.0 关键升级：Session Durability
+
+v0.13 把「网关重启 / `/update` / 源文件 reload」之后的会话恢复变成一等公民：
+
+| 增强 | PR | 说明 |
+|------|-----|------|
+| **自动恢复被打断的 session** | #21192（salvage #20888） | gateway 在 agent 跑到一半被杀掉，重启后自动续上 |
+| **跨重启保留 pending update prompt** | #20160 | "确认升级" 这类等待用户回应的提示不会因重启而丢失 |
+| **跨重启保留 home-channel thread target** | #19271（salvage #18440） | 重启通知发到正确的子频道 / 线程 |
+| **branch session 时保留 assistant metadata** | #18222 | 分支会话保留 reasoning、tool_call_id 等 |
+| **`/update` 进度 + prompt 保留 thread routing** | #18193 | 升级进度不串到错误的 thread |
+| **合并 queued event 时保留 document type** | #18215 | 合并消息时不丢图片 / 文件类型 |
+| **transient agent 失败仍持久化 user message** | #7100 | 即使 agent 启动失败，用户消息已存进库（不丢消息） |
+| **`/new` accepts optional session name** | #19637（salvage #19555，v0.13） | `/new shopping list` 直接命名新 session |
+
+底层依赖：**atomic restart markers + Windows runtime-lock offset**（#17842, PR #18179）+ **git HEAD SHA 用作 stale-code 检测（不再用 file mtime）**（#19740）。
 
 ## 架构原理
 

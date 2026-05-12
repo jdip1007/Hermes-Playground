@@ -1,23 +1,27 @@
 ---
 title: Hermes 多 Agent 架构
 created: 2026-04-08
-updated: 2026-04-18
+updated: 2026-05-12
 type: concept
-tags: [architecture, module, agent, delegation, concurrency]
-sources: [tools/delegate_tool.py, tools/mixture_of_agents_tool.py, run_agent.py]
+tags: [architecture, module, agent, delegation, concurrency, kanban]
+sources: [tools/delegate_tool.py, tools/mixture_of_agents_tool.py, tools/kanban_tools.py, hermes_cli/kanban.py, hermes_cli/kanban_db.py, hermes_cli/kanban_diagnostics.py, hermes_cli/goals.py, run_agent.py]
 ---
 
 # Hermes 多 Agent 架构
 
 ## 概述
 
-Hermes 的多 Agent 能力分为**三种运行时机制**，全部在 Agent 对话过程中触发，不涉及外部脚本或离线工具：
+Hermes 的多 Agent 能力分为**五种运行时机制**，覆盖从单进程协作到跨 profile 持久看板的全部场景：
 
 | 机制                    | 触发方式                  | 用途                   |
 | --------------------- | --------------------- | -------------------- |
 | **Delegate Task**     | LLM tool call（模型自主决定） | 并行子任务，最多 3 路         |
 | **Mixture of Agents** | LLM tool call（模型自主决定） | 多模型协同推理              |
-| **Background Review** | 系统计数器自动触发             | 后台提炼经验 → 创建/改进 skill |
+| **Background Review / Curator** | 系统计数器 / Cron tick    | 后台提炼经验 → 创建/改进 skill |
+| **Kanban（v0.13+）**   | `hermes kanban` CLI / dashboard / `/kanban` 斜杠 | 跨 profile 的持久任务板，多 worker 自动认领、心跳、僵尸检测、重试 |
+| **`/goal` Ralph loop（v0.13+）** | 用户 `/goal` 斜杠 | 跨 turn 的目标守护：每轮后由 judge 模型判断是否完成，未完成则自动继续 |
+
+前 3 种沿用之前的「单进程 / 同 session」语义；后 2 种把多 Agent 协作扩展到**跨 turn**（goal）和**跨 profile**（kanban）。
 
 ## 触发机制
 
@@ -600,6 +604,117 @@ Discord 还有**多 bot 过滤**：消息 @了其他 bot 但没 @自己时自动
 **注意**：这不是 Hermes 设计的 agent 间通信功能，是两个独立 bot 通过平台消息碰巧交互。有延迟、无事务保证，且容易产生死循环（A 发 → B 回 → A 又回 → 无限循环），使用时需注意控制。
 
 详见 → [[configuration-and-profiles]]
+
+## 四、Kanban — 跨 profile 持久看板（v0.13.0+）
+
+**post-revert 重写版**，从前一次（已撤回）的多 profile 协作板重新设计为「先持久化、再多 worker」。整张板存在共享 SQLite，多个 profile 的 Hermes worker 通过心跳竞争任务，僵尸 worker 自动回收，每个任务有重试预算。
+
+### 组件
+
+| 组件 | 文件 | 行数 |
+|------|------|------|
+| CLI 入口 | `hermes_cli/kanban.py` | 2252 |
+| SQLite 状态层 | `hermes_cli/kanban_db.py` | 4839 |
+| Worker 健康诊断 | `hermes_cli/kanban_diagnostics.py` | 776 |
+| Agent 内工具 | `tools/kanban_tools.py` | 1139 |
+| 分发器 systemd unit | `plugins/kanban/systemd/hermes-kanban-dispatcher.service` | — |
+| Dashboard 插件 | `plugins/kanban/dashboard/` | — |
+| Worker / Orchestrator 技能 | `skills/devops/kanban-{worker,orchestrator}/` | — |
+
+### 任务状态机
+
+```
+todo → ready → running → done
+                  ↓
+                blocked → todo（重试）
+                  ↓
+                archived（终态，可被消费）
+```
+
+`hermes_cli/kanban.py` 暴露 38 个 `_cmd_*` 子命令，覆盖 boards（multi-board 多看板）、init、heartbeat、assignees、create、list、show、assign、reclaim、reassign、diagnostics、link、unlink、claim、comment、complete、edit、block、unblock、archive、tail、dispatch、daemon、watch、stats、notify_*、log、runs、context、specify、gc。
+
+### Agent 内工具：9 个 kanban_* 工具
+
+Agent 在 kanban worker 模式下（环境变量 `HERMES_KANBAN_TASK` 被设置）或 profile 显式启用 `kanban` toolset 时才可见：
+
+- `kanban_show` / `kanban_list` — 只读视图
+- `kanban_complete` / `kanban_block` / `kanban_unblock` — 推进任务
+- `kanban_heartbeat` — worker 主动心跳（默认 dispatcher 每 30s 自动 ping）
+- `kanban_comment` — 留言（包括给 orchestrator 的交付证据）
+- `kanban_create` / `kanban_link` — orchestrator 角色才能用，建子任务 + 依赖链
+
+源码 `tools/kanban_tools.py:1061-1133` 列出全部 9 个工具的 `register_tool()`。`_enforce_worker_task_ownership`（行 115）强制 worker 只能改自己被 claim 的任务，防止 cross-worker 互踩。
+
+### 可靠性保障
+
+| 机制 | 实现 |
+|------|------|
+| 心跳 + reclaim | dispatcher 周期扫描 stale heartbeat，自动 reassign |
+| 僵尸检测 | macOS / Linux 平台特有的 zombie worker 检测，分发器主动回收 |
+| 退出无完成 → auto-block | worker 进程退出但任务未完成时强制移入 blocked，避免「悄悄死掉」 |
+| 重试预算 | 每个任务 `max_retries` 字段，超出后停止再分发 |
+| 幻觉门 | worker 声称「创建了新任务」时校验该任务在数据库中确实存在，否则拒绝并要求重试 |
+| 一致性失败计数 | spawn / timeout / crash 统一计入 `failure_count`，避免不同失败路径计数器漂移 |
+
+### 多 board 支持
+
+一台机器可以同时跑多块看板：`hermes kanban boards create <slug>`、`boards switch <slug>`、`boards rm <slug>`、`boards show <slug>`。每块看板独立的 SQLite + 独立的 dispatcher service。多 profile 共享同一块看板时通过 `assignees` 表实现 worker 注册。
+
+详见 → `skills/devops/kanban-orchestrator/` 和 `kanban-worker/`，里面有具体 prompt 和工作流。
+
+## 五、`/goal` — Ralph loop 持久目标（v0.13.0+）
+
+`hermes_cli/goals.py`（593 行）。给 Agent 一个跨 turn 持续追逐的目标，每轮结束后由一个**判断模型**（aux client）裁决目标是否达成；没达成就自动注入续作 prompt 继续。Ralph loop 作为一等公民。
+
+### 工作流
+
+```text
+用户：/goal 把 src/ 下所有 TODO 注释清掉，PR 提上去
+       │
+       ▼
+GoalState{goal=..., status="active", turns_used=0, max_turns=20}
+持久化到 SessionDB.state_meta["goal:<session_id>"]
+       │
+每轮结束后：
+       ▼
+judge_goal(goal_text, last_response) → {"done": bool, "reason": str}
+       │
+   ┌───┴───┐
+   ▼       ▼
+ done   continue
+   │       │
+   ▼       ▼
+clear  注入 CONTINUATION_PROMPT_TEMPLATE 当作新 user message
+       │
+       ▼
+不修改系统 prompt / toolset → prompt cache 保留
+```
+
+### 关键不变量
+
+1. **不修改系统 prompt 或 toolset**：续作 prompt 就是普通的 user message，prefix cache 保持完整（见 [[prompt-caching-optimization]] 的 prefix_and_2 路径）。
+2. **Judge 失败 fail-OPEN**：判断模型异常 → `continue`，turn budget 是兜底。
+3. **用户新消息抢占**：真实用户输入到达时立即抢占续作 prompt，且把循环暂停一回合（用户消息本身可能完成目标，下一轮再判）。
+4. **解析失败自动暂停**：连续 3 次 judge 解析失败（小模型不遵守严格 JSON 协议）自动暂停 + 提示用户改 `goal_judge` 配置，防止预算被「judge returned empty response」一类垃圾消耗光。
+
+GoalState 序列化字段：`goal, status, turns_used, max_turns, created_at, last_turn_at, last_verdict, last_reason, paused_reason, consecutive_parse_failures`。状态写在 SessionDB 的 `state_meta` 表，键 `goal:<session_id>`，所以 `/resume` 自动恢复目标。
+
+## 六、Autonomous Curator — 自治技能维护（v0.12.0+ 升级）
+
+不同于 Background Review（per-session 计数器触发），**Curator** 是 gateway 上**独立**跑的代理，在 cron ticker 上每 N 小时（默认 7 天）自动跑一次 skill review：
+
+- 给每个 agent-created skill 用**类一级 rubric**评分（v0.12 起改成 rubric-based，之前是自由文本）
+- consolidate（合并）/ prune（淘汰）/ pin（保护）/ archive（可恢复）
+- 每次运行写报告：`logs/curator/run.json` + `REPORT.md`
+- 归档时分两类：consolidated（已被另一个 skill 吞并）vs pruned（独立淘汰），由模型 + 启发式联合分类
+- 严格不动 bundled / hub skill（按 frontmatter `name` 保护）
+- 用 `auxiliary.curator` slot 选模型，`hermes curator status` 看最近一次 run 摘要 + 最常用 / 最少用 skill 排行
+
+源码：`agent/curator.py`（1781 行）、`agent/curator_backup.py`、`hermes_cli/curator.py`。CLI 子命令：`status / run / pause / resume / pin / unpin / restore / archive / prune / backup / rollback / list-archived`。
+
+v0.13 起 `hermes curator run` 是同步的（直接看输出，不用 tail log），并新增 `archive / prune / list-archived` 三个手动子命令。
+
+详见 → [[skills-system-architecture]] 的 Curator 章节。
 
 ## 相关页面
 
