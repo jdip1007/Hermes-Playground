@@ -122,3 +122,24 @@
   - 源码: gateway/hooks.py (170行), hermes_cli/plugins.py (609行)
   - 核心内容: Gateway Hooks 事件驱动(8种事件+通配符)，Plugin System 三级来源(用户/项目/pip)，PluginContext API(工具注册/消息注入/CLI命令/钩子)，缓存友好上下文注入
 - index.md 更新为 37 页
+
+## [2026-05-19] update | hermes-agent v2026.4.23 → v2026.5.16 全量同步（2418 commits）
+对照 `/tmp/hermes-agent` HEAD `2b41f9d`（2026-05-19, hermes-agent 0.14.0, tag v2026.5.16）逐文件验证：
+
+**重构与插件化（5 个 concept 页更新）**
+- `agent-loop-and-prompt-assembly.md` + `entities/aiagent-class.md`: run_agent.py 拆分到 agent/*.py，AIAgent.__init__ 60+ 参数；system_prompt.py:60 三层结构；TOOL_USE_ENFORCEMENT_MODELS 扩展到 8 种；codex_app_server 运行时
+- `web-tools-architecture.md`: WebSearchProvider ABC + web_search_registry + 7 个 plugins/web 插件（firecrawl/tavily/exa/parallel/searxng/brave_free/ddgs），tools/web_providers/ 已删除
+- `browser-tool-architecture.md`: BrowserProvider ABC + browser_registry + 3 个 plugins/browser 插件，tools/browser_providers/ 已删除，Lightpanda + Camofox 外部托管会话
+- `provider-transport-architecture.md` + `auxiliary-client-architecture.md`: ProviderProfile ABC + 30 个 plugins/model-providers/ 目录；4-entry fallback chain + 600s 不健康缓存
+- `messaging-gateway-architecture.md`: 24 个平台（19 内置 + 5 插件：IRC/LINE/Google Chat/MS Teams/SimpleX），新增 msgraph_webhook
+
+**新建页面 (1)**
+- `kanban-orchestration.md` — 持久化多 Profile 协作看板，hermes_cli/kanban*.py + tools/kanban_tools.py + plugins/kanban/dashboard，9 状态机，Gateway 调度器 + Orchestrator 自动分解 + Respawn 守卫
+
+**新增 changelog**
+- `changelog/2026-05-19-update.md` —— 17 节，2418 commits 总结
+
+**统计**
+- index.md 更新为 38 页
+- README 版本徽章 v2026.4.23 → v2026.5.16，平台数 18+ → 24
+- 跟踪版本：hermes-agent 0.14.0
