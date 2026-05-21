@@ -197,6 +197,30 @@ cron:
   output_dir: "~/.hermes/cron/output"
 ```
 
+## `no_agent` 模式 —— script-only watchdog（v0.13.0+）
+
+`hermes_cli/cron.py:96,181` + `tools/cronjob_tools.py:322-372`：cron 任务可以**完全跳过 agent**，只跑脚本。
+
+```yaml
+cron:
+  jobs:
+    - name: heartbeat-check
+      schedule: "*/5 * * * *"
+      command: "curl -fsS https://api.example.com/health || echo 'DOWN'"
+      mode: no_agent           # 不调 LLM，纯脚本执行
+      deliver_to: telegram     # 仅非空 stdout 才投递
+```
+
+- **空 stdout 静默** —— 健康时不打扰
+- **非空 stdout 原样投递** —— 异常立即推送
+- **零 LLM 成本** —— 适合监控/轮询/状态检查
+
+`tools/cronjob_tools.py:44,133-139` **同时**对 prompt-injection 进行**预扫描**（v0.13.0 安全 wave 之一）：cron 组装好的 prompt（含已加载 skill 内容）走 injection 正则，命中返回 `"Blocked: prompt contains injection"` 阻止执行。
+
+### Watchers Skill（v0.14.0+）
+
+`optional-skills/watchers/` 利用 `no_agent` cron 模式轮询 RSS / HTTP JSON / GitHub，实现变更检测：检测到新条目时再投递给 agent 处理。
+
 ## 相关页面
 
 - [[messaging-gateway-architecture]] — 网关驱动调度器 tick() 循环

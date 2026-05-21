@@ -134,6 +134,47 @@ display:
 | 主题系统 | ✅ Skin Engine | ❌ | ❌ |
 | 工具调用预览 | ✅ 格式化 | ✅ | ❌ |
 
+## v0.12 - v0.14 新增子命令与斜杠命令
+
+### 新 hermes 子命令
+
+| 命令 | 引入版本 | 说明 |
+|------|---------|------|
+| `hermes -z <prompt>` | v0.12.0 | One-shot 非交互模式，配 `--model` / `--provider` / `HERMES_INFERENCE_MODEL` |
+| `hermes update --check` | v0.12.0 | preflight 升级检查 + opt-in HERMES_HOME backup |
+| `hermes curator {archive, prune, list-archived, backup, rollback}` | v0.12/v0.13 | Curator 扩展子命令（详见 [[skills-system-architecture]]） |
+| `hermes kanban {add, dispatch, claim, complete, reclaim, ...}` | v0.13.0 | 持久化 Kanban CLI（详见 [[multi-agent-architecture]]） |
+| `hermes proxy {start, status, list-providers}` | v0.14.0 | OpenAI-compatible 本地代理：`hermes_cli/proxy/cli.py:30,78,102` |
+| `hermes acp --setup-browser` | v0.14.0 | Zed ACP registry 引导浏览器工具安装 |
+| `pip install hermes-agent && hermes` | v0.14.0 | PyPI 正式上架（`pyproject.toml:6` `name = "hermes-agent"`） |
+
+### 新斜杠命令（v0.13.0+）
+
+`hermes_cli/commands.py`：
+
+| 斜杠 | 位置 | 说明 |
+|------|------|------|
+| `/goal <目标>` | `commands.py:105` | 锁定跨轮持久目标（Ralph loop），judge 评分推进直到 DONE（`hermes_cli/goals.py`） |
+| `/subgoal {show, append, remove, clear}` | `commands.py:107` | 给运行中的 `/goal` mid-loop 追加成功标准 |
+| `/handoff <profile>` | `commands.py:82` | 实时迁移整个 session（v0.14.0 升级带 message + tool call + context 一起迁） |
+| `/steer <text>` | `commands.py:103` | 对正在运行的 agent 注入纠偏指令 |
+| `/queue <text>` | `commands.py:101` | 后续指令排队进 inflight agent |
+| `/reload-skills` | v0.12.0 | rescan `~/.hermes/skills/`（不打破 prompt cache） |
+| `/reload` | v0.12.0 | `.env` 热重载（TUI 也支持） |
+| `/mouse` | v0.12.0 | toggle ConPTY phantom mouse 注入 |
+
+## Native Windows 支持（v0.14.0+）
+
+`scripts/check-windows-footguns.py` + `pyproject.toml:60,66`（tzdata、psutil）：原生 `cmd.exe` + PowerShell 跑通，**无需 WSL**。完整 PowerShell installer 含 MinGit 自动安装、Microsoft Store python stub 检测、前台 Ctrl+C dance。本版后续跟 40+ Windows-only fix（taskkill、native PTY、信号差异、路径规范化、file-locking）。
+
+## OSC8 可点击 URL（v0.14.0+）
+
+任何支持 OSC8 的终端中 agent 输出的 URL 都是真 hyperlink，hover 高亮、点击在浏览器打开。iTerm2 / Kitty / Ghostty / 现代 Windows Terminal 都支持。
+
+## 国际化（v0.13.0+）
+
+`locales/` 共 **16 个语言 YAML**（af、de、en、es、fr、ga、hu、it、ja、ko、pt、ru、tr、uk、zh、zh-hant），gateway + CLI 静态消息可翻译。Docs 站点拿 zh-Hans。
+
 ## 相关页面
 
 - [[configuration-and-profiles]] — 配置管理与 Profile 系统
@@ -144,12 +185,18 @@ display:
 - [[context-references]] — @file/@diff/@url 引用系统
 - [[worktree-isolation]] — Git Worktree 并行隔离
 - [[code-execution-sandbox]] — 代码执行沙箱
+- [[multi-agent-architecture]] — `/goal`、`/handoff`、`/steer`、`/queue`、Kanban CLI
+- [[smart-model-routing]] — `hermes proxy` OpenAI-compatible 本地代理
 
 ## 相关文件
 
 - `cli.py` — CLI 主类
 - `hermes_cli/main.py` — 入口点和子命令
-- `hermes_cli/commands.py` — 斜杠命令定义
+- `hermes_cli/commands.py` — 斜杠命令定义（lines 82, 101, 103, 105, 107 为新增）
+- `hermes_cli/goals.py` — `/goal` Ralph loop 实现
+- `hermes_cli/kanban.py` — Kanban CLI（2677 行）
+- `hermes_cli/proxy/` — OpenAI-compatible 本地代理（v0.14.0+）
 - `hermes_cli/dump.py` — `hermes dump` 环境摘要（纯文本，用于调试/提 issue）
 - `agent/display.py` — 显示系统
 - `hermes_cli/skin_engine.py` — 皮肤引擎
+- `locales/` — 16 个语言 YAML

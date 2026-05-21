@@ -99,6 +99,29 @@ marker = {"type": "ephemeral", "ttl": "1h"}  # 1 小时 TTL
 - **5m（默认）**：适合快速连续对话，缓存命中率高
 - **1h**：适合长时间对话间隔，容忍更高的缓存未命中
 
+### `prompt_caching.cache_ttl` 配置（v0.12.0+）
+
+`agent/prompt_caching.py:51` 引入 `cache_ttl` 配置项，默认 `"5m"`：
+
+```yaml
+# config.yaml
+auxiliary:
+  prompt_caching:
+    cache_ttl: 1h         # opt-in 1h tier (Anthropic 多 2x 价格但 12x 寿命)
+```
+
+加载位置：`agent/agent_init.py:475-485` 从 `auxiliary.prompt_caching.cache_ttl` 取值；config stub 在 `hermes_cli/config.py:820-822`。Bursty session 保持 cache 暖时省钱。
+
+### 跨 Session 1h Claude Prefix Cache（v0.14.0+）
+
+`agent/model_metadata.py:1268` `_CODEX_OAUTH_CONTEXT_CACHE_TTL = 3600  # 1 hour`：
+
+用 Claude 走 Anthropic / OpenRouter / Nous Portal 时，**system prompt + skills + memory 的 prefix 在 session 之间复用 1 小时**：
+- `/new` session 第一次回复又快又便宜，因为上次 cache 仍然热
+- 后台 memory review 也吃 cache，不再每轮全价
+
+> 等同于 v0.10.0 引入的 "冻结快照"机制扩展到跨 session 维度：之前一个 session 内多轮 turn 共享前缀；现在多个 session 共享同一前缀。
+
 ## 成本效益
 
 假设系统提示 2000 tokens，每次对话平均 5000 tokens：

@@ -193,6 +193,51 @@ plugins:
 | 自定义工具 | ✅ 注册表 | ❌ | ❌ |
 | 插件 CLI | ✅ | N/A | N/A |
 
+## MCP SSE Transport（v0.13.0+）
+
+`tools/mcp_tool.py:5,35,52,203-208`：MCP 服务器现在支持三种 transport：
+
+```yaml
+# config.yaml
+mcp:
+  servers:
+    my-sse-server:
+      url: http://localhost:8000/sse
+      transport: sse       # 替代默认 Streamable HTTP
+```
+
+- **SSE transport** 配 `transport: sse`
+- **OAuth forwarding** for SSE：MCP server 后端的 OAuth 流可直接转发
+- **Stale-pipe retries**：连接断开后自动重连
+- **Image result 改作 MEDIA tag**（之前被直接丢弃）
+- **Lifecycle keepalive** for 长 lived waits
+
+## `transform_llm_output` 插件 lifecycle Hook（v0.13.0+）
+
+`agent/conversation_loop.py:3936,3944` + `hermes_cli/plugins.py:136`：新增 lifecycle hook，让插件在 LLM 输出**回到对话之前**重塑/过滤。Context-window reducer 和内容过滤器用得上：
+
+```python
+def register(ctx):
+    @ctx.transform_llm_output
+    def shrink_excess(output: str) -> str:
+        # 例如：截掉超过 10KB 的部分，加 [truncated] 标记
+        return output[:10240] + "\n[...truncated]" if len(output) > 10240 else output
+```
+
+## Plugin `ctx.llm` + `tool_override`（v0.14.0+）
+
+插件可走 active provider + credentials **直接发 LLM call**，无需手动 client wiring：
+
+```python
+def register(ctx):
+    @ctx.register_tool("my_custom_search")
+    async def search(query: str) -> str:
+        # 走主 agent 同款 provider/model 路由 + 凭证
+        return await ctx.llm.complete(f"Search: {query}", model="auto")
+```
+
+**`tool_override=True`** flag 允许插件**干净替换**一个 built-in 工具的实现，旧实现自动让位。
+
 ## 相关页面
 
 - [[tool-registry-architecture]] — 插件通过 registry.register() 注册工具
@@ -201,7 +246,8 @@ plugins:
 
 ## 相关文件
 
-- `tools/mcp_tool.py` — MCP 服务器任务
+- `tools/mcp_tool.py` — MCP 服务器任务（SSE transport: lines 5,35,52,203-208）
 - `tools/mcp_oauth.py` — MCP OAuth
-- `hermes_cli/plugins.py` — 插件系统
+- `hermes_cli/plugins.py` — 插件系统（transform_llm_output: line 136）
+- `agent/conversation_loop.py` — transform_llm_output dispatch（lines 3936, 3944）
 - `plugins/` — 插件目录

@@ -1,23 +1,25 @@
 ---
 title: Hermes 多 Agent 架构
 created: 2026-04-08
-updated: 2026-04-18
+updated: 2026-05-21
 type: concept
-tags: [architecture, module, agent, delegation, concurrency]
-sources: [tools/delegate_tool.py, tools/mixture_of_agents_tool.py, run_agent.py]
+tags: [architecture, module, agent, delegation, concurrency, kanban, goal, ralph-loop]
+sources: [tools/delegate_tool.py, tools/mixture_of_agents_tool.py, run_agent.py, hermes_cli/kanban.py, hermes_cli/kanban_db.py, hermes_cli/goals.py, agent/system_prompt.py]
 ---
 
 # Hermes 多 Agent 架构
 
 ## 概述
 
-Hermes 的多 Agent 能力分为**三种运行时机制**，全部在 Agent 对话过程中触发，不涉及外部脚本或离线工具：
+截至 v2026.5.16，Hermes 的多 Agent 能力分为**五种运行时机制**：
 
 | 机制                    | 触发方式                  | 用途                   |
 | --------------------- | --------------------- | -------------------- |
 | **Delegate Task**     | LLM tool call（模型自主决定） | 并行子任务，最多 3 路         |
 | **Mixture of Agents** | LLM tool call（模型自主决定） | 多模型协同推理              |
 | **Background Review** | 系统计数器自动触发             | 后台提炼经验 → 创建/改进 skill |
+| **持久化 Kanban**（v0.13.0+） | `hermes kanban` CLI / `/kanban` 斜杠 / dashboard | 多 worker 长任务协作板，heartbeat + reclaim |
+| **`/goal` Ralph Loop**（v0.13.0+） | 用户斜杠命令 | 跨轮锁定目标，judge 评分驱动持续推进 |
 
 ## 触发机制
 
@@ -600,6 +602,78 @@ Discord 还有**多 bot 过滤**：消息 @了其他 bot 但没 @自己时自动
 **注意**：这不是 Hermes 设计的 agent 间通信功能，是两个独立 bot 通过平台消息碰巧交互。有延迟、无事务保证，且容易产生死循环（A 发 → B 回 → A 又回 → 无限循环），使用时需注意控制。
 
 详见 → [[configuration-and-profiles]]
+
+## 四、持久化 Kanban —— 多 Worker 协作板（v0.13.0+）
+
+**v0.13.0 Tenacity Release** 把 Kanban 重做成**真正持久、跨 Profile、可靠**的多 Agent 工作板。源码：`hermes_cli/kanban.py`（2677 行）+ `hermes_cli/kanban_db.py`（6286 行）+ `tools/kanban_tools.py` + `plugins/kanban/`。
+
+### 触发与使用
+
+```
+hermes kanban add "task title" --workspace path/to/repo --profile worker
+hermes kanban dispatch                 # 一遍 reclaim 过期 → promote ready → spawn worker
+hermes dashboard                       # 视化看板
+/kanban …                              # 斜杠命令（CLI/gateway 也用）
+```
+
+### Worker 生命周期不变量
+
+| 机制 | 验证位置 |
+|------|---------|
+| **Heartbeat + TTL** | `tools/kanban_tools.py:547-580` `_handle_heartbeat()`；claim 过期 → 自动 reclaim |
+| **Zombie 检测** | macOS/Linux 各自路径，detect darwin zombie workers |
+| **Exit-without-complete 自动 block** | dispatcher 把 abnormal exit 计入失败 |
+| **Per-task `max_retries`** | `hermes_cli/kanban_db.py:647-652` —— `max_retries=1` 首败 block；`max_retries=3` 允许 2 次重试。`hermes_cli/kanban.py:1281-1306` `--max-retries` CLI flag |
+| **Task ownership 强制** | worker 必须拥有任务才能 reclaim/转移；destructive tool 调用前校验 |
+| **Hallucination gate** | `plugins/kanban/dashboard/plugin_api.py:217` —— "我做完了"但数据库无证据 → `completion_blocked_hallucination` 状态进入恢复 |
+
+### KANBAN_GUIDANCE —— Lifecycle Contract
+
+`agent/system_prompt.py:34,120` 把 `KANBAN_GUIDANCE` 字符串注入系统提示。所有 worker 看到的"我属于一块板、必须从 claim → working → complete/block 的生命周期约束"都来自这一处，`hermes_cli/kanban_db.py:5213,5368,5377` 反复强调"已经在系统提示里了，工具调用不再 echo"。
+
+### 多 Project / 跨 Profile 共享
+
+一台机器、多块板、跨 profile 共享 board / workspace / worker log。Dashboard inline create 表单含 workspace kind + path、home-channel 通知开关、tenant 过滤。Generic diagnostics engine 统一识别 task 困扰信号。
+
+## 五、`/goal` Ralph Loop —— 跨轮持久目标（v0.13.0+）
+
+源码：`hermes_cli/goals.py`（762 行）+ `hermes_cli/commands.py:105`（`/goal` 注册）+ `:107`（`/subgoal` 注册）。
+
+### 工作机制
+
+```
+/goal <目标 + 成功标准>
+   │
+   ▼
+注入 goal block 到系统提示（每轮）
+   │
+   ▼
+Agent 工作 → 完成一轮
+   │
+   ▼
+goal judge 评分（`hermes_cli/goals.py:298 _goal_judge_max_tokens()`)
+   │
+   ▼
+DONE？──否──→ 继续下一轮（带 judge 反馈）
+   │
+   是
+   ▼
+Loop 终止
+```
+
+### `/subgoal <text>` —— Mid-loop 追加成功标准
+
+`hermes_cli/goals.py:79,86,118,123,156`：在 `/goal` 跑到一半时，用 `/subgoal` 把额外 criteria **追加**进 judge。`/subgoal {show, append, remove, clear}` 完整子命令在 `cli.py` 中。Judge 把所有用户附加的 criteria 一起算进 DONE 判定，不必重启循环。
+
+## 多 Agent 控制面 —— `/handoff` / `/steer` / `/queue`（v0.13.0+）
+
+`hermes_cli/commands.py:82,101,103`：
+
+- **`/handoff <profile|platform>`**（v0.13 起，v0.14 升级为实时 session 迁移）—— 把当前 session 整体迁到目标 profile / model / persona；message、tool call、context 完整带走
+- **`/steer <text>`** —— 对**正在运行**的 agent 注入纠偏指令（不打断），`tests/gateway/test_steer_command.py` 验证
+- **`/queue <text>`** —— 后续指令排队进 inflight agent，等它完成当前 turn 自动取出
+
+ACP 同步暴露 `/steer` + `/queue`（`tests/gateway/test_steer_command.py`），Zed / VS Code / JetBrains 用户能驾驭 inflight agent。
 
 ## 相关页面
 

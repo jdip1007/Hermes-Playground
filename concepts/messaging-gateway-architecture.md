@@ -1,17 +1,17 @@
 ---
 title: Messaging Gateway Architecture
 created: 2026-04-07
-updated: 2026-04-29
+updated: 2026-05-21
 type: concept
-tags: [gateway, architecture, module, telegram, discord, messaging, qq, proxy]
-sources: [gateway/run.py, gateway/platforms/, hermes_cli/config.py]
+tags: [gateway, architecture, module, telegram, discord, messaging, qq, proxy, teams, line, simplex]
+sources: [gateway/run.py, gateway/platforms/, gateway/platform_registry.py, plugins/platforms/, hermes_cli/config.py]
 ---
 
 # 消息网关架构
 
 ## 概述
 
-Gateway 是 Hermes Agent 的**统一消息网关**，支持 14+ 消息平台，从单一进程管理所有平台的连接和消息分发。
+Gateway 是 Hermes Agent 的**统一消息网关**，截至 v2026.5.16 共支持 **22 个消息平台**，从单一进程管理所有平台的连接和消息分发。其中 5 个由 `plugins/platforms/` 以**插件形式**接入（IRC、Teams、Google Chat、LINE、SimpleX），其余 17 个仍在 `gateway/platforms/` 内置。
 
 ## 架构
 
@@ -73,6 +73,10 @@ gateway/
 | Webhook | HTTP | 外部事件接收 |
 | **腾讯元宝 Yuanbao** | API | 原生文本+媒体投递，sticker 支持（v2026.4.23+） |
 | **IRC**（插件） | TLS asyncio | 零外部依赖，TLS、PING/PONG、nick collision、NickServ、频道寻址（v2026.4.23+，参考实现） |
+| **Microsoft Teams**（插件） | MS Graph + Webhook | Microsoft Graph auth/client + webhook listener + pipeline plugin runtime + outbound delivery；`plugins/platforms/teams/` + `plugins/teams_pipeline/`（v2026.5.16） |
+| **Google Chat**（插件） | API | 第 20 个平台，`plugins/platforms/google_chat/`（v2026.5.7） |
+| **LINE**（插件） | LINE Messaging API | 日韩台主流，`plugins/platforms/line/`（v2026.5.16） |
+| **SimpleX Chat**（插件） | E2E P2P | 去中心化、无 user ID，`plugins/platforms/simplex/`（v2026.5.16） |
 
 ## 平台适配器插件化（v2026.4.23+）
 
@@ -110,6 +114,37 @@ def register(ctx):
 - 频道消息要求 `nick: msg` 寻址，DM 全部派发
 - 输出 Markdown 自动剥离（IRC 不支持），消息分片（IRC 长度限制）
 - 交互式 `setup` 向导（v2026.4.23+）
+
+### 后续插件平台（v0.12 → v0.14）
+
+- **Microsoft Teams** (`plugins/platforms/teams/` + `plugins/teams_pipeline/`，v0.12.0 起完整链路，v0.14.0 端到端) —— Microsoft Graph 完整栈（`tools/microsoft_graph_auth.py` + `tools/microsoft_graph_client.py` + `gateway/platforms/msgraph_webhook.py`）
+- **Google Chat** (`plugins/platforms/google_chat/`，v0.13.0) —— 第 20 个平台
+- **LINE** (`plugins/platforms/line/`，v0.14.0) —— 日韩台
+- **SimpleX Chat** (`plugins/platforms/simplex/`，v0.14.0) —— 隐私优先去中心化
+
+### Discord 频道历史回填（v0.14.0+）
+
+`gateway/platforms/discord.py:3683,3692,4784`：首次加入 Discord 频道/thread 时**回读近期消息**作为上下文，避免"我们在聊什么"。默认开。
+
+### 跨平台统一 allowlist（v0.13.0+）
+
+`allowed_channels` / `allowed_chats` / `allowed_rooms` 配置覆盖 Slack、Telegram、Mattermost、Matrix、钉钉（`gateway/platforms/dingtalk.py:392-496`）—— 统一的硬 gate ACL。
+
+### Discord DM 角色 Guild-scoped（v0.13.0+）
+
+`gateway/platforms/discord.py:508 dm_role_auth_guild`、`:2206-2235`：闭合 CVSS 8.1 跨 guild DM 绕过。允许列表绑定到具体 guild，不再被其他服务器借用。
+
+### WhatsApp 默认拒陌生人（v0.13.0+）
+
+`gateway/platforms/whatsapp.py:236-239`：`dm_policy: open | allowlist | disabled`（默认 open，但 SECURITY release notes 提及"strangers rejected by default" —— 配合 `allow_from`/`group_allow_from` 白名单使用）。`group_policy` 同步控制群组。
+
+### Native button UI for `clarify`（v0.14.0+）
+
+`tools/clarify_gateway.py:48`：Telegram + Discord 适配器 override `send_clarify`，渲染 inline button（如 Telegram `InlineKeyboardMarkup`）。tap 即答，移动端尤佳。
+
+### `[[as_document]]` 技能媒体路由指令（v0.13.0+）
+
+`gateway/run.py:11159,11163` + `gateway/platforms/base.py:2133,2154-2157,3160-3174`：skills 可在内容里加 `[[as_document]]`，强制 gateway 在支持的平台上把输出当 document 投递（而非 inline 消息）。
 
 ### 平台插件 12 个集成点全覆盖
 
