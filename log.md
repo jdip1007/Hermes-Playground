@@ -123,20 +123,49 @@
   - 核心内容: Gateway Hooks 事件驱动(8种事件+通配符)，Plugin System 三级来源(用户/项目/pip)，PluginContext API(工具注册/消息注入/CLI命令/钩子)，缓存友好上下文注入
 - index.md 更新为 37 页
 
-## [2026-05-12] update | 同步 hermes-agent v0.12.0 + v0.13.0（2026-04-30 ~ 2026-05-12，约 2015 commits）
-- 拉取 NousResearch/hermes-agent main，覆盖窗口 v2026.4.23 → 2026-05-12
-- 新建 changelog 条目 3 个：
-  - changelog/2026-04-30-v0.12.0.md — Curator Release (1,096 commits)
-  - changelog/2026-05-07-v0.13.0.md — Tenacity Release (864 commits, 13 P0, 36 P1)
-  - changelog/2026-05-12-update.md — post-v0.13.0 增量 (55 commits)
-- 修订 concept 页面（每条均逐行源码验证）：
-  - concepts/prompt-caching-optimization.md — 全文重写：新增 prefix_and_2 跨会话 1h 前缀缓存策略（PR #23828），源码 agent/prompt_caching.py 从 72 行扩展到 201 行
-  - concepts/multi-agent-architecture.md — 多 Agent 机制从 3 种扩展到 5+ 种：新增 Kanban（第四节，hermes_cli/kanban.py 2252 行 + kanban_db.py 4839 行 + tools/kanban_tools.py 1139 行）、`/goal` Ralph loop（第五节，hermes_cli/goals.py 593 行）、Autonomous Curator（第六节）
-  - concepts/messaging-gateway-architecture.md — 平台从 14+ 重写为 17 内置 + 4 bundled 插件 = 21；新增 Yuanbao / Microsoft Teams / Google Chat / LINE 适配器；展开 PlatformEntry v0.13 hooks（env_enablement_fn / cron_deliver_env_var / standalone_sender_fn）
-  - concepts/skills-system-architecture.md — Curator 章节大幅扩展，覆盖 v0.12 rubric-based grading、active-update bias、scoped toolsets、报告路径、子命令 archive/prune/list-archived
-  - concepts/hook-system-architecture.md — VALID_HOOKS 更新到 v0.13.0：新增 transform_llm_output（PR #21235）/ transform_tool_result / transform_terminal_output / pre_gateway_dispatch（PR #15050）/ pre_approval_request + post_approval_response（PR #16776）；post_tool_call 增加 duration_ms kwarg（PR #15429）
-  - concepts/cron-scheduling.md — 新增 no_agent watchdog 模式（PR #19709）、context_from 链（PR #15606）、per-job workdir/enabled_toolsets
-  - concepts/smart-model-routing.md — 新增 ProviderProfile ABC + plugins/model-providers/（29 个），v0.12-v0.13 新增 provider 列表（GMI/Azure Foundry/LM Studio first-class/MiniMax OAuth/Tencent Tokenhub），Nous Portal 作为 model metadata authority，Cross-session 1h prefix cache 引用
-  - concepts/gateway-session-management.md — 新增 Session Durability 章节（v0.13 auto-resume after restart，PR #21192/20160/19271/...)
-- README.md：版本徽章 v2026.4.23 → v2026.5.7，最后更新 2026-04-29 → 2026-05-12，新增 3 个 changelog 链接，统计信息更新（5 → 8 个更新日志）
-- 验证方式：每条 wiki 更新都对照 /tmp/hermes-agent 中对应源文件（路径 + 行号 + 函数名），所有新增声明都有 PR 编号或源码定位
+## [2026-05-13] update | sync wiki with hermes-agent v0.12.0 → v0.13.0 (595 commits, 2026-04-30 ~ 2026-05-13)
+拉取 hermes-agent 最新代码（HEAD `08671d8`，2026-05-13）对照 wiki，每条结论均经源码验证。
+
+**新增 changelog**:
+- changelog/2026-05-13-update.md — 完整 595-commit 综述
+
+**概念页面更新**（10 处源码验证后改动）:
+- concepts/messaging-gateway-architecture.md
+  - 新增 Microsoft Teams / LINE / Google Chat 三个 bundled 平台插件（源码 plugins/platforms/teams,line,google_chat）
+  - 新增 v0.12.0+ gateway 增强段（i18n、Telegram native draft、cadence tuning、QQBot guild ACL、stream-retry 诊断、shutdown forensics 等）
+- concepts/voice-mode-architecture.md
+  - TTS Provider 从 5 个扩展到 10 个内置 + 命令型自定义注册表（源码 tools/tts_tool.py:339-350 BUILTIN_TTS_PROVIDERS frozenset）
+  - 加入 Piper（44 语种，源码 tools/tts_tool.py:1342+），命令型 provider（源码 tools/tts_tool.py:309-470），FLAC 路由（源码 gateway/platforms/base.py:_AUDIO_EXTS），WSL audio 检测改进
+- concepts/prompt-caching-optimization.md
+  - 1h cross-session 前缀缓存（PR #23828，源码 run_agent.py:1455-1470）
+  - 系统提示 byte-static 设计（PR #24778，b06e999）
+- concepts/gateway-session-management.md
+  - `/handoff` 跨平台 session 转移（源码 gateway/run.py:3708-3795，hermes_cli/commands.py:82）
+  - Telegram `/topic` DM 多 session（源码 gateway/platforms/telegram.py:419-585）
+- concepts/cron-scheduling.md
+  - `no_agent` 模式（源码 cron/jobs.py:1041-1106，hermes_cli/cron.py:96/177/233）
+- concepts/skills-system-architecture.md
+  - Curator 扩展：archive/prune/backup/rollback/list-archived 子命令（源码 hermes_cli/curator.py:_cmd_*）
+  - 状态机分裂 consolidated vs pruned（8b290a5）
+  - bump_use() 接入更多调用点（4178ab3/ae8930a）
+  - Pin 仅保护 deletion（b10e38e）
+  - .archive 在 walk 中跳过（eda1d51/a845177）
+  - 统一到 auxiliary.curator 入口（0da66e8）
+- concepts/hook-system-architecture.md
+  - `ctx.llm` 让插件直接调用宿主模型（PR #23194，源码 hermes_cli/plugins.py:299-313）
+  - Bundled plugins 列表（hermes-achievements + 4 个 platform plugins）
+- concepts/agent-loop-and-prompt-assembly.md
+  - Per-turn file-mutation verifier footer（PR #24498，源码 run_agent.py:5331-5395）
+  - LSP semantic diagnostics（PR #24168，源码 tools/file_operations.py:929-991）
+  - In-process delta lint（PR #20191，5168226）
+
+**元数据更新**:
+- README.md — Version v2026.4.23 → v0.13.0、最后更新 → 2026-05-13、changelog 列表 +1
+- index.md — Last updated → 2026-05-13、Total pages 注记
+- log.md — 本条记录
+
+**追踪信息**:
+- hermes-agent pyproject.toml: `version = "0.13.0"`
+- v0.12.0 release commit: 73bf3ab (chore: release v0.12.0 (2026.4.30))
+- 截至 commit: 08671d8 tui: make URLs clickable + hover-highlight (#25071), 2026-05-13T13:52
+- 总 commits: 595

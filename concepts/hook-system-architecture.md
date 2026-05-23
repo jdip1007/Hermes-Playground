@@ -409,43 +409,26 @@ def my_command_hook(event_type, context):
 
 决策类型：`deny` / `handled` / `rewrite` / `allow`，在核心处理前拦截。向后兼容——fire-and-forget 遥测钩子仍走 `emit()`。
 
-### PluginContext 新增 API（v0.12.0 / v0.13.0）
+### v0.12.0+ — `ctx.llm`：插件直接调用宿主模型（5aa755e）
 
-`hermes_cli/plugins.py` 的 `PluginContext` 又扩了几个一等公民入口：
-
-| 方法 | 行 | 说明 |
-|---|---|---|
-| `register_command()` | 401 | 见 v0.10.0 |
-| `register_cli_command()` | 376 | 只在 CLI 注册，不上 gateway |
-| `register_tool()` | 317 | 给 agent 加工具 |
-| `register_hook()` | 603 | 注册任意 lifecycle hook |
-| `register_skill()` | 622 | 插件命名空间技能 |
-| `register_context_engine()` | 488 | v0.11.0，自定义 context 注入 |
-| `register_image_gen_provider()` | 520 | v0.11.0+，image_gen 后端 |
-| `register_platform()` | 547 | v2026.4.23，平台插件 |
-
-### 新 lifecycle hook：`transform_llm_output`（v0.13.0）
-
-`hermes_cli/plugins.py:136` 把 `transform_llm_output` 加进合法 hook 列表：
+新增 `PluginContext.llm` property（`hermes_cli/plugins.py:299-313`），插件可以直接用宿主 agent 的活跃模型 + 认证跑 chat / structured completion，**无需自带 provider key**：
 
 ```python
-KNOWN_HOOKS = (
-    ...,
-    "transform_terminal_output",     # v0.11.0
-    "transform_tool_result",         # v0.11.0
-    ...,
-    "transform_llm_output",          # v0.13.0
-)
+def register(ctx):
+    def my_handler(event_type, context):
+        reply = ctx.llm.chat(
+            messages=[{"role": "user", "content": "summarize this"}],
+            # 可选：在 plugins.entries.<plugin_id>.llm.* 里覆盖 model/agent_id/auth
+        )
 ```
 
-**触发点**：LLM 原始输出（**包括 tool calls + 文本响应**）进 conversation history 之前。插件返回值替换原值。
+**实现要点**（`agent/plugin_llm.PluginLlm`）：
 
-**典型用途**：
-- Context-window reducer——把 LLM 的冗长解释砍短
-- 内容过滤——脱敏、合规改写
-- 风格归一化
+- Lazy 构造：访问 `ctx.llm` 时才实例化 `PluginLlm(plugin_id=manifest.key or manifest.name)`
+- **Fail-closed override**：默认用 host 当前模型，插件想改 model / agent_id / auth profile 必须用户在 `plugins.entries.<plugin_id>.llm.*` 配置里**显式开启**才生效——避免恶意插件偷偷换 key 把账单挪到用户头上
+- 共享 host 的 auxiliary client / credential pool，命中相同的 prompt cache 边界
 
-和 `transform_tool_result`（改工具结果）、`transform_terminal_output`（改终端流）配对，构成"全链路输出整形"工具箱。
+适合做 dashboard 插件（如 hermes-achievements）需要简短分类/摘要时用，省去 plugin 自己写一遍 provider 适配。
 
 ### Dashboard 插件系统
 
@@ -464,6 +447,26 @@ KNOWN_HOOKS = (
 - 支持可选的后端 API 路由自动挂载
 
 同时新增 **Dashboard 主题系统**，支持实时切换。
+
+### Bundled plugins（v0.12.0+）
+
+`plugins/` 现在带四个 bundled 插件目录，启动时自动注册：
+
+| 插件 | 类型 | 说明 |
+|------|------|------|
+| `hermes-achievements` | Dashboard plugin | 从 [@PCinkusz/hermes-achievements](https://github.com/PCinkusz/hermes-achievements) vendor 过来，60+ tiered badges，扫本地 session 历史解锁。**Share card**（2026-05-04）：解锁徽章一键渲染 1200×630 PNG 分享卡（client-side canvas，no backend）。`hermes dashboard` 首次启动自动注册，无需独立安装。源码 `plugins/hermes-achievements/` |
+| `platforms/irc` | Platform plugin | IRC 适配器（参考实现） |
+| `platforms/teams` | Platform plugin | Microsoft Teams Bot Framework 适配器 |
+| `platforms/line` | Platform plugin | LINE Messaging API 适配器 |
+| `platforms/google_chat` | Platform plugin | Google Chat Pub/Sub 适配器 |
+
+bundled 插件被 nix 打包系统通过 `HERMES_BUNDLED_PLUGINS` 暴露（6e42daf），确保 pip 安装、源码 clone、nix 安装、Docker 镜像四种场景下都能找到这些 plugin 目录。
+
+### Plugin slash exec live + 错误兜底
+
+- **TUI plugin slash 命令实时执行**（7e780f4 + 21c7c9f）：TUI 里运行插件 slash 命令也走 live 通道，错误被独立 try/except 捕获展示。
+- **Dashboard 主页插件 API 路由 auth**（ec9329e）：插件 API 路由现在统一走 dashboard auth，避免未授权访问。Achievement 插件加 `Authorization` 头 + 用 `X-Hermes-Session-Token`（da2ed47 + 80bb5f2）。
+- **Plugin module sys.modules 注册**（718e4e2）：动态加载的 plugin module 在 `exec` 前先 `register` 到 `sys.modules`——解决 plugin 内部 import 找不到自己 module 的边角情况。
 
 ## 与其他系统的关系
 

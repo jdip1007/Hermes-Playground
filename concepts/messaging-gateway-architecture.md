@@ -1,10 +1,10 @@
 ---
 title: Messaging Gateway Architecture
 created: 2026-04-07
-updated: 2026-05-12
+updated: 2026-05-13
 type: concept
-tags: [gateway, architecture, module, telegram, discord, messaging, qq, yuanbao, teams, google-chat, line, irc, proxy]
-sources: [gateway/run.py, gateway/platforms/, gateway/platform_registry.py, gateway/config.py, plugins/platforms/, hermes_cli/config.py]
+tags: [gateway, architecture, module, telegram, discord, messaging, qq, proxy, teams, line, google-chat, i18n]
+sources: [gateway/run.py, gateway/platforms/, gateway/platform_registry.py, plugins/platforms/, hermes_cli/config.py, agent/i18n.py, locales/]
 ---
 
 # 消息网关架构
@@ -73,8 +73,13 @@ gateway/
 | 企业微信 | Stream | 企业微信消息、QR 扫码 bot 创建（v2026.4.18+） |
 | BlueBubbles | REST + Webhook | iMessage（macOS），tapback、已读回执 |
 | 微信/WeChat | iLink Bot API | 长轮询收消息，AES-128-ECB 媒体加密，QR 登录 |
-| QQ Bot | Official API v2 | WebSocket 入站(C2C/群/频道/DM) + REST 出站，语音转录（腾讯 ASR），allowlist + DM 配对、v0.13 起原生 approval keyboards + chunked upload + quoted attachments |
-| 腾讯元宝 Yuanbao | API | 原生文本 + 媒体投递、sticker 支持（v2026.4.23+） |
+| QQ Bot | Official API v2 | WebSocket 入站(C2C/群/频道/DM) + REST 出站,语音转录(腾讯 ASR),allowlist + DM 配对 |
+| Webhook | HTTP | 外部事件接收 |
+| **腾讯元宝 Yuanbao** | API | 原生文本+媒体投递，sticker 支持（v2026.4.23+） |
+| **IRC**（插件） | TLS asyncio | 零外部依赖，TLS、PING/PONG、nick collision、NickServ、频道寻址（v2026.4.23+，参考实现） |
+| **Microsoft Teams**（插件） | Bot Framework | Adaptive Card 审批、图片附件原生发送、`app.reply()` 线程化（v0.12.0+） |
+| **LINE**（插件） | Messaging API | aiohttp webhook + HMAC-SHA256 验证，免费 reply token 优先，Push API 兜底，慢响应 postback 按钮（v0.12.0+） |
+| **Google Chat**（插件） | Cloud Pub/Sub + REST | Pub/Sub 拉取入站事件，REST 发送出站，per-user OAuth 文件附件（`/setup-files`），无需公网 URL |
 
 ### Bundled 平台插件（plugins/platforms/）
 
@@ -147,7 +152,22 @@ def register(ctx):
 | `plugins/platforms/google_chat/` | Google Chat | Cloud Pub/Sub pull + Chat REST + 每用户 OAuth 文件附件 |
 | `plugins/platforms/line/` | LINE | aiohttp webhook + HMAC-SHA256 + Reply token + Push API fallback |
 
-每个目录包含 `__init__.py`、`adapter.py`、`plugin.yaml`（`requires_env` / `optional_env` 字段被 `hermes config` 读取并显示在 UI）。bundled 插件平台启动时自动加载。
+### 平台插件 12 个集成点全覆盖
+
+`feat: complete plugin platform parity` (2e20f6ae2) + `feat: final platform plugin parity` (e464cde58) 让插件平台和内置平台行为一致：
+- webhook 投递、PLATFORM_HINTS、`get_connected_platforms`、cron 投递、动态 toolset 生成、setup wizard 等
+- bundled 插件平台（如 IRC、Teams、LINE、Google Chat）启动时自动加载（`feat(plugins): bundled platform plugins auto-load by default`，4d36349）
+
+### 已 bundled 的平台插件（v0.12.0+）
+
+`plugins/platforms/` 目录下随源码发行的平台插件：
+
+| 插件目录 | 平台 | 关键源码 | 备注 |
+|---------|------|---------|------|
+| `irc/` | IRC | `adapter.py` | 首个参考实现，零外部依赖 |
+| `teams/` | Microsoft Teams | `adapter.py` (Bot Framework) | Adaptive Card 审批，threading via `app.reply()`，本地图片走 attachment（避免 Markdown 链接渲染失败） |
+| `line/` | LINE | `adapter.py` (LINE Messaging API SDK) | 免费 reply token 优先 + Push API 兜底；慢响应 (`LINE_SLOW_RESPONSE_THRESHOLD` 秒，默认 45s) 推送 Template Buttons postback 让用户重新获取免费 token |
+| `google_chat/` | Google Chat | `adapter.py` + `oauth.py` | Pub/Sub 拉取（与 Slack Socket / Telegram long-poll 同形态，无需公网 URL）；`/setup-files` per-user OAuth 启用原生文件附件 |
 
 ## 平台适配器基类
 
@@ -398,21 +418,31 @@ slack:
 - **临时 agent 关闭**：一次性任务完成后自动关闭临时 agent
 - **WebSocket 重连等待**：发送前等待重连完成，避免丢消息
 
-### Gateway 媒体与消息能力（v2026.4.30+）
+### v0.12.0+ 增强（2026-04-30 ~ 2026-05-13）
 
-- **Native multi-image sending**：Telegram / Discord / Slack / Mattermost / Email / Signal 都接入统一的多图发送通道（PR #17909）
-- **集中音频路由 + FLAC 支持 + Telegram document fallback**（PR #17833）—— TTS 输出走统一管道，平台不支持的格式自动 fallback 为 attachment
-- **Native multimodal image routing**（PR #16506）—— 入站图像按 model.vision 能力路由，不再按 provider 默认
-- **`pre_gateway_dispatch` plugin hook**（`gateway/run.py:4461-4490`）—— 消息收到 → 内部事件守卫 → **plugin hook（可 skip / rewrite / allow）** → auth/pairing → agent dispatch
-- **`pre_approval_request` / `post_approval_response` 审批生命周期 hook**（CLI + Gateway + ACP 全覆盖，纯遥测）
-- **Opt-in 运行时元信息 footer**（PR #17026）—— 最终回复可附带 model / token / cost
-- **Make hygiene hard message limit configurable**
-- **Auto-restart on source-file changes**（PR #18409）
-- **Gateway shutdown hygiene** —— drain timeout、false-fatal 抑制、success log
-
-### `[SYSTEM:` → `[IMPORTANT:` 标记重命名（v2026.4.30+ 行为变更）
-
-所有用户注入的标记从 `[SYSTEM: ...]` 改名 `[IMPORTANT: ...]`，绕开 Azure content filter（之前 Azure 把 "SYSTEM" 误判为提示注入）。涉及 `gateway/run.py:909-922`、`agent/skill_commands.py:440,487`、`tools/process_registry.py` 等多处。
+- **i18n 国际化**（c391684）：`agent/i18n.py` 引入轻量 i18n 框架，`locales/<lang>.yaml` 16 个语种（en、zh、ja、de、es、fr、tr、uk、af、ga、hu、it、ko、pt、ru、zh-hant）。仅覆盖**最高影响**的静态用户面字符串（approval 提示、若干 gateway 斜杠命令回复、restart-drain 通知），agent 输出/日志/工具结果保持英文。语言解析顺序：`lang=`参数 → `HERMES_LANGUAGE` env → `display.language` config → `"en"`。
+- **i18n 也覆盖 web dashboard**（PR #22914 一并落地）。
+- **Telegram /topic（DM topic mode）**（d6615d8、d35efb9）：在私聊里通过 `/topic <name>` 创建 Hermes 管理的伪话题（forum topic），每个话题独立 session。`/topic off` 退出，`auth gate + screenshot debounce`，CASCADE 删除，rename guard，General-topic 处理。详见 [[gateway-session-management]]。
+- **Telegram native draft streaming**（4ed293b，Bot API 9.5+）：通过 `sendMessageDraft` 而非编辑现有消息来流式输出，避免反复编辑导致的 rate limit。
+- **Telegram cadence tuning + adaptive fast-path**（ac95b8c）：短回复走快通道，长回复走平滑节奏，对应 `tests/.../adaptive text-batch tiers`。
+- **Telegram edit overflow split-and-deliver**（bf1f409）：超长编辑不再静默截断，而是切分多条投递。
+- **Telegram `clarify` inline keyboard**（29d7c24）：将 `clarify` 工具的多选项映射成 inline keyboard buttons，用户点击直接回填。
+- **Telegram DM 群组允许列表**（1f71217）：DM 模式下也支持 group user allowlist，并保留 pre-#17686 chat-ID-in-_USERS 配置。
+- **QQBot guild ACL 修复**（d69a0b2）：guild messages 和 guild DMs 也走 ACL 检查，堵住 allowlist 旁路。
+- **Signal 多设备 group message 处理**（e713932）：linked device 经 syncMessage 路径下发的 group message 现在正确处理。
+- **Weixin 内容指纹去重**（7a8ee8b）：相同内容的重复 webhook 投递通过 fingerprint 跳过。
+- **WeCom AES key 自动 padding**（8f4c0bf）：base64 AES key 解码前自动 pad，兼容上游格式差异。
+- **gateway 音频路由集中化 + FLAC 支持**（aa7bf32）：所有平台共用统一音频路由表（`gateway/platforms/base.py:_AUDIO_EXTS`），新增 `.flac`；Telegram 对原生不支持的格式（`.wav`/`.flac`）自动 document fallback。
+- **gateway 多图发送**：`send_multiple_images` 在 Telegram、Discord、Slack、Mattermost、Email 上走原生 album/group API（3de8e21）；Signal 也补齐多图（04ea895）。
+- **stream-consumer thread context 保留**（ff14666 + e164a9c）：消息溢出/首消息发送时不再丢失 thread routing。
+- **stream-retry 诊断**（68e4464 + 126cbff）：drop log 携带 upstream + timing，方便定位是哪个 provider 抖了；同时折叠两行 drop status 到一行，避免噪声。
+- **gateway shutdown forensics**（cede612）：非阻塞 diag、每阶段计时、stale unit warning。
+- **gateway WSL interop PATH 保留**（8ab9f61）：systemd 单元里保留 WSL interop PATH，避免 `wsl.exe` 不可见。
+- **gateway 状态版本检测**（d90f73b）：以 git HEAD SHA 作为 stale-code 检查依据（取代文件 mtime，CI 友好）。
+- **gateway scoped-lock stale 检测**（fb1f409、653d304）：start_time 缺失（macOS）时走 cmdline 比对；cmdline 不可读时回退到 lock record argv。
+- **gateway kanban 通知去重**（861ce7c、a96dd54）：blocked/gave_up 状态去重，发送异常 rewind，re-block 通知投递。
+- **per-platform admin/user 斜杠命令拆分**（a282434）：管理员命令和用户命令分别注册到不同 menu。
+- **per-platform reply_to_mode**（6b76ea4）：Discord/Telegram 从 config.yaml 读 reply_to_mode 而不仅是 env。
 
 ### v2026.4.18+ 增强
 

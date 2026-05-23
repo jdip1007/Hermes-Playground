@@ -1,10 +1,10 @@
 ---
 title: 语音模式架构
 created: 2026-04-10
-updated: 2026-05-10
+updated: 2026-05-13
 type: concept
-tags: [voice, stt, tts, architecture, video]
-sources: [tools/voice_mode.py, tools/tts_tool.py, tools/transcription_tools.py, tools/vision_tools.py, cli.py]
+tags: [voice, stt, tts, architecture, piper]
+sources: [tools/voice_mode.py, tools/tts_tool.py, tools/transcription_tools.py, cli.py]
 ---
 
 > **v2026.5.7 增量**：
@@ -28,6 +28,8 @@ pip install hermes-agent[voice]
 
 音频库**按需懒加载**，不装也不影响文本模式。在无音频设备的环境（SSH、Docker、WSL）中自动检测并禁用。
 
+> WSL 改进（v0.12.0，081f936）：`sd.query_devices()` 返回空列表但 `PULSE_SERVER` env 已设置时，仍判定为有音频可用（之前直接禁用，跑 WSL + PulseAudio 的用户没法用语音）。
+
 ## 流程
 
 ```text
@@ -49,19 +51,18 @@ STT 转文字（6 个 Provider 可选，源：tools/transcription_tools.py）:
     ↓
 LLM 回复（自动注入简洁指令："respond concisely, 2-3 sentences max"）
     ↓
-TTS 语音播报（10 个内置 Provider，源：tools/tts_tool.py BUILTIN_TTS_PROVIDERS）:
-  - edge（默认）
-  - elevenlabs（流式，边生成边播放）
-  - openai
-  - minimax
-  - xai
-  - mistral
-  - gemini（Google Gemini TTS）
-  - neutts（自托管）
-  - kittentts（本地 CPU，~25MB）
-  - piper（v0.12.0 新增，本地 VITS，44 语言）
-  
-  此外可在 `tts.providers.<name>` 下配置自定义 command provider。
+TTS 语音播报（10 个内置 Provider + 任意命令型自定义 provider）:
+  - Edge TTS（默认、免费、无需 API key）
+  - ElevenLabs（流式，边生成边播放）
+  - OpenAI TTS
+  - MiniMax TTS（含 voice cloning）
+  - Mistral Voxtral TTS（多语种，原生 Opus）
+  - Google Gemini TTS（30 prebuilt voices）
+  - xAI TTS（Grok voices）
+  - NeuTTS（本地）
+  - KittenTTS（本地 25MB）
+  - Piper（本地，OHF-Voice/piper1-gpl 神经 VITS，44 语种）—— v0.12.0+
+  - 任意 `tts.providers.<name>` 命令型自定义 provider（v0.12.0+）
 ```
 
 ## STT 配置
@@ -100,35 +101,14 @@ TTS Provider 选择和语音设置通过 `tools/tts_tool.py` 管理，支持 Ele
 
 这些 provider 也可通过 Nous Tool Gateway 统一访问（无需自备 API key）。
 
-### TTS Provider Registry（v0.12.0）
+### v0.12.0+ TTS 更新
 
-`tts.providers.<name>` 是个**可插拔注册表**——不止上面这些 built-in，第三方可挂自己的本地 CLI（Piper / VoxCPM / Kokoro CLI 等）。注册路径在 `tools/tts_tool.py:290` 注释里写：
-
-> ... built-ins so they can plug any local CLI (Piper, VoxCPM, Kokoro CLIs, ...) — provider: piper-en
-
-## 视频理解（v0.13.0）
-
-新增 `video_analyze` 工具，对应多模态 video 模型（Gemini 等）：
-
-```python
-# tools/vision_tools.py:1375 VIDEO_ANALYZE_SCHEMA
-{
-    "name": "video_analyze",
-    "description": "Analyze a video from a URL or local file path...",
-    "parameters": {
-        "properties": {
-            "video_url": {"type": "string"},
-            "question": {"type": "string"},
-        },
-        "required": ["video_url", "question"],
-    },
-}
-```
-
-- 支持 `mp4/webm/mov/avi/mkv/mpeg`，max ~50 MB（>20 MB 较慢）
-- 模型路由：`AUXILIARY_VIDEO_MODEL` → `AUXILIARY_VISION_MODEL` fallback
-- 注册：`registry.register(name="video_analyze", toolset="video", emoji="🎬", ...)`
-- 内部 prompt 模板会要求模型"先完整描述（含 motion / audio / 文字 / 转场），然后回答用户问题"
+| 变更 | 说明 |
+|------|------|
+| **Piper 原生 provider** | `pip install piper-tts` 启用，OHF-Voice/piper1-gpl 神经 VITS，44 语种。模块级 `_piper_voice_cache` 复用 voice 实例。源码 `tools/tts_tool.py:1342-1500`。closes #8508（8d302e3） |
+| **`tts.providers.<name>` 命令型 provider 注册表** | 用户可在 `~/.hermes/config.yaml` 声明 `type: command` 的命名 provider，Hermes 将文本写入 UTF-8 临时文件并执行配置好的 shell 命令（占位符替换 `{output_path}` / `{input_path}`）。已有 10 个内置 provider 名字被保留为 frozenset `BUILTIN_TTS_PROVIDERS`，命令型 provider 不能撞名。默认超时 120s，支持 `mp3/wav/ogg/flac`，默认 5000 字符限制。源码 `tools/tts_tool.py:309-470`（2facea7） |
+| **gateway 音频路由集中化 + FLAC 支持** | `gateway/platforms/base.py:_AUDIO_EXTS` 加入 `.flac`，Telegram 对原生不支持的 `.wav`/`.flac` 自动 document fallback（aa7bf32） |
+| **MiniMax TTS endpoint 更新** | API 升级到 `v1/text_to_speech`（6875471） |
 
 ### STT Provider 扩展（v2026.4.18+）
 
@@ -162,7 +142,7 @@ VAD 循环 + TTS + crash 取证全部在 Ink-based TUI 里实现 parity（之前
 
 | 文件 | 职责 |
 |------|------|
-| `tools/voice_mode.py`（1017 行）| 录音、STT 调度、音频播放 |
-| `tools/tts_tool.py`（2185 行）| TTS Provider 路由、流式播报、Piper 缓存 |
-| `tools/transcription_tools.py`（911 行）| STT Provider 统一接口 |
+| `tools/voice_mode.py`（1018 行）| 录音、STT 调度、音频播放 |
+| `tools/tts_tool.py`（2225 行）| TTS Provider 路由（10 内置 + 命令型自定义）、流式播报 |
+| `tools/transcription_tools.py`（921 行）| STT Provider 统一接口 |
 | `cli.py` | Push-to-talk 键绑定（Ctrl+B） |
