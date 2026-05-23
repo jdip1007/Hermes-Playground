@@ -1,10 +1,10 @@
 ---
 title: Skills System Architecture
 created: 2026-04-07
-updated: 2026-05-10
+updated: 2026-05-12
 type: concept
-tags: [skill, architecture, module, prompt-builder, curator, active-update]
-sources: [tools/skills_tool.py, tools/skill_manager_tool.py, tools/skills_hub.py, tools/skills_guard.py, tools/skill_usage.py, run_agent.py, agent/prompt_builder.py, agent/curator.py, hermes_cli/curator.py, hermes_cli/plugins.py, agent/skill_utils.py]
+tags: [skill, architecture, module, prompt-builder, curator]
+sources: [tools/skills_tool.py, tools/skill_manager_tool.py, tools/skills_hub.py, tools/skills_guard.py, agent/curator.py, agent/curator_backup.py, hermes_cli/curator.py, run_agent.py, agent/prompt_builder.py, hermes_cli/plugins.py, agent/skill_utils.py]
 ---
 
 > **v2026.5.7 增量**：
@@ -244,19 +244,11 @@ skills:
 | 质量 | 用户控制 | agent 自主判断，可能创建也可能跳过 |
 | LLM 消耗 | 主对话的一部分 | 额外消耗（后台 agent 最多 8 轮迭代） |
 
-## Curator — 后台技能维护（v2026.4.23 引入，v0.12.0 升级）
+## Curator — 后台技能维护（v2026.4.23+，v0.12-v0.13 持续升级）
 
-新增**辅助模型驱动的后台维护机制**（`agent/curator.py` + `hermes_cli/curator.py` + `tools/skill_usage.py`）。定期审查**agent 创建的**技能，跟踪使用情况，并把闲置 skill 经过状态机转换归档。
+辅助模型驱动的后台维护机制。**v0.12.0 重大升级**：从 inactivity-triggered（仅 CLI/gateway 启动检查）升级为完整的 cron-driven 自治代理，每 N 天周期自动跑，并把分类、归档分支、报告写盘流程都纳入。
 
-### v0.12.0 升级要点
-
-- **作为后台 agent 运行**：跑在 gateway 的 cron-ticker 上，**默认 7 天周期**（`DEFAULT_INTERVAL_HOURS = 24 * 7`，`agent/curator.py:56`），unbounded iterations，umbrella-first prompt。
-- **每轮报告**：`logs/curator/run.json` + `REPORT.md`。
-- **consolidated vs pruned 分类**：归档 skill 用模型 + 启发式区分"被合并"和"被剪枝"。
-- **`hermes curator status` 排序**：按使用频次显示 most-used / least-used。
-- **统一在 `auxiliary.curator`**：在 `hermes model` 选 curator 模型；可在 dashboard 配置 `auxiliary.curator.{provider, model, timeout, ...}`。源：`agent/curator.py:1483` 的迁移提示和 `_resolve_review_runtime()`。
-- **bump_use() 接入 skill 调用 + preload + skill_view**（v0.12.0 #17932）。
-- **`restore_skill` 扫描嵌套 archive 子目录**（@0xDevNinja，#17951）。
+源码：`agent/curator.py`（1781 行）+ `agent/curator_backup.py`（693 行，backup / rollback）+ `hermes_cli/curator.py`（598 行 CLI 入口）+ `tools/skill_usage.py`（使用追踪 sidecar）。
 
 ### 不变量（load-bearing invariants）
 
@@ -298,34 +290,47 @@ active ──不用 N 天──> stale ──继续不用──> archived
 - 记录使用次数（`bump_use()` 在 `skill_view`、preload、显式调用路径都触发）和最近使用时间
 - 是状态机的输入信号，也是 `hermes curator status` 排名依据
 
-### CLI（11 个子命令，2026-05 扩展）
+### CLI 子命令（hermes_cli/curator.py 的 `_cmd_*` 函数）
 
 ```bash
-hermes curator status        # 当前状态、按使用量排名（v0.12+）
-hermes curator run [--sync]  # 立即跑一轮（v0.13 起默认同步等结果）
-hermes curator pause/resume  # 暂停/恢复
-hermes curator pin <skill>   # 钉住某个 skill（跳过自动转换）
+hermes curator status        # 当前状态 + 最近 run 摘要 + most-used / least-used skill 排行（v0.12）
+hermes curator run           # 立即跑一轮（v0.13 起改为同步，直接看输出）
+hermes curator pause/resume
+hermes curator pin <skill>   # 钉住（跳过自动转换 + 阻止 skill_manage 写入）
 hermes curator unpin <skill>
-hermes curator restore <skill>  # 从归档恢复（v0.13: 扫嵌套子目录）
-hermes curator archive <skill>     # v0.13 新增：手动归档
-hermes curator prune [--idle-days N]  # v0.13 新增：删除归档过的
-hermes curator list-archived       # v0.13 新增：列归档
-hermes curator backup/rollback     # 备份/回滚
+hermes curator restore <skill>           # 从归档恢复（v0.13 扫描嵌套子目录）
+hermes curator archive <skill>           # 手动归档（v0.13）
+hermes curator prune                      # 手动 prune（v0.13）
+hermes curator list-archived             # 列出已归档（v0.13）
+hermes curator backup / rollback         # 备份 + 回滚（v0.12+ 接入 `auxiliary.curator` 路径）
 ```
 
 `/curator` 斜杠命令暴露相同子命令。
 
-### Curator 升级要点（v0.12.0 + v0.13.0）
+### v0.12 关键升级
 
-- **真正的后台 Agent**：跑在 gateway cron-ticker 上，默认 7 天循环，umbrella-first prompt，继承 parent config，**unbounded iterations**（不卡 max_turns）
-- **Per-run 报告**：`logs/curator/run.json` + `REPORT.md` 每周期一份
-- **Consolidated vs Pruned 分类**：归档时由 model + heuristic 联合决定是"被合并到别的 skill"还是"过期删除"
-- **统一在 `auxiliary.curator`**：在 `hermes model` 配置 curator 模型，dashboard 也能改
-- **Manual run 改同步**（v0.13）：`hermes curator run` 现在直接 wait 完成，不用 poll
-- **`skill_manage` 拒写 pinned**：在 `_pinned_guard()` 拦截，扩展 Curator 的 pinned 不变量
-- **Active-update bias**：background review 偏好"刚刚被 agent 加载过的 skill"，支持 `references/` + `templates/` sub-file
-- **Class-first prompt**：rubric 分级 vs 开放式判断
-- **`bump_use()` 钩到 skill invocation + preload + skill_view**：使用量统计真实反映 agent 行为
+- **类一级 rubric 评分**：背景 review fork 改成 rubric-based（之前自由文本「这个 skill 该不该更新」）；解析结果稳定
+- **active-update 偏置**：偏向**改**刚加载过的 skill，而不是凭空创建新的
+- **`references/` / `templates/` 子文件感知**：review fork 能正确识别 multi-file skill
+- **runtime 继承**：fork 实际继承父 agent 的 provider/model/credentials（之前会悄悄漂移到 aux 默认值）
+- **scoped toolsets**：fork 限制在 memory + skills toolsets，不能调用 shell / web（避免 sprawl）
+- **clean shutdown**：fork 退出时 memory provider 也正确关闭
+- **clean context**：review summary 排除上一轮的 tool 消息，给 fork 一个干净的对话视角
+- **consolidated vs pruned 分类**：归档的 skill 分两类（被另一个 skill 吞并 vs 独立淘汰），由模型 + 启发式联合分类
+
+### v0.12 / v0.13 跑出来的报告
+
+每次 cron 运行写两个文件：
+- `logs/curator/run.json` — 机器可读
+- `logs/curator/REPORT.md` — 人读
+
+`hermes curator status` 会读取最近一次报告路径（`last_report_path` 状态字段，v0.13 修复了路径丢失）。
+
+### 数据保护
+
+- **绝不动 bundled / hub skill**（v0.13 按 frontmatter `name` 字段保护，比目录名匹配更严）
+- 仅触碰 `is_agent_created` 为 true 的 skill
+- pinned skill 既不被自动归档，也拦截 `skill_manage` 写入
 
 ## /reload-skills 和 /reload-mcp（v2026.4.23+）
 

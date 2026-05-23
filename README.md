@@ -87,9 +87,9 @@
 - [2026-04-17-update](changelog/2026-04-17-update.md): 641 commits (v0.10.0)，压缩 v3、Bedrock/Gemini/Ollama 新 Provider、Tool Gateway、插件命名空间技能、钉钉 QR 认证、Dashboard 插件
 - [2026-04-18-update](changelog/2026-04-18-update.md): 410 commits post-v0.10.0，Transport ABC 重构、Shell Hooks、Delegate Orchestrator、Step Plan/AI Gateway/xAI STT/KittenTTS、WeCom QR、Subagent 观测性
 - [2026-04-29-update](changelog/2026-04-29-update.md): 182 commits (v2026.4.23)，平台适配器插件化（PlatformRegistry + IRC 参考实现）、Curator 后台技能维护、MiniMax OAuth、Vercel Sandbox、腾讯元宝、`on_session_switch`、`/reload-skills`
-- [2026-04-30-update](changelog/2026-04-30-update.md): **v0.12.0 "The Curator Release"** —— 1,096 commits since v0.11.0、自治 Curator 最终形态、Self-improvement 循环重写、4 个新 provider（GMI / Azure Foundry / LM Studio first-class / Tencent Tokenhub）、Provider Registry（29 bundled 插件）、Gateway 平台插件化、Spotify 原生 7 工具、Google Meet、TTS Provider Registry + Piper、`hermes -z` 一次性模式、Cold-start ↓57%
-- [2026-05-07-update](changelog/2026-05-07-update.md): **v0.13.0 "The Tenacity Release"** —— 864 commits since v0.12.0、Multi-agent Kanban（SQLite/WAL/CAS/heartbeat）、`/goal` Ralph loop、`video_analyze`、xAI Custom Voices、Google Chat（第 20 个平台）、i18n 7 个 locale、Sessions auto-resume 跨重启、安全 8 P0 闭环、Checkpoints v2（单存储重写）、Post-write delta lint、Cron `no_agent` 模式
-- [2026-05-11-update](changelog/2026-05-11-update.md): 441 commits post-v0.13.0、跨 session 1h prefix cache（Claude）、`HERMES_SESSION_ID` ContextVar 暴露、`/goal` checklist+subgoal 栈 revert、sudo 加固、Kanban 安全修复（comment sanitize / iteration-budget protocol fix）、`/model` 远程 manifest Nous Portal
+- [2026-04-30-v0.12.0](changelog/2026-04-30-v0.12.0.md): 1,096 commits (v0.12.0)，Autonomous Curator、self-improvement loop 升级、Microsoft Teams（19 平台）、5 个新 provider（GMI/Azure Foundry/LM Studio/MiniMax OAuth/Tencent Tokenhub）、ComfyUI/TouchDesigner 转 bundled、TUI 冷启动 -57%、`prompt_caching.cache_ttl` 可配
+- [2026-05-07-v0.13.0](changelog/2026-05-07-v0.13.0.md): 864 commits (v0.13.0)，Multi-Agent Kanban 持久看板、`/goal` Ralph loop、`video_analyze` 工具、xAI Custom Voices、Google Chat（20 平台）、Checkpoints v2 单 store、post-write delta lint、Cron `no_agent` watchdog、Provider 插件化（ProviderProfile ABC）、8 个 P0 安全关闭、7 个新 locale、Sessions auto-resume after restart
+- [2026-05-12-update](changelog/2026-05-12-update.md): 55 commits post-v0.13.0，Claude 跨会话 1h prefix cache（prefix_and_2 策略）、per-turn file-mutation verifier footer、supply-chain advisory checker + lazy-install framework、`HERMES_SESSION_ID` 暴露到工具子进程、Nous Portal 作为 model metadata authority
 
 ---
 
@@ -98,8 +98,8 @@
 - **概念页面**: 37 个
 - **更新日志**: 8 个
 - **源码覆盖**: 关键模块逐行验证
-- **跟踪版本**: v2026.5.7（v0.13.0 + 441 post-release commits）
-- **最后更新**: 2026-05-11
+- **跟踪版本**: v0.13.0 (v2026.5.7)，post-release 同步至 2026-05-12
+- **最后更新**: 2026-05-12
 
 
 ## 使用方式

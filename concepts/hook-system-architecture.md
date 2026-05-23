@@ -1,10 +1,10 @@
 ---
 title: Hook 系统架构
 created: 2026-04-08
-updated: 2026-05-09
+updated: 2026-05-12
 type: concept
-tags: [architecture, module, extensibility, mcp, plugins, transform-llm-output, approval-hooks]
-sources: [gateway/hooks.py, hermes_cli/plugins.py, model_tools.py, run_agent.py, tools/approval.py]
+tags: [architecture, module, extensibility, mcp, plugins]
+sources: [gateway/hooks.py, hermes_cli/plugins.py, model_tools.py, run_agent.py, gateway/platform_registry.py]
 ---
 
 > **v2026.5.7 新增钩子**：
@@ -171,48 +171,36 @@ class PluginManager:
 `hermes_cli/plugins.py:128 VALID_HOOKS`：
 
 ```python
+# hermes_cli/plugins.py:128-168 — 截至 v0.13.0
 VALID_HOOKS = {
-    # ── 工具 ────────────────────────────────
-    "pre_tool_call",                # 工具调用前
-    "post_tool_call",               # 工具调用后
-    "transform_terminal_output",    # 终端工具输出改写
-    "transform_tool_result",        # 通用工具结果改写
-    "transform_llm_output",         # ★ v0.13.0+ LLM 响应给用户前改写
-
-    # ── LLM ────────────────────────────────
-    "pre_llm_call",                 # LLM 调用前
-    "post_llm_call",                # LLM 调用后
-    "pre_api_request",              # 底层 API 请求前
-    "post_api_request",             # 底层 API 请求后
-
-    # ── 会话生命周期 ───────────────────────
-    "on_session_start",
-    "on_session_end",
-    "on_session_finalize",          # finalize 阶段（持久化前）
+    "pre_tool_call",                 # 工具调用前；可返回 block 阻止执行
+    "post_tool_call",                # 工具调用后；含 duration_ms（v0.12 起）
+    "transform_terminal_output",     # 改写 terminal 输出
+    "transform_tool_result",         # 改写任意 tool 结果
+    "transform_llm_output",          # 改写 LLM 输出文本（v0.13 新增）
+    "pre_llm_call",                  # LLM 调用前
+    "post_llm_call",                 # LLM 调用后
+    "pre_api_request",               # API 请求前
+    "post_api_request",              # API 请求后
+    "on_session_start",              # 会话开始
+    "on_session_end",                # 会话结束
+    "on_session_finalize",
     "on_session_reset",
     "subagent_stop",
-
-    # ── Gateway ────────────────────────────
-    "pre_gateway_dispatch",         # ★ v0.13.0+ 收到 MessageEvent → auth/pairing 前
-
-    # ── Approval（observer-only）── ★ v0.13.0+
-    "pre_approval_request",
-    "post_approval_response",
+    "pre_gateway_dispatch",          # gateway 事件分发前；可 skip / rewrite / allow（v0.12）
+    "pre_approval_request",          # 危险命令审批前（observer，v0.12）
+    "post_approval_response",        # 审批响应后（observer，v0.12）
 }
 ```
 
-**新增钩子说明**：
+**v0.12-v0.13 新增**：
+- `transform_llm_output`（v0.13，PR #21235）— 在响应送达用户前改写文本。第一个非 None 字符串胜出。典型用途：内容过滤、词表替换、人格转换。
+- `transform_tool_result` / `transform_terminal_output` — 改写工具结果或 terminal 输出
+- `pre_gateway_dispatch`（v0.12，PR #15050）— gateway 内部事件 guard 后、auth/pairing 前。可返回 `{"action": "skip" / "rewrite" / "allow"}`
+- `pre_approval_request` / `post_approval_response`（v0.12，PR #16776）— observer-only（返回值忽略），覆盖 CLI 和 gateway/ACP 审批
+- `post_tool_call` 新增 `duration_ms` kwarg（v0.12，PR #15429，灵感来自 Claude Code 2.1.119）
 
-| Hook | 时机 | 返回值语义 |
-|------|------|-----------|
-| `transform_llm_output` | LLM 响应返回用户前 | 字符串（替换响应文本）/ None / 空（保留原样）；首个非 None 字符串 wins。useful for vocabulary / personality transformation（PR #21235） |
-| `pre_gateway_dispatch` | gateway 收到 MessageEvent，**internal-event guard 之后但 auth/pairing 之前** | dict：`{"action": "skip", "reason": "..."}` 丢弃 / `{"action": "rewrite", "text": "..."}` 改写 event.text 继续 / `{"action": "allow"}` 或 None 放行 |
-| `pre_approval_request` | dangerous 命令需要 approval（CLI **和** gateway 都触发） | observer-only，返回值忽略；kwargs：`command`、`description`、`pattern_key`、`pattern_keys`、`session_key`、`surface: "cli"\|"gateway"` |
-| `post_approval_response` | approval 决议后 | 同上 + `choice: "once"\|"session"\|"always"\|"deny"\|"timeout"` |
-
-**重要约束**：approval 钩子是 **observer-only** —— 不能 veto 也不能预先回答 approval。要拦截需用 `pre_tool_call` 在到达 approval 之前阻断。
-
-**调试**：`HERMES_PLUGINS_DEBUG=1` 暴露插件发现日志（PR #22684）。
+**v0.12 平台插件 hooks**（在 `PlatformEntry` 上声明，不在 `VALID_HOOKS` 里，但同属插件机制）：`env_enablement_fn` / `cron_deliver_env_var` / `standalone_sender_fn`。详见 [[messaging-gateway-architecture]]。
 
 #### 钩子调用
 

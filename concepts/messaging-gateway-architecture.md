@@ -1,17 +1,17 @@
 ---
 title: Messaging Gateway Architecture
 created: 2026-04-07
-updated: 2026-05-10
+updated: 2026-05-12
 type: concept
-tags: [gateway, architecture, module, telegram, discord, messaging, qq, proxy, google-chat, teams, line]
-sources: [gateway/run.py, gateway/platforms/, gateway/platform_registry.py, plugins/platforms/, hermes_cli/config.py]
+tags: [gateway, architecture, module, telegram, discord, messaging, qq, yuanbao, teams, google-chat, line, irc, proxy]
+sources: [gateway/run.py, gateway/platforms/, gateway/platform_registry.py, gateway/config.py, plugins/platforms/, hermes_cli/config.py]
 ---
 
 # 消息网关架构
 
 ## 概述
 
-Gateway 是 Hermes Agent 的**统一消息网关**，v0.13.0 起支持 **20+ 消息平台**（17 个 native 平台 + 4 个插件平台），从单一进程管理所有平台的连接和消息分发，**网关重启会自动 resume 中段会话**（v0.13.0 新增）。
+Gateway 是 Hermes Agent 的**统一消息网关**，从单一进程管理所有平台的连接和消息分发。截至 v0.13.0（2026-05-07），共支持 **17 个内置消息平台 + 4 个 bundled 平台插件** = 21 个，并允许第三方插件继续扩展。
 
 ## 架构
 
@@ -52,199 +52,102 @@ gateway/
 
 ## 平台支持
 
+### 内置消息平台（gateway/platforms/）
+
+源代码 `gateway/config.py:82-111` 的 `Platform` Enum 显式列出所有内置 member。下表去除了 `LOCAL` / `WEBHOOK` / `API_SERVER` / `MSGRAPH_WEBHOOK` / `WECOM_CALLBACK` 这些非用户对话平台，剩 **17 个**：
+
 | 平台 | 类型 | 特性 |
 |------|------|------|
-| Telegram | Bot API | 群组/私聊、语音转录、贴纸、代理支持、链接预览控制 |
-| Discord | Bot API | 服务器/私聊、语音频道、Slash Commands、角色权限控制、channel_prompts |
-| Slack | Bot API | Workspace 集成、Thread 支持 |
-| WhatsApp | Bridge (Node.js) | 群组/私聊、允许列表 |
+| Telegram | Bot API | 群组/私聊、语音转录、贴纸、代理支持、链接预览控制、`allowed_chats` |
+| Discord | Bot API | 服务器/私聊、语音频道、Slash Commands、`DISCORD_ALLOWED_ROLES`（v0.13 起 guild-scoped，封堵 CVSS 8.1 跨 guild DM 旁路）、channel_prompts |
+| Slack | Bot API | Workspace 集成、Thread 支持、`strict_mention`、`channel_skill_bindings`、`allowed_channels` |
+| WhatsApp | Bridge (Node.js) | 群组/私聊、允许列表、v0.13 起默认**拒绝陌生人** + 永不在 self-chat 回复 |
 | Signal | Bot API | 加密消息，原生格式化、reply 引用、reactions（v2026.4.23+） |
 | Email | IMAP/SMTP | 邮件交互 |
 | SMS | Twilio | 短信，字符限制 |
 | Home Assistant | WebSocket | 智能家居事件 |
-| Matrix | E2E 加密 | 去中心化消息 |
-| Mattermost | Bot API | 自托管团队消息 |
+| Matrix | E2E 加密 | 去中心化消息、`allowed_rooms` |
+| Mattermost | Bot API | 自托管团队消息、`allowed_channels` |
 | 钉钉 | Stream | 企业消息，QR 扫码认证，require_mention + allowed_users 权限控制 |
-| 飞书/Lark | Stream | 企业消息 |
-| 企业微信 | Stream | 企业微信消息 |
+| 飞书/Lark | Stream | 企业消息、`require_mention`、操作可配置的 bot admission policy（v0.13） |
+| 企业微信 | Stream | 企业微信消息、QR 扫码 bot 创建（v2026.4.18+） |
 | BlueBubbles | REST + Webhook | iMessage（macOS），tapback、已读回执 |
 | 微信/WeChat | iLink Bot API | 长轮询收消息，AES-128-ECB 媒体加密，QR 登录 |
-| QQ Bot | Official API v2 | WebSocket 入站(C2C/群/频道/DM) + REST 出站,语音转录(腾讯 ASR),allowlist + DM 配对 |
-| Webhook | HTTP | 外部事件接收 |
-| **腾讯元宝 Yuanbao** | API | 原生文本+媒体投递，sticker 支持（v2026.4.23+），群聊 owner identity check |
-| **IRC**（插件） | TLS asyncio | 零外部依赖，TLS、PING/PONG、nick collision、NickServ、频道寻址（v2026.4.23+，参考实现） |
-| **Microsoft Teams**（插件） | Graph + webhook | `plugins/platforms/teams/`，第一个 plugin-shipped 平台（v0.12.0） |
-| **Google Chat**（插件，**20th**） | Cloud Pub/Sub pull subscription | `plugins/platforms/google_chat/`，无需公网 URL；OAuth per-user 附件（v0.13.0） |
-| **LINE**（插件） | Messaging API | `plugins/platforms/line/`（v0.13.0） |
+| QQ Bot | Official API v2 | WebSocket 入站(C2C/群/频道/DM) + REST 出站，语音转录（腾讯 ASR），allowlist + DM 配对、v0.13 起原生 approval keyboards + chunked upload + quoted attachments |
+| 腾讯元宝 Yuanbao | API | 原生文本 + 媒体投递、sticker 支持（v2026.4.23+） |
 
-## 平台适配器插件化（v2026.4.23+）
+### Bundled 平台插件（plugins/platforms/）
 
-`gateway/platform_registry.py` 引入 `PlatformRegistry` 单例 + `PlatformEntry` dataclass，让任何人都可以把新平台（IRC、Viber、Line 等）以**纯插件**形式接入，无需改 gateway 核心代码。
+通过 `PlatformRegistry` 接入，行为与内置平台完全一致：
+
+| 插件平台 | 实现 | 引入版本 |
+|----------|------|----------|
+| **IRC** | TLS asyncio，零外部依赖、NickServ、PING/PONG、频道寻址 | v2026.4.23（首个参考实现） |
+| **Microsoft Teams** | Bot Framework + Adaptive Card 审批 | v0.12.0（19th platform） |
+| **Google Chat** | Cloud Pub/Sub pull + Chat REST、每用户 OAuth 文件附件 | v0.13.0（20th platform） |
+| **LINE** | aiohttp webhook + HMAC-SHA256 签名 + reply token / Push API fallback | v0.13.0+ |
+
+第三方插件（`~/.hermes/plugins/`）走相同机制，无需改 gateway 核心。
+
+### 协议 / 内部平台
+
+`LOCAL`（CLI）、`WEBHOOK`、`API_SERVER`、`MSGRAPH_WEBHOOK`、`WECOM_CALLBACK` 是协议接入点，不对应一对一的「消息平台」。
+
+## 平台适配器插件化（v2026.4.23+，v0.13.0 扩展）
+
+`gateway/platform_registry.py` 引入 `PlatformRegistry` 单例 + `PlatformEntry` dataclass，让任何人都可以把新平台（IRC、Teams、Google Chat、LINE 等）以**纯插件**形式接入，无需改 gateway 核心代码。
 
 ```python
-# 插件注册入口
+# 插件注册入口（hermes_cli/plugins.py 提供 ctx.register_platform）
 def register(ctx):
     ctx.register_platform(
-        name="irc",
-        label="IRC",
-        adapter_factory=create_irc_adapter,
-        check_fn=check_irc_available,
-        validate_config=validate_irc_config,
-        required_env=["IRC_NICK", "IRC_PASS"],
-        install_hint="pip install ...",
+        name="line",
+        label="LINE",
+        adapter_factory=create_line_adapter,
+        check_fn=check_line_available,
+        validate_config=validate_line_config,
+        required_env=["LINE_CHANNEL_ACCESS_TOKEN", "LINE_CHANNEL_SECRET"],
+        install_hint="pip install line-bot-sdk",
     )
 ```
+
+### `PlatformEntry` 元数据字段（gateway/platform_registry.py:37-143）
+
+| 字段 | 作用 |
+|------|------|
+| `adapter_factory` / `check_fn` / `validate_config` / `is_connected` | 工厂 + 健康检查 |
+| `required_env` / `install_hint` / `setup_fn` | 安装 / 配置辅助 |
+| `allowed_users_env` / `allow_all_env` | `_is_user_authorized` 集成 |
+| `max_message_length` / `pii_safe` / `emoji` | 显示 / 隐私 / 智能分片 |
+| `allow_update_command` | 是否允许该平台触发 `/update` |
+| `platform_hint` | 注入系统 prompt 的平台行为提示 |
+| `env_enablement_fn` ⭐ | 从 env vars 读取，返回要 seed 到 `PlatformConfig.extra` 的 dict（v0.13） |
+| `cron_deliver_env_var` ⭐ | `*_HOME_CHANNEL` env 名；让 `cron.scheduler` 识别 `deliver=<name>` 为合法目标（v0.13） |
+| `standalone_sender_fn` ⭐ | out-of-process delivery：cron 独立进程时打开临时连接发送，支持 OAuth refresh（v0.13） |
+
+`env_enablement_fn` / `cron_deliver_env_var` / `standalone_sender_fn` 是 v0.13 抽离出来的 platform-plugin hooks，让插件平台**完全平权**：cron deliver、env-only setup 状态显示、out-of-process send 全部正常。
 
 ### 关键改造点
 
 | 模块 | 改造 |
 |------|------|
-| `Platform` enum | `_missing_()` 接受未知字符串，创建缓存的 pseudo-member（`Platform('irc') is Platform('irc')` 永真） |
+| `Platform` enum (`gateway/config.py:82-176`) | `_missing_()` 接受未知字符串，按 `plugins/platforms/` 扫描 + runtime registry 创建缓存 pseudo-member（`Platform('irc') is Platform('irc')` 永真） |
 | `GatewayConfig.from_dict` | 解析 config.yaml 里的插件平台名，不再拒绝未知平台 |
-| `_create_adapter()` in `gateway/run.py` | 先查 registry，未命中再 fall through 到内置 if/elif 链 |
+| `_create_adapter()` in `gateway/run.py` | 先查 registry，未命中再 fall through 到内置 if/elif 链（line 5167） |
 | `get_connected_platforms()` | 把未知平台委托给 registry |
 | `PluginContext.register_platform()` | 镜像 `register_tool()` / `register_hook()` 模式 |
+| `_apply_env_overrides` | 调用 `entry.env_enablement_fn()`，让 `gateway status` 看得到 env-only 配置（v0.13） |
 
-### IRC 参考实现
+### 4 个 bundled 插件参考实现
 
-`plugins/platforms/irc/` 是首个插件平台：
-- 全 async（`asyncio` stdlib，零外部依赖）
-- TLS 连接、PING/PONG 心跳、nick 冲突重命名、NickServ 自动鉴权
-- 频道消息要求 `nick: msg` 寻址，DM 全部派发
-- 输出 Markdown 自动剥离（IRC 不支持），消息分片（IRC 长度限制）
-- 交互式 `setup` 向导（v2026.4.23+）
+| 插件路径 | 标签 | 关键技术 |
+|----------|------|----------|
+| `plugins/platforms/irc/` | IRC | asyncio + TLS + NickServ，零外部依赖 |
+| `plugins/platforms/teams/` | Microsoft Teams | Bot Framework + Adaptive Card 审批 + threading |
+| `plugins/platforms/google_chat/` | Google Chat | Cloud Pub/Sub pull + Chat REST + 每用户 OAuth 文件附件 |
+| `plugins/platforms/line/` | LINE | aiohttp webhook + HMAC-SHA256 + Reply token + Push API fallback |
 
-### Microsoft Teams 插件实现（v2026.4.30+）
-
-`plugins/platforms/teams/adapter.py` 是第二个插件平台，`TeamsAdapter(BasePlatformAdapter)` 通过 `microsoft-teams` SDK 接入 Bot Framework：
-- Adaptive Cards 渲染（`AdaptiveCardInvokeActivity` / `InvokeResponse`）
-- typing indicator + delivery receipts
-- xdist collision guard（pytest 并行执行避免 worker 冲突）
-
-注册路径与 IRC 完全一致：
-
-```python
-ctx.register_platform(
-    name="teams",
-    label="Microsoft Teams",
-    adapter_factory=lambda cfg: TeamsAdapter(cfg),
-    ...
-)
-```
-
-证明 PlatformRegistry 抽象成立 —— 插件平台与内置平台拥有 12 个集成点的对等支持。
-
-### 平台插件 12 个集成点全覆盖
-
-`feat: complete plugin platform parity` (2e20f6ae2) + `feat: final platform plugin parity` (e464cde58) 让插件平台和内置平台行为一致：
-- webhook 投递、PLATFORM_HINTS、`get_connected_platforms`、cron 投递、动态 toolset 生成、setup wizard 等
-- bundled 插件平台（如 IRC、Teams）启动时自动加载（`feat(plugins): bundled platform plugins auto-load by default` 4d36349）
-
-## 原生多图发送（v2026.4.30+）
-
-`feat(gateway): native send_multiple_images for Telegram, Discord, Slack, Mattermost, Email`（commit 3de8e21）+ `feat(gateway/signal): add support for multiple images sending`（04ea895）让 6 个平台支持原生 `send_multiple_images`，避免单图循环投递的 rate limit / 顺序错乱问题。
-
-```
-Telegram → media group (sendMediaGroup)
-Discord → multipart 多 attachment
-Slack → files.upload v2
-Mattermost → /files multi-upload
-Email → multipart MIME 多 image part
-Signal → 多 attachment 单消息
-```
-
-## 集中音频路由（v2026.4.30+）
-
-`feat(gateway): centralize audio routing + FLAC support + Telegram doc fallback`（aa7bf32）：
-- 音频投递路径统一在 gateway 层，不再每个 platform 各自实现
-- 新增 FLAC 编码支持
-- Telegram 在媒体大小或格式不被语音消息接受时，自动 fallback 到文档发送
-
-## 其他增强
-
-- `busy_ack_enabled` 配置选项（2b512cb）：suppress busy session 的 ack 提示消息
-- 自动重启：源码 in-place 改变时 gateway 自动 restart（f99676e #18409）
-- `auto-delete slash-command system notices after TTL`（4caad28 #18266）：斜杠命令系统通知到期自动撤回
-- 异常恢复：crash/restart 后**resume** sessions（f1e0292），不再 blanket suspend
-- Discord：reload-skills 实时刷新 `/skill` 自动补全（10297fa #18754）
-- Slack：preserve 大小写敏感的 chat ID（5cdc39e）；slash command 走 ephemeral ack（7cda0e5）；按用户隔离 session（a147164）
-- Telegram：group user allowlist（1f71217）；reconnect 后探测 polling liveness（2470434）
-- Yuanbao：群聊斜杠命令强制 owner identity 检查（b7ad3f4）
-- Feishu：operator-configurable bot admission and mention policy（b94cb8e）
-- WhatsApp：pin protobufjs >=7.5.5 修复 3 个 critical 漏洞（55647a5 #19204）
-
-### 通用插件平台 hooks（v0.13.0+，PR #21306）
-
-`feat(gateway): generic plugin hooks for env enablement + cron delivery` 引入两个通用 hook，让插件平台不必改 gateway 核心代码就能完成 env 启用判断和 cron 投递路由：
-
-- **`env_enablement_fn`** — 平台插件返回是否启用（基于 env vars）
-- **`cron_deliver_env_var`** — cron 投递时根据 env var 决定走哪个 chat
-
-**Teams 和 IRC 已经从 gateway 内置迁到插件路径**；Google Chat 是第一个**纯插件**新平台。
-
-### `[[as_document]]` —— 媒体路由指令
-
-`gateway/platforms/base.py:1949+` 的 `[[as_document]]` 指令允许 skill / agent 输出强制走 document 路径（不走图片渲染）：
-
-```
-[[as_document]]
-MEDIA: /path/to/big-image.png
-```
-
-`base.py:1973` 在解析后剥离指令文本，`base.py:2891` 决定后续所有 image path 都按 document 投递（每个支持 document 的平台走自己的 native path）。
-
-### 跨平台白名单（PR #21251）
-
-`allowed_chats` / `allowed_channels` / `allowed_rooms` 三种命名按平台习俗统一：
-
-| 平台 | 命名 | 实现位置 |
-|------|------|----------|
-| Slack | `allowed_channels` | gateway/platforms/slack.py |
-| Telegram | `allowed_chats` / `TELEGRAM_ALLOWED_CHATS` | |
-| Mattermost | `allowed_channels` | |
-| Matrix | `allowed_rooms` / `MATRIX_ALLOWED_ROOMS` | gateway/platforms/matrix.py:21,359-368 |
-| DingTalk | `allowed_chats` | gateway/platforms/dingtalk.py:368-475 |
-
-**白名单是硬门** —— 非空时未列出的 chat 完全静默（除某些平台 DM 豁免）。
-
-### 会话自动恢复（v0.13.0+，PR #21192）
-
-gateway 中途重启（手动 / `/update` / 源码热重载）后**自动恢复中断 session**，恢复 home-channel thread 路由、pending update prompts、document type、queue。
-
-附加：per-platform `gateway_restart_notification` flag、`busy_ack_enabled` 配置项（抑制 ack 消息）、slash-command 系统通知 TTL 自动删除、临时进度气泡 opt-in 清理。
-
-### 4 个 bundled 平台插件（v0.13.0）
-
-`plugins/platforms/` 下当前 bundled 4 个：
-
-| 插件 | 加入版本 | 备注 |
-|---|---|---|
-| `irc` | v0.11.0 (v2026.4.23) | 第一个参考实现 |
-| `teams` | v0.12.0 | Microsoft Teams，第一个 plugin-shipped 平台 |
-| `google_chat` | v0.13.0 | 20th 平台，Pub/Sub pull |
-| `line` | v0.13.0 | LINE Messaging API |
-
-## 网关自动恢复中断会话（v0.13.0）
-
-`gateway/run.py:3124,3192` —— 启动时扫描 `resume_pending` 标记，把"上次因 gateway 重启/`/update`/源文件 reload 而被打断"的 session 自动 schedule resume：
-
-```
-INFO  Scheduled auto-resume for 3 restart-interrupted session(s)
-```
-
-Resume 在**下一次真实用户消息**触发——而不是启动时立刻跑（避免 boot 风暴）。`gateway/run.py:4870` 注释说 `session_key auto-resumes from the existing conversation`。
-
-## `[[as_document]]` Skill 媒体指令（v0.13.0）
-
-技能输出里写 `[[as_document]]`，gateway 把所有附件以**文档形式**投递（而非 inline image），适合大图 / 原始 PNG / PDF：
-
-- `tools/send_message_tool.py:245` 在 `extract_media` 前 capture
-- `gateway/run.py:9928` 走 send-to-platform 同样 capture
-- `gateway/platforms/base.py:1976-2000` 文档说：agent 一旦 emit `[[as_document]]`，message 里**每个**图片路径都 force as document
-
-## 平台白名单（v0.13.0）
-
-`allowed_channels` / `allowed_chats` / `allowed_rooms` config 已在 Slack / Telegram / Mattermost / Matrix / DingTalk 落地——之前只有部分平台支持。
+每个目录包含 `__init__.py`、`adapter.py`、`plugin.yaml`（`requires_env` / `optional_env` 字段被 `hermes config` 读取并显示在 UI）。bundled 插件平台启动时自动加载。
 
 ## 平台适配器基类
 
