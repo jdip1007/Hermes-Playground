@@ -233,9 +233,19 @@ skills:
 | 质量 | 用户控制 | agent 自主判断，可能创建也可能跳过 |
 | LLM 消耗 | 主对话的一部分 | 额外消耗（后台 agent 最多 8 轮迭代） |
 
-## Curator — 后台技能维护（v2026.4.23+，v2026.4.30 自治化）
+## Curator — 后台技能维护（v2026.4.23 引入，v0.12.0 升级）
 
-**辅助模型驱动的后台维护机制**（`agent/curator.py`，**1599 行** + `hermes_cli/curator.py`，**430 行** + `tools/skill_usage.py`）。定期审查**agent 创建的**技能，跟踪使用情况，按状态机转换归档闲置 skill；v2026.4.30 升级为**自治后台 agent**。
+新增**辅助模型驱动的后台维护机制**（`agent/curator.py` + `hermes_cli/curator.py` + `tools/skill_usage.py`）。定期审查**agent 创建的**技能，跟踪使用情况，并把闲置 skill 经过状态机转换归档。
+
+### v0.12.0 升级要点
+
+- **作为后台 agent 运行**：跑在 gateway 的 cron-ticker 上，**默认 7 天周期**（`DEFAULT_INTERVAL_HOURS = 24 * 7`，`agent/curator.py:56`），unbounded iterations，umbrella-first prompt。
+- **每轮报告**：`logs/curator/run.json` + `REPORT.md`。
+- **consolidated vs pruned 分类**：归档 skill 用模型 + 启发式区分"被合并"和"被剪枝"。
+- **`hermes curator status` 排序**：按使用频次显示 most-used / least-used。
+- **统一在 `auxiliary.curator`**：在 `hermes model` 选 curator 模型；可在 dashboard 配置 `auxiliary.curator.{provider, model, timeout, ...}`。源：`agent/curator.py:1483` 的迁移提示和 `_resolve_review_runtime()`。
+- **bump_use() 接入 skill 调用 + preload + skill_view**（v0.12.0 #17932）。
+- **`restore_skill` 扫描嵌套 archive 子目录**（@0xDevNinja，#17951）。
 
 ### 不变量（load-bearing invariants）
 
@@ -322,53 +332,28 @@ if rec.get("pinned"):
 
 这是 Curator 不变量的延伸——pinned 状态对 agent 也是禁区，只能通过 `hermes curator unpin` 显式解锁。
 
-## v2026.4.30+ Skill 系统增强
+## v0.12.0 新增/晋升的技能
 
-### bump_use 命中计数（commit ae8930a + 4178ab3 #17782）
+| 技能 | 状态 | 说明 |
+|------|------|------|
+| `comfyui` | **从 optional 升级为 built-in by default**（`skills/creative/comfyui/`） | v5：官方 CLI + REST + 硬件门控的本地安装；ComfyUI 文档"先问云 vs 本地，再硬件检查" |
+| `touchdesigner-mcp` | **bundled by default**（`skills/creative/touchdesigner-mcp/`） | 扩展 GLSL / post-FX / audio / geometry，9 篇新参考文档 |
+| `humanizer` | 新增 | 移植自 OpenClaw，剥离 AI-isms |
+| `claude-design` | 新增 | HTML artifact 技能；与其他 design 技能消歧 |
+| `design-md` | 新增 | Google `DESIGN.md` 规范 |
+| `airtable` | 新增（salvage） | skill API key 写入 `.env` |
+| `pretext` / `spike` / `sketch` | 新增 | 创意/HTML mockup |
+| `kanban-video-orchestrator` | 新增（重命名自 `video-orchestrator`） | 视频编排创意技能 |
 
-`fix(skills): wire bump_use() into skill invocation and preload paths` + `fix(skills): also bump_use on skill_view tool invocation`：每次 skill 被调用、preload 或 `skill_view` 查看，`tools/skill_usage.py:bump_use()` 会原子更新 sidecar 的 `last_used_at` 和 `call_count`。Curator 用此信号决定 stale/archive 转换。
+源：`/tmp/hermes-agent/skills/creative/` 及 `RELEASE_v0.12.0.md`。
 
-### .archive 目录排除（commit a845177 + eda1d51）
+## 技能安装/管理增强
 
-`fix(skills): exclude .archive from skill index walk` + `fix(skills): also exclude .archive in skills_tool`：归档过的 skill 放在 `~/.hermes/skills/.archive/`，索引扫描和 `skills_tool` 都跳过该目录，避免归档版本干扰当前可用 skill。
-
-### Curator 后续修复（v2026.4.30+）
-
-| commit | 修复 |
-|--------|------|
-| `e8e5985` | seed defaults on update + create `logs/curator/` dir + defer fire import |
-| `564a649` | scan nested archive subdirs in restore_skill |
-| `f4b76fa` | use actual skill activity in curator status |
-| `8b290a5` | split archived into **consolidated vs pruned**，model + heuristic 分类（#17941） |
-| `7c07422`/`d60a991` | `hermes curator status` 展示 most-used / least-used skill 排名 |
-| `0da968e` | unify under `auxiliary.curator`（hermes model + dashboard 选模型） |
-| `77c0bc6` | defer first run + add `--dry-run` preview（#18373/#18389） |
-| `e2eb561` | rewrite cron job skill refs after consolidation |
-| `97acd66` | authoritative `absorbed_into` on delete + restore cron skill links on rollback |
-| `75483b6` | preserve `last_report_path` in state |
-
-### 内置和可选新 skill（v2026.4.30+）
-
-- **here.now**（`f7dfd4a`/`7cbe943`）：built-in + optional 双形态，本地时间/位置/天气查询的最小 skill
-- **Shopify**（`180a703` #18116）：Admin GraphQL + Storefront GraphQL，optional skill
-- **kanban-orchestrator** + **kanban-worker**（随 kanban feature 引入）：devops 类 skill
-- **kanban-video-orchestrator**（`0dd8e3f` 改名自 video-orchestrator）：creative optional skill，结合 kanban + 视频管线
-- **video-orchestrator → kanban-video-orchestrator** 重命名，避免 namespace 冲突
-
-### 平台 scope rescan（fix）
-
-`fix(skills): rescan skill_commands cache when platform scope changes`（c73594f #18739）：当 skill 的 `applies_to` 平台范围变化时，`skill_commands` 缓存被强制重扫，否则 Discord/Telegram slash 自动补全会展示已不可用的 skill。
-
-`fix(gateway): match disabled/optional skills by frontmatter slug, not dir name`（6ec74ae #18753）：禁用/可选 skill 现在按 frontmatter `slug` 匹配，不再按目录名——目录名可能被人为重命名，slug 是稳定 ID。
-
-### Discord `/skill` 自动补全（fix）
-
-- `8825e90` #18745 完成 #18741 工作并放弃旧的 25×25 上限
-- `5d5b891` 名字 clamp 到 32 字符后保留 `cmd_key`
-- `c4c0e5a` _clamp_command_names 截断后冲突警告
-- `5eac608` 32-char clamp 冲突日志（#18759）
-- `e2cea6e` Telegram/Discord slash 命令包含 `external_dirs` 来源的 skill（#18741）
-- `10297fa` Discord `/reload-skills` 实时刷新自动补全（#18754）
+- **直接 URL 安装**：`hermes skills install <https://...>` 一步装包
+- **`hermes skills list`** 显示 enabled/disabled 状态
+- **`skill_manage` 在 `external_dirs` 中原地编辑**（v0.12.0 #17512）
+- **`.archive/` 目录从 skill index walk 排除**（v0.12.0 #17931）
+- **bundled skill 同步到所有 profile 包括 active**（v0.12.0 #16176）
 
 ## 相关页面
 

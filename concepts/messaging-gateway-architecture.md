@@ -3,15 +3,15 @@ title: Messaging Gateway Architecture
 created: 2026-04-07
 updated: 2026-05-04
 type: concept
-tags: [gateway, architecture, module, telegram, discord, messaging, qq, proxy, teams]
-sources: [gateway/run.py, gateway/platforms/, gateway/platform_registry.py, plugins/platforms/, hermes_cli/config.py]
+tags: [gateway, architecture, module, telegram, discord, messaging, qq, proxy]
+sources: [gateway/run.py, gateway/platforms/, plugins/platforms/, hermes_cli/config.py]
 ---
 
 # 消息网关架构
 
 ## 概述
 
-Gateway 是 Hermes Agent 的**统一消息网关**，支持 **19 个**消息平台（17 内置 + 2 plugin-shipped），从单一进程管理所有平台的连接和消息分发。
+Gateway 是 Hermes Agent 的**统一消息网关**，从 v0.12.0 起共支持 **19 个内置/插件消息平台**（核心 18 + Microsoft Teams 插件，第 19 个），从单一进程管理所有平台的连接和消息分发。
 
 ## 架构
 
@@ -73,7 +73,7 @@ gateway/
 | Webhook | HTTP | 外部事件接收 |
 | **腾讯元宝 Yuanbao** | API | 原生文本+媒体投递，sticker 支持（v2026.4.23+），群聊 owner identity check |
 | **IRC**（插件） | TLS asyncio | 零外部依赖，TLS、PING/PONG、nick collision、NickServ、频道寻址（v2026.4.23+，参考实现） |
-| **Microsoft Teams**（插件） | microsoft-teams-apps SDK | 第二个插件平台（v2026.4.30+）。aiohttp webhook server 接消息，SDK `App.send()` proactive 投递。需要 `TEAMS_CLIENT_ID/SECRET/TENANT_ID`，默认端口 3978。Adaptive Card 审批按钮、@mention 强制（群聊）、本地图片附件投递、`hermes teams app get --install-link` 部署助手 |
+| **Microsoft Teams**（插件） | Bot Framework | v0.12.0 新增，第 19 个平台，OAuth (TENANT/CLIENT_ID/CLIENT_SECRET)，单消息上限 ~28KB（`plugins/platforms/teams/adapter.py`） |
 
 ## 平台适配器插件化（v2026.4.23+）
 
@@ -362,6 +362,10 @@ hermes gateway status   # 状态
 - 话题/线程支持
 - **代理支持**（v0.10.0）：`TELEGRAM_PROXY` 环境变量或 `config.yaml` 中 `proxy_url`
 - **链接预览控制**（v0.10.0）：`config.yaml` 中 `telegram.disable_link_preview` 关闭消息链接预览
+- **DM 主题模式（topic mode）**（v2026.5.x 新增）：DM 论坛话题映射多个独立 session。`extra.dm_topics` 配置 `chat_id` + `topics: [{name, thread_id?}]`，启动时自动 `create_forum_topic`；新增 `/topic on|off` 指令、CASCADE 重命名、`switch_session` 期间持久化 thread 绑定、`/new` 重新绑定。源：`gateway/platforms/telegram.py:282 _dm_topics`
+- **聊天白名单（群组/论坛）**：`@web3blind` 提交，v0.12.0 ([#15027](https://github.com/NousResearch/hermes-agent/pull/15027))
+- **markdown 表格→分组项目符号**：v0.12.0 ([#16997](https://github.com/NousResearch/hermes-agent/pull/16997))
+- **原生多图发送**：v0.12.0 跨 Telegram/Discord/Slack/Mattermost/Email/Signal 统一
 
 ### Discord
 - 支持服务器和私聊

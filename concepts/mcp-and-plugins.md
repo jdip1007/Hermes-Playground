@@ -163,49 +163,37 @@ hermes plugins remove <name>  # 移除插件
 hermes plugins update <name>  # 更新插件
 ```
 
-## Bundled 插件（v2026.4.30+）
+## v0.12.0 内置插件清单
 
-`feat(plugins): bundled platform plugins auto-load by default`（commit 4d36349）：随 Hermes 一起发布的插件首次启动时自动注册，无需用户安装：
+`/tmp/hermes-agent/plugins/` 目录新增/扩展：
 
-```
-plugins/
-├── platforms/
-│   ├── irc/                       # 第一个参考实现（v2026.4.23+）
-│   └── teams/                     # Microsoft Teams（v2026.4.30+）
-├── kanban/                        # Kanban 看板 + dashboard UI + systemd unit
-├── hermes-achievements/           # 成就徽章插件，扫描完整会话历史（v2026.4.30+，#17754）
-├── observability/                 # Langfuse 可观测性
-├── context_engine/                # Context Engine
-├── memory/                        # honcho memory provider
-├── disk-cleanup/                  # 磁盘清理
-├── example-dashboard/             # 仪表盘示例
-├── google_meet/                   # Google Meet 集成
-├── image_gen/                     # 图像生成
-├── spotify/                       # Spotify
-└── strike-freedom-cockpit/        # cockpit
-```
+| 插件 | 路径 | 说明 |
+|------|------|------|
+| `spotify` | `plugins/spotify/` | 7 个 native tool（play / search / queue / playlists / devices）+ PKCE OAuth + 交互式 setup 向导，可在 `hermes tools` 中切换 |
+| `google_meet` | `plugins/google_meet/` | 加入会议、转录、说话、跟进；OpenAI realtime transport + Node bot server，全管道 bundled |
+| `observability/langfuse` | `plugins/observability/langfuse/` | Langfuse observability bundled |
+| `hermes-achievements` | `plugins/hermes-achievements/` | 扫描全部 session 历史输出"成就" |
+| `kanban` | `plugins/kanban/` | 看板插件 + per-platform home-channel 通知 toggle（v0.12.0 #19864） |
+| `image_gen` | `plugins/image_gen/` | 图像生成 |
+| `context_engine` | `plugins/context_engine/` | Context Engine 插件化 |
+| `memory` | `plugins/memory/` | Memory provider |
+| `disk-cleanup` / `example-dashboard` / `strike-freedom-cockpit` | … | 例示/工具型插件 |
 
-`feat(nix): bundle plugins/ and expose it via HERMES_BUNDLED_PLUGINS`（commit 6e42daf）让 nix 安装路径也能识别 bundled 插件目录。
+平台插件目录 `plugins/platforms/`：
 
-`feat(plugins): bundle hermes-achievements + scan full session history`（62a5d72 #17754）vendored 自 [@PCinkusz/hermes-achievements](https://github.com/PCinkusz/hermes-achievements)，60+ 成就徽章。
+- `irc/`：v2026.4.23 加入，参考实现
+- `teams/`：v0.12.0 新增（**第 19 个消息平台**），通过 `register(ctx)` 调 `ctx.register_platform(...)` 注入，最大消息长度 28KB
 
-## Dashboard 插件页面（v2026.4.30+）
+### 新增 Hook 类型（v0.12.0）
 
-`feat(dashboard): add Plugins page with enable/disable, auth status, install/remove`（commit e2a4905）：
+- `pre_gateway_dispatch`（#15050）：插件可在 gateway 派发前拦截
+- `pre_approval_request` / `post_approval_response`（#16776）：审批请求前后注入
+- `post_tool_call` 增加 `duration_ms` 字段（#15429，灵感来自 Claude Code 2.1.119）
 
-- `/dashboard/plugins` 页面：每行插件展示启用状态、auth 状态（OAuth 已登录/未登录）、安装/卸载按钮
-- `feat(dashboard): add hide/show toggle for dashboard plugins in sidebar`（c73b799）：侧边栏可隐藏/显示 dashboard 标签页
-- `refactor(plugins): move rescan button to page header, remove redundant title`（a523632）
+### 直接 URL 安装
 
-## 异步插件命令
-
-`fix(plugins): bound async plugin command await with 30s timeout`（447a2bb）+ `fix(plugins): await async handlers in CLI and TUI dispatch`（ca9a61a）：CLI/TUI 插件命令现在正确 await 异步 handler，超时 30 秒兜底。
-
-`fix(plugins): register dynamically-loaded modules in sys.modules before exec`（718e4e2）：动态加载插件模块前先注册到 `sys.modules`，避免 dataclass 序列化出现重复类标识问题。
-
-## /reload-mcp 缓存提示
-
-`feat(gateway,cli): confirm /reload-mcp to warn about prompt cache invalidation`（4d7fc0f）：`/reload-mcp` 现在弹确认提示，警告 MCP 工具变更会**整体失效 prompt cache**。配合 `fix(gateway): refresh cached agents after MCP tool changes`（7fae87b）保证 reload 后 cached agent 看到最新工具列表。
+- 技能：`hermes skills install <https://...>`（#16323）
+- NixOS module：`extraPackages` + 声明式插件安装（@alt-glitch，#15953/#17047）
 
 ## 配置
 
