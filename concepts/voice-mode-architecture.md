@@ -1,7 +1,7 @@
 ---
 title: 语音模式架构
 created: 2026-04-10
-updated: 2026-05-14
+updated: 2026-05-15
 type: concept
 tags: [voice, stt, tts, architecture, piper]
 sources: [tools/voice_mode.py, tools/tts_tool.py, tools/transcription_tools.py, cli.py]
@@ -39,30 +39,28 @@ sounddevice 采集音频 → WAV 临时文件
     ↓
 再按 Ctrl+B 停止录音
     ↓
-STT 转文字（6 个 Provider 可选，源：tools/transcription_tools.py）:
+STT 转文字（5 个 Provider 可选）:
   - local: faster-whisper（本地，无需 API Key，默认）
-  - local_command: 任意本地 STT 二进制
   - groq: Whisper via Groq（免费额度）
   - openai: Whisper via OpenAI
-  - mistral: Voxtral Transcribe API
-  - xai: xAI Grok STT（ITN + diarization + 21 语言）
+  - mistral: Voxtral Transcribe via Mistral
+  - xai: Grok STT via xAI
     ↓
 转录文本作为用户消息发送给 LLM
     ↓
 LLM 回复（自动注入简洁指令："respond concisely, 2-3 sentences max"）
     ↓
-TTS 语音播报（10 个内置 Provider + 任意命令型自定义 provider）:
-  - Edge TTS（默认、免费、无需 API key）
-  - ElevenLabs（流式，边生成边播放）
-  - OpenAI TTS
-  - MiniMax TTS（含 voice cloning）
-  - Mistral Voxtral TTS（多语种，原生 Opus）
-  - Google Gemini TTS（30 prebuilt voices）
-  - xAI TTS（Grok voices）
-  - NeuTTS（本地）
-  - KittenTTS（本地 25MB）
-  - Piper（本地，OHF-Voice/piper1-gpl 神经 VITS，44 语种）—— v0.12.0+
-  - 任意 `tts.providers.<name>` 命令型自定义 provider（v0.12.0+）
+TTS 语音播报（10 个内置 Provider + 自定义 command Provider）:
+  - edge（Edge TTS）
+  - elevenlabs（流式，边生成边播放）
+  - openai（OpenAI TTS）
+  - gemini（Google Gemini TTS）
+  - xai（xAI TTS）
+  - minimax（MiniMax TTS）
+  - mistral（Mistral TTS）
+  - neutts（自托管）
+  - kittentts（本地 CPU）
+  - piper（本地神经 TTS）
 ```
 
 ## STT 配置
@@ -70,16 +68,17 @@ TTS 语音播报（10 个内置 Provider + 任意命令型自定义 provider）:
 ```yaml
 # config.yaml
 stt:
-  provider: local   # local | local_command | groq | openai | mistral | xai
-                    # 自动模式优先级：local > groq > openai > mistral > xai
+  provider: local   # local | groq | openai | mistral | xai
   model: base       # faster-whisper 模型大小（base ~150MB，首次自动下载）
 ```
+
+未显式指定 provider 时按 `local > groq > openai > xai` 自动探测（`mistral` 因 `mistralai` PyPI 包于 2026-05-12 被隔离暂时跳过）。
 
 ```bash
 # .env
 GROQ_API_KEY=...              # Groq Whisper（免费）
 VOICE_TOOLS_OPENAI_KEY=...    # OpenAI Whisper
-MISTRAL_API_KEY=...           # Mistral Voxtral
+MISTRAL_API_KEY=...           # Mistral Voxtral Transcribe
 XAI_API_KEY=...               # xAI Grok STT
 ```
 
@@ -87,36 +86,65 @@ XAI_API_KEY=...               # xAI Grok STT
 
 TTS Provider 选择和语音设置通过 `tools/tts_tool.py` 管理，支持 ElevenLabs 的流式播报——LLM 生成一句就播一句，不用等完整回复。
 
-### TTS Provider 演进
+### 内置 TTS Provider
 
-| Provider | 来源 |
-|----------|------|
-| ElevenLabs | 原有 |
-| OpenAI | 原有 |
-| **Google Gemini TTS** | v0.10.0 新增，通过 Gemini API |
-| **xAI TTS** | v0.10.0 随 xAI Responses API 升级引入 |
-| **KittenTTS（本地）** | v2026.4.18+ 引入，本地 CPU 运行，无需 GPU 和 API key，默认模型 `KittenML/kitten-tts-nano-0.8-int8`（25MB），默认声音 `Jasper`，其他声音由 KittenTTS 包提供（25-80MB 模型范围） |
-| **Piper（本地）** | v0.12.0 新增（`#17885`），作为 native local TTS provider 通过 `tts.providers.<name>` registry 注册，closes #8508 |
-| **xAI Custom Voices** | v0.13.0 新增（`#18776`，@alt-glitch），**voice cloning** 支持 |
-
-这些 provider 也可通过 Nous Tool Gateway 统一访问（无需自备 API key）。
-
-### TTS Provider Registry（v0.12.0+）
-
-`#17843` 把 TTS provider 改成 *pluggable* —— `tts.providers.<name>` 注册表，第三方可以新增 provider 而不改 hermes 核心。Piper 是第一个 native local provider 走这套机制。
-
-### STT Provider 扩展（v2026.4.18+）
+`tools/tts_tool.py` 的 `BUILTIN_TTS_PROVIDERS` 当前包含 10 个内置 provider：
 
 | Provider | 说明 |
 |----------|------|
-| local（faster-whisper） | 原有，默认；模型自动下载到 `~/.hermes/cache/` |
-| local_command | 调用任意本地 STT 二进制（v0.12.0 时已有） |
-| Groq Whisper（免费） | 原有 |
-| OpenAI Whisper | 原有 |
-| **Mistral Voxtral** | v0.12.0 阶段已并入 |
-| **xAI Grok STT** | v2026.4.18 引入，支持 ITN、可选 diarization、21 语言 |
+| `edge` | Edge TTS |
+| `elevenlabs` | ElevenLabs，支持流式播报 |
+| `openai` | OpenAI TTS |
+| `gemini` | Google Gemini TTS（通过 Gemini API） |
+| `xai` | xAI TTS |
+| `minimax` | MiniMax TTS（默认模型 `speech-02`，支持 GroupId） |
+| `mistral` | Mistral TTS |
+| `neutts` | NeuTTS（自托管） |
+| `kittentts` | KittenTTS，本地 CPU 运行，无需 GPU 和 API key，默认模型 `KittenML/kitten-tts-nano-0.8-int8`（25MB），默认声音 `Jasper` |
+| `piper` | **Piper（v2026-05-15+ 新增）**，来自 Home Assistant 项目的快速本地神经 TTS（OHF-Voice/piper1-gpl），支持 44 种语言，零 API key |
 
-> 注：源码 `tools/transcription_tools.py` 模块 docstring 自述 "six providers"，与 `_get_provider()` 的分支一致（local / local_command / groq / openai / mistral / xai）。
+部分云端 provider 也可通过 Nous Tool Gateway 统一访问（无需自备 API key）。
+
+### Piper 本地 TTS（v2026-05-15+）
+
+`piper` 作为原生内置 provider 加入（closes #8508 / #17885），与 `edge`/`neutts`/`kittentts` 并列，可通过 `hermes tools` 一键安装：
+
+- 懒加载导入 `_import_piper()`
+- 模块级 voice 缓存以 `(model_path, use_cuda)` 为 key——切换声音不会使旧缓存失效
+- `_resolve_piper_voice_path()` 接受绝对 `.onnx` 路径或声音名（首次使用经 `python -m piper.download_voices` 自动下载）
+- voice 缓存位于 `~/.hermes/cache/piper-voices/`（profile-aware）
+- 可选 `SynthesisConfig` 参数：`length_scale`、`noise_scale`、`noise_w_scale`、`volume`、`normalize_audio`、`use_cuda`
+- 输出 WAV 后经 ffmpeg 转换（与 neutts/kittentts 一致），ffmpeg 存在时支持 Telegram 语音气泡
+
+### command 类型 Provider 注册表（v2026-05-15+）
+
+`tts.providers.<name>` 注册表（#17843）让用户无需添加引擎专属 Python 代码即可接入任意本地/外部 TTS CLI：
+
+```yaml
+tts:
+  provider: piper-en
+  providers:
+    piper-en:
+      type: command
+      command: 'piper -m ~/model.onnx -f {output_path} < {input_path}'
+      output_format: wav
+```
+
+- 占位符：`{input_path}`、`{text_path}`、`{output_path}`、`{format}`、`{voice}`、`{model}`、`{speed}`；`{{` / `}}` 表示字面花括号
+- `command:` 已设置时 `type: command` 为默认
+- **内置 provider 名永远优先**——`tts.providers.openai` 等条目不能遮蔽原生内置 provider
+
+### STT Provider（5 个）
+
+`tools/transcription_tools.py` 提供 5 个 STT provider：
+
+| Provider | 说明 |
+|----------|------|
+| `local` | faster-whisper 本地运行，默认，无需 API key，自动下载模型 |
+| `groq` | Groq Whisper API（免费额度），需 `GROQ_API_KEY` |
+| `openai` | OpenAI Whisper API，需 `VOICE_TOOLS_OPENAI_KEY` |
+| `mistral` | Mistral Voxtral Transcribe API，需 `MISTRAL_API_KEY`（因 `mistralai` 包于 2026-05-12 被隔离暂时禁用） |
+| `xai` | xAI Grok STT API，需 `XAI_API_KEY`，支持 ITN（Inverse Text Normalization）+ 可选 diarization，21 种语言 |
 
 ## 语音模式特殊行为
 

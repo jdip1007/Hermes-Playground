@@ -1,10 +1,10 @@
 ---
 title: Skills System Architecture
 created: 2026-04-07
-updated: 2026-05-12
+updated: 2026-05-15
 type: concept
-tags: [skill, architecture, module, prompt-builder, curator]
-sources: [tools/skills_tool.py, tools/skill_manager_tool.py, tools/skills_hub.py, tools/skills_guard.py, agent/curator.py, agent/curator_backup.py, hermes_cli/curator.py, run_agent.py, agent/prompt_builder.py, hermes_cli/plugins.py, agent/skill_utils.py]
+tags: [skill, architecture, module, prompt-builder]
+sources: [tools/skills_tool.py, tools/skill_manager_tool.py, tools/skills_hub.py, tools/skills_guard.py, run_agent.py, agent/prompt_builder.py, hermes_cli/plugins.py, agent/skill_utils.py, agent/curator.py, hermes_cli/curator.py, tools/skill_usage.py]
 ---
 
 > **v2026.5.7 增量**：
@@ -254,7 +254,7 @@ skills:
 
 - **永不触碰** bundled 或 hub-installed 技能（`.bundled_manifest` + `.hub/lock.json` 双过滤；v0.12.0 进一步加入 **frontmatter name 保护**——68e4664，避免重命名后绕过 hub 检查）
 - **永不自动删除** —— 只归档，可通过 `hermes curator restore <skill>` 恢复
-- **Pinned skills 跳过所有自动转换**：`tools/skill_manager_tool.py:_pinned_guard()` 在 `skill_manage` 写入路径上拦截 pinned skill 修改；v0.12.0 起 pin 仅保护 **删除**，**编辑** 仍允许（b10e38e）——避免 pin 锁死后无法修 bug
+- **Pinned skills 跳过所有自动转换**：curator 永不对 pinned 技能做自动归档或 LLM review（`agent/curator.py`）。`skill_manage` 侧，`tools/skill_manager_tool.py:_pinned_guard()` 仅拦截 **delete**（见下文「pinned skill 的删除保护」）
 - 使用 aux client，**永不污染主 session 的 prompt cache**
 - `.archive/` 在 skill index walk 和 skills_tool 中**全部跳过**（eda1d51 + a845177），不再误把归档当作活跃 skill 推给 agent
 
@@ -294,27 +294,42 @@ active ──不用 N 天──> stale ──继续不用──> archived
 ### CLI 子命令（hermes_cli/curator.py 的 `_cmd_*` 函数）
 
 ```bash
-hermes curator status                # 当前状态、待处理 skill；按使用量排序（v0.12.0+）
-hermes curator run                   # 立即跑一轮——v0.12.0+ 同步执行直接看结果
-hermes curator pause/resume          # 暂停/恢复
-hermes curator pin <skill>           # 钉住某个 skill（跳过自动转换）
+hermes curator status            # 当前状态、技能统计、使用排行
+hermes curator run               # 立即跑一轮
+hermes curator pause/resume      # 暂停/恢复
+hermes curator pin <skill>       # 钉住某个 skill（跳过自动转换）
 hermes curator unpin <skill>
-hermes curator restore <skill>       # 从归档恢复
-hermes curator archive <skill>       # 手动归档（v0.13.0+，#20200）
-hermes curator prune                 # 手动批量剪枝（v0.13.0+，#21216）
-hermes curator list-archived         # 列出已归档的 skill（v0.13.0+，hermes_cli/curator.py:464）
-hermes curator backup / rollback     # 快照 / 回滚（hermes_cli/curator.py:372/391）
+hermes curator restore <skill>   # 从归档恢复
+hermes curator list-archived     # 列出已归档技能
+hermes curator archive <skill>   # 手动归档某个 agent 创建的技能（pinned 会被拒绝）
+hermes curator prune [--days N] [--yes] [--dry-run]  # 批量归档闲置 ≥N 天（默认 90）的未钉技能
+hermes curator backup/rollback   # 备份/回滚
 ```
 
 `/curator` 斜杠命令暴露相同子命令。
 
-### v0.12 → v0.13 增强
+#### archive / prune 子命令（#20200）
 
-- **per-run 报告**：`logs/curator/run.json` + `REPORT.md`（`#17307`）
-- **consolidated vs pruned 分类**：归档时区分整合 vs 剪枝（`#17941`）
-- **`hermes curator status` 排序**：按使用量列出 most-used / least-used skill（`#18033`、`hermes_cli/curator.py:86 by_state`）
-- **`auxiliary.curator` 配置统一**：curator 用哪个辅助模型在 `hermes model` 里选（`#17868`），不再需要 hand-edit yaml
-- **fixes**：`bump_use()` 接到 skill_invoke + preload + `skill_view`（`#17932`，原 PR #17782）；`restore_skill` 扫嵌套归档子目录（`#17951`）；status 使用真实活动时间戳而非状态（`#17953`）；seed defaults / 创建 `logs/curator/` 目录 / 延后 fire import（`#17927`）
+- **`archive`** — 手动归档单个 agent 创建的技能。遇到 pinned 技能会拒绝，并提示用 `hermes curator unpin`。
+- **`prune`** — 批量归档闲置时长 ≥ `--days`（默认 90 天）的未钉技能。`last_activity_at` 为空时回退到 `created_at`，确保从未使用的技能也能被 prune。`--dry-run` 预览、`--yes` 跳过确认。
+
+> 设计说明：`#19384` 原本还提议 `stats` 和 `restore` 两个动词，但它们已存在为 `curator status` / `curator restore`，因此只新增 `archive` 和 `prune`，所有技能生命周期命令统一在 `hermes curator` 命名空间下。
+
+#### `curator status` 使用排行（#18033、#17941）
+
+`hermes curator status` 除状态、`interval`、`stale after`、`archive after` 外，还展示三类技能排行：
+
+- **least recently active (top 5)** — 按 `last_activity_at`（含 view/edit）升序，始终显示。
+- **most active (top 5)** — 按 `activity_count`（use + view + patch）降序，全为 0 时隐藏（新装环境降噪）。
+- **least active (top 5)** — 按 `activity_count` 升序。
+
+此外，归档技能在 run 报告中被进一步拆分为 **consolidated（内容被吸收进新 umbrella 技能）** 与 **pruned（真正闲置归档）** 两类（`#17941`，通过当轮 `skill_manage` 工具调用做 model + 启发式分类）。这样用户不会把「被整合」的技能误认为「被删除」而错误 restore，造成技能重复。
+
+#### 默认信任的 GitHub tap（#2549）
+
+`tools/skills_hub.py` 的 `GitHubSource.DEFAULT_TAPS` 与 `tools/skills_guard.py` 的 `TRUSTED_REPOS` 现已加入 **`huggingface/skills`**，与 `openai/skills`、`anthropics/skills` 同列为 `trusted` 信任级别（第三方扫描不弹警告）。
+
+> 内置技能目录也有变动：`comfyui` 已从 `optional-skills/` 移入 `skills/creative/`（`#17631`），成为随 Hermes 发行的 built-in 技能。新增的内容技能（如 EVM 多链、股票金融、api-testing 等）属于技能「内容」层，不影响本页描述的技能「系统」架构。
 
 ## /reload-skills 和 /reload-mcp（v2026.4.23+）
 
@@ -324,111 +339,32 @@ hermes curator backup / rollback     # 快照 / 回滚（hermes_cli/curator.py:3
 
 **`/reload-mcp` 加确认提示**：MCP 重载会失效 prompt cache，gateway 现在弹出确认对话框（包含"未来不再询问"的 opt-out 选项），避免误操作清掉昂贵的缓存。
 
-## Pin 语义：仅保护删除（v2026.5.5 收窄）
+## pinned skill 的删除保护（v2026.4.23+，#20220 后收窄）
 
-### 当前行为（2026-05-05 之后，#20220）
+`tools/skill_manager_tool.py:137` 的 `_pinned_guard(name)` 在 `skill_manage` 写入路径上检查 pinned 状态。
 
-`tools/skill_manager_tool.py:_pinned_guard()` **仅在 `skill_manage(action='delete')` 路径触发**。Patch、edit、supporting-file write 在 pinned skill 上**全部放行**。
+**最初**（`#17562`）pin 是一道「硬围栏」，拦截 `skill_manage` 的所有写动作（edit、patch、write_file、remove_file、delete）。但 `#20220` 把它**收窄为只拦截 `delete`**：
 
 ```python
-def _pinned_guard(name: str) -> Optional[str]:
-    """Return a refusal message if *name* is pinned, else None.
-
-    Only applies to delete; the agent can still patch/edit pinned skills;
-    pin only guards against deletion."""
-    rec = _index_record(name)
-    if rec.get("pinned"):
-        return (
-            f"Skill '{name}' is pinned and cannot be deleted by "
-            f"skill_manage(action='delete'). Patches and edits are allowed "
-            f"on pinned skills; only delete is blocked."
-        )
-    return None
+# tools/skill_manager_tool.py:_pinned_guard
+if rec.get("pinned"):
+    return (
+        f"Skill '{name}' is pinned and cannot be deleted by "
+        f"skill_manage. Patches and edits are allowed on pinned skills; "
+        f"only deletion is blocked. Run `hermes curator unpin {name}` first."
+    )
 ```
 
-调用位点（`tools/skill_manager_tool.py:571`）只剩 delete handler。
+收窄原因：pin 混淆了两种关注点——「删除保护」（别让 curator 归档或 agent 删掉稳定技能）和「内容冻结」（别让 agent 中途改写）。实践中用户 pin 是为了前者；后者制造了「unpin → patch → 重新 pin」的摩擦，反而让 pinned 技能逐渐过时。
 
-### 为什么收窄
+因此现在：
 
-之前 `_pinned_guard` 是 hard fence，**任何写操作（edit/patch/delete/write_file/remove_file）都拒**。设计混淆了两件事：
+- **`skill_manage(action='delete')`** — pinned 技能被拒绝。
+- **edit / patch / write_file / remove_file** — pinned 技能**允许通过**，agent 仍可持续改进它。
+- **curator 自身** —— 仍完全不碰 pinned 技能（自动归档与 LLM review 均跳过，`agent/curator.py`）。
+- **`hermes curator archive <skill>`** —— 这是删除等价的归档动作，遇 pinned 仍会拒绝。
 
-1. **Pin as deletion protection**——保护 skill 不被 curator/agent 删（用户实际想要的）
-2. **Pin as content freeze**——禁止 agent 改 skill（造成 unpin → patch → re-pin 麻烦舞步，鼓励 skill 失修）
-
-现在分开处理：**Curator 自身的 pinned-skip 不变**（`agent/curator.py:271` 自动归档 + `:349` LLM review prompt 都仍跳过 pinned），所以 pin 仍然防自动删除/归档；agent 仍可改 pinned skill 维护它。
-
-## v0.12.0 新增/晋升的技能
-
-| 技能 | 状态 | 说明 |
-|------|------|------|
-| `comfyui` | **从 optional 升级为 built-in by default**（`skills/creative/comfyui/`） | v5：官方 CLI + REST + 硬件门控的本地安装；ComfyUI 文档"先问云 vs 本地，再硬件检查" |
-| `touchdesigner-mcp` | **bundled by default**（`skills/creative/touchdesigner-mcp/`） | 扩展 GLSL / post-FX / audio / geometry，9 篇新参考文档 |
-| `humanizer` | 新增 | 移植自 OpenClaw，剥离 AI-isms |
-| `claude-design` | 新增 | HTML artifact 技能；与其他 design 技能消歧 |
-| `design-md` | 新增 | Google `DESIGN.md` 规范 |
-| `airtable` | 新增（salvage） | skill API key 写入 `.env` |
-| `pretext` / `spike` / `sketch` | 新增 | 创意/HTML mockup |
-| `kanban-video-orchestrator` | 新增（重命名自 `video-orchestrator`） | 视频编排创意技能 |
-
-源：`/tmp/hermes-agent/skills/creative/` 及 `RELEASE_v0.12.0.md`。
-
-## 技能安装/管理增强
-
-- **直接 URL 安装**：`hermes skills install <https://...>` 一步装包
-- **`hermes skills list`** 显示 enabled/disabled 状态
-- **`skill_manage` 在 `external_dirs` 中原地编辑**（v0.12.0 #17512）
-- **`.archive/` 目录从 skill index walk 排除**（v0.12.0 #17931）
-- **bundled skill 同步到所有 profile 包括 active**（v0.12.0 #16176）
-
-## Curator 子命令扩展（v0.13.0+）
-
-`hermes curator` 在 `status / run / pause / resume / pin / unpin / restore` 之上新增：
-
-| 子命令 | 作用 | 来源 PR |
-|--------|------|---------|
-| `archive <skill>` | 手动归档 skill（同 curator 自动归档路径） | #20200 |
-| `prune` | 真正删除归档区里足够老的 skill（默认 14 天） | #20200 |
-| `list-archived` | 列出归档区的 skill | #21236 |
-
-**`hermes curator run` 现在同步执行**——返回前等结果，不再让用户 polling 后台进程（PR #21216）。
-
-`/curator` 斜杠命令暴露相同子命令。
-
-## `platforms` frontmatter 全覆盖（v0.13.0+）
-
-PR `98db898c0`（79 个 built-in） + `db22efbe8`（63 个 optional）批量补 `platforms` 声明，PR `b18b17f9c` 把 7 个 Linux/macOS-only skill 在 Windows 上自动 gate（`platforms: [linux, macos]`）。
-
-```yaml
----
-name: my-skill
-platforms: [linux, macos]    # 可选；省略 = 全平台
----
-```
-
-**用途**：Native Windows beta（PR #22115）启动后，运行时 platform 不在 `platforms` 列表的 skill 自动跳过 —— 不会出现 macOS-only 工具在 Windows 报错的脏体验。
-
-## `watchers` skill —— RSS / HTTP / GitHub 看门狗（optional）
-
-`optional-skills/devops/watchers/`（PR #21881）—— 配合 cron `no_agent` 模式（[[cron-scheduling]]）用：
-
-- 三个独立脚本：RSS / Atom、HTTP JSON endpoint、GitHub repo（issues / pulls / releases / commits）
-- watermark dedup helper —— 只投递新 item
-- `requires_toolsets: [terminal]`
-
-## 新增 skill（v0.13.0+）
-
-| Skill | 类型 | 说明 |
-|-------|------|------|
-| `comfyui` | built-in | 从 optional 移到内置，重写为官方 CLI + REST API（v2026.4.23 提，本期固化） |
-| `here.now` | built-in + optional | 双版本（PR `f7dfd4ae3` / `7cbe943d2`） |
-| `shopify` | optional | Admin + Storefront GraphQL（PR #18116） |
-| `shop-app` | optional | 个人购物助手（PR #20702） |
-| `finance` | optional bundle | Anthropic financial-services 移植（PR #21180） |
-| `linear` | built-in 增强 | + Documents 支持 + Python helper（PR #20752） |
-| `searxng-search` | optional | 配 SearXNG backend |
-| `kanban-video-orchestrator` | optional 创意 | (@SHL0MS) PR #19281 |
-| `hyperframes` | optional 创意 | |
-| `watchers` | optional devops | （见上） |
+要彻底删除一个 pinned 技能，需先 `hermes curator unpin <name>`。
 
 ## 相关页面
 
@@ -443,5 +379,9 @@ platforms: [linux, macos]    # 可选；省略 = 全平台
 - `agent/skill_utils.py` — 技能解析工具函数
 - `agent/skill_commands.py` — 技能斜杠命令
 - `tools/skills_sync.py` — 技能同步机制
-- `tools/skills_hub.py` — 技能中心（搜索/安装）
-- `tools/skill_manager_tool.py` — 技能管理工具
+- `tools/skills_hub.py` — 技能中心（搜索/安装），`DEFAULT_TAPS` 含 huggingface/skills
+- `tools/skills_guard.py` — 技能安全扫描与信任级别，`TRUSTED_REPOS` 含 huggingface/skills
+- `tools/skill_manager_tool.py` — 技能管理工具，`_pinned_guard()` 仅拦截 delete
+- `agent/curator.py` — 后台技能维护（状态机、归档分类）
+- `hermes_cli/curator.py` — `hermes curator` CLI（status/archive/prune/restore 等子命令）
+- `tools/skill_usage.py` — 技能使用 sidecar telemetry（`.usage.json`）
