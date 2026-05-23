@@ -421,66 +421,43 @@ def my_command_hook(event_type, context):
 
 决策类型：`deny` / `handled` / `rewrite` / `allow`，在核心处理前拦截。向后兼容——fire-and-forget 遥测钩子仍走 `emit()`。
 
-### `pre_gateway_dispatch` Hook（v2026.4.30+）
+### PluginContext 新增 API（v0.12.0 / v0.13.0）
 
-Gateway 收到 `MessageEvent` → 内部事件守卫 → **`pre_gateway_dispatch` plugin hook** → auth/pairing → agent dispatch。`gateway/run.py:4461-4490` 实现：
+`hermes_cli/plugins.py` 的 `PluginContext` 又扩了几个一等公民入口：
+
+| 方法 | 行 | 说明 |
+|---|---|---|
+| `register_command()` | 401 | 见 v0.10.0 |
+| `register_cli_command()` | 376 | 只在 CLI 注册，不上 gateway |
+| `register_tool()` | 317 | 给 agent 加工具 |
+| `register_hook()` | 603 | 注册任意 lifecycle hook |
+| `register_skill()` | 622 | 插件命名空间技能 |
+| `register_context_engine()` | 488 | v0.11.0，自定义 context 注入 |
+| `register_image_gen_provider()` | 520 | v0.11.0+，image_gen 后端 |
+| `register_platform()` | 547 | v2026.4.23，平台插件 |
+
+### 新 lifecycle hook：`transform_llm_output`（v0.13.0）
+
+`hermes_cli/plugins.py:136` 把 `transform_llm_output` 加进合法 hook 列表：
 
 ```python
-# Fire pre_gateway_dispatch plugin hook for user-originated messages.
-result = invoke_plugin_hooks(
-    "pre_gateway_dispatch",
-    event=event,
-    gateway=self,
-    session_store=session_store,
+KNOWN_HOOKS = (
+    ...,
+    "transform_terminal_output",     # v0.11.0
+    "transform_tool_result",         # v0.11.0
+    ...,
+    "transform_llm_output",          # v0.13.0
 )
 ```
 
-返回值约定：
+**触发点**：LLM 原始输出（**包括 tool calls + 文本响应**）进 conversation history 之前。插件返回值替换原值。
 
-| 返回值 | 行为 |
-|------|------|
-| `{"action": "skip", "reason": "..."}` | drop 消息，不回复（典型用例：rate-limit、垃圾邮件过滤） |
-| `{"action": "rewrite", "text": "..."}` | 替换 `event.text`，继续正常 dispatch |
-| `{"action": "allow"}` 或 `None` | 正常 dispatch |
+**典型用途**：
+- Context-window reducer——把 LLM 的冗长解释砍短
+- 内容过滤——脱敏、合规改写
+- 风格归一化
 
-钩子异常不阻塞主流程（`logger.warning("pre_gateway_dispatch invocation failed: %s", _hook_exc)`）。
-
-### `pre_approval_request` / `post_approval_response`（v2026.4.30+）
-
-由 `tools/approval.py` 在审批生命周期触发，**CLI 交互弹窗 + Gateway/ACP 远程审批**全覆盖（Telegram、Discord、Slack、TUI 都触发）。
-
-**纯观察者** —— 返回值忽略，不能 veto / 不能预答审批。要拦截工具，仍然用 `pre_tool_call`（可返回 `{"action": "block"}`）。
-
-```python
-# Kwargs for pre_approval_request:
-#   command: str, description: str, pattern_key: str, pattern_keys: list[str],
-#   session_key: str, surface: "cli" | "gateway"
-
-# Kwargs for post_approval_response: same as above plus
-#   choice: "once" | "session" | "always" | "deny" | "timeout"
-```
-
-典型用途：审批审计、合规上报、metrics、向 Slack 发"管理员审批了 X 命令"通知。
-
-### `transform_tool_result` & `transform_terminal_output`（v0.11.0+）
-
-| Hook | 适用范围 | 用途 |
-|------|------|------|
-| `transform_terminal_output` | 仅 `terminal` 工具 | 在结果回到 LLM 前**改写终端输出**（如脱敏 IP、截断噪音 log） |
-| `transform_tool_result` | 任何工具 | 通用结果改写（如统一 JSON 格式、过滤敏感字段） |
-
-### Plugin Kind 枚举（v2026.4.30+）
-
-`hermes_cli/plugins.py:176`：
-
-```python
-_VALID_PLUGIN_KINDS: Set[str] = {"standalone", "backend", "exclusive", "platform"}
-```
-
-- **`standalone`** — 默认；hooks/tools 自带，opt-in via `plugins.enabled`
-- **`backend`** — 现有 core 工具的可插拔后端（如 `image_gen`）；bundled 自动加载，user-installed 仍受 `plugins.enabled` 门控
-- **`exclusive`** — 独占某个 surface（防止冲突注册）
-- **`platform`** — gateway messaging 平台插件（IRC、Microsoft Teams 等）—— 见 [[messaging-gateway-architecture]]
+和 `transform_tool_result`（改工具结果）、`transform_terminal_output`（改终端流）配对，构成"全链路输出整形"工具箱。
 
 ### Dashboard 插件系统
 

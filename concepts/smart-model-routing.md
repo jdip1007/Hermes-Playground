@@ -1,10 +1,10 @@
 ---
 title: Smart Model Routing 智能模型路由
 created: 2026-04-08
-updated: 2026-05-09
+updated: 2026-05-10
 type: concept
-tags: [architecture, module, model-routing, performance, caching, anthropic, provider-plugin]
-sources: [agent/model_metadata.py, agent/models_dev.py, hermes_cli/model_switch.py, hermes_cli/model_normalize.py, providers/base.py, providers/__init__.py, plugins/model-providers/]
+tags: [architecture, module, model-routing, performance, caching, anthropic, providers-as-plugins]
+sources: [agent/model_metadata.py, agent/models_dev.py, hermes_cli/model_switch.py, hermes_cli/model_normalize.py, providers/__init__.py, plugins/model-providers/]
 ---
 
 > **v2026.5.7 重要变更**：Provider 已**插件化**。`providers/base.py:25` 定义 `ProviderProfile` dataclass，`plugins/model-providers/` 目录下集成了 14 个 provider 插件（gmi / kilocode / stepfun / openai-codex / alibaba / xiaomi / xai / azure-foundry / copilot-acp / kimi-coding / zai / gemini / custom / ollama-cloud）。第三方 provider 不需要改核心。配套 `list_picker_providers`（凭证过滤 picker，#20298），删除 `/provider` 别名，Nous OAuth token 跨 profile 共享（#19712）。
@@ -505,87 +505,45 @@ browser:
 - `hermes model` 交互流程：Nous 登录后展示可用工具列表，用户选择启用全部 / 仅未配置的 / 跳过
 - 免费层用户看到升级提示
 
-## ProviderProfile 插件化（v0.13.0+，PR #20324）
+### Providers 全面插件化（v0.13.0）
 
-**重大架构**：`providers/base.py`（165 行）+ `providers/__init__.py`（191 行）建立 `ProviderProfile` ABC —— 每个 provider 用单一声明式 dataclass 描述 auth / endpoints / 模型目录 / client quirks / request quirks，取代散落的 20+ boolean flags。`auth.py`、`config.py`、`models.py`、`doctor.py`、`model_metadata.py`、`runtime_provider.py` 和 chat_completions transport 全部从 registry 自动 wire。
-
-### `ProviderProfile` 核心字段（`providers/base.py:23-77`）
-
-```python
-@dataclass
-class ProviderProfile:
-    name: str
-    api_mode: str = "chat_completions"            # 决定走哪个 transport
-    aliases: tuple = ()                           # 别名（如 "vercel-ai-gateway" → "ai-gateway"）
-
-    display_name: str = ""                        # 选择器显示
-    description: str = ""                         # 选择器副标题
-    signup_url: str = ""                          # setup 时给用户的链接
-
-    env_vars: tuple = ()                          # API key / base URL 变量名
-    base_url: str = ""
-    models_url: str = ""                          # 显式 models 端点（OpenRouter 用）
-    auth_type: str = "api_key"                    # api_key | oauth_device_code | oauth_external | copilot | aws_sdk
-
-    fallback_models: tuple = ()                   # /model picker fallback（live fetch 失败时）
-    hostname: str = ""                            # URL→provider 反向映射
-
-    default_headers: dict[str, str] = field(...)
-    fixed_temperature: Any = None                 # OMIT_TEMPERATURE 常量 = 不发
-    default_max_tokens: int | None = None
-    default_aux_model: str = ""                   # 压缩 / 视觉等辅助任务用的便宜模型
-```
-
-### Profile 钩子（覆盖即可加 quirk）
-
-| 钩子 | 调用时机 | 默认 |
-|------|----------|------|
-| `prepare_messages(messages)` | codex 字段清洗后 / developer-role swap 前 | pass-through |
-| `build_extra_body(session_id, **ctx)` | 合并到 API extra_body | `{}` |
-| `build_api_kwargs_extras(reasoning_config, **ctx) → (extra_body, top_level_kwargs)` | 把 quirk 拆成 extra_body 和 api_kwargs 顶层（OpenRouter 把 reasoning 放 extra_body，Kimi 放 top-level） | `({}, {})` |
-| `fetch_models(api_key, timeout) → list[str] \| None` | 拉 live model 列表，None 表示走 `_PROVIDER_MODELS` 静态 fallback | 通用 GET `models_url \|\| base_url+/models` |
-| `get_hostname()` | URL → provider 反向解析 | 用 `hostname` 或从 `base_url` 派生 |
-
-### 插件目录结构
+`providers/__init__.py` 头部规定 provider profile **走插件目录**：
 
 ```
-plugins/model-providers/
-├── openrouter/
-│   ├── __init__.py    # 调用 register_provider(profile)
-│   └── plugin.yaml    # name, kind: model-provider, version
-├── anthropic/
-├── bedrock/
-├── gemini/
-├── ai-gateway/
-├── nous/
-├── xai/
-└── ...                 # 共 28 个
+1. Bundled plugins: plugins/model-providers/<name>/
+2. User plugins:    $HERMES_HOME/plugins/model-providers/<name>/
 ```
 
-`plugins/model-providers/` 实测 28 个 bundled 插件：
-`ai-gateway, alibaba, alibaba-coding-plan, anthropic, arcee, azure-foundry, bedrock, copilot, copilot-acp, custom, deepseek, gemini, gmi, huggingface, kilocode, kimi-coding, minimax, nous, nvidia, ollama-cloud, openai-codex, opencode-zen, openrouter, qwen-oauth, stepfun, xai, xiaomi, zai`
+每个 plugin dir 含 `__init__.py`（在 import 时 `register_provider(profile)`）和 `plugin.yaml`（manifest）。当前 bundled **29 个**：
 
-### 发现机制（`providers/__init__.py:_discover_providers`）
+ai-gateway, alibaba, alibaba-coding-plan, anthropic, arcee, azure-foundry, bedrock, copilot, copilot-acp, custom, deepseek, gemini, gmi, huggingface, kilocode, kimi-coding, minimax, nous, nvidia, ollama-cloud, openai-codex, opencode-zen, openrouter, qwen-oauth, stepfun, xai, xiaomi, zai
 
-```
-1. Bundled    — <repo>/plugins/model-providers/<name>/
-2. User       — $HERMES_HOME/plugins/model-providers/<name>/   (last-writer-wins)
-3. Legacy     — providers/<name>.py                              (back-compat)
-```
+**用户插件可覆盖 bundled**（last-writer-wins）——第三方不用动核心代码就能加 provider 或 monkey-patch 内置 profile。详见 [[provider-transport-architecture]]。
 
-每个 plugin `__init__.py` 在 import 时调用 `register_provider(profile)` 完成自注册，`get_provider_profile(name)` / `list_providers()` 首次调用触发懒发现。
+### v0.12.0 / v0.13.0 新 Provider（全部源码核对）
 
-**用户插件可以 override 内置 profile**：例如 drop 一个 `$HERMES_HOME/plugins/model-providers/openrouter/__init__.py` 就能 monkey-patch OpenRouter 配置而不改仓库代码。
+| Provider | 位置 | 备注 |
+|---|---|---|
+| **LM Studio** | `agent/lmstudio_reasoning.py`、`chat_completions.py` 引用 | 从 custom-endpoint 别名升级为 native provider（reasoning transport + `/models` 探测 + `hermes doctor`） |
+| **GMI Cloud** | `plugins/model-providers/gmi/` | First-class，多模型直连 |
+| **Azure AI Foundry** | `plugins/model-providers/azure-foundry/` | 自动探测 |
+| **MiniMax OAuth** | `plugins/model-providers/minimax/` | PKCE browser flow |
+| **Tencent Tokenhub** | `plugins/model-providers/` | 中国区 |
+| **NVIDIA NIM** | bundled 在 v0.11.0；继续完善 | native provider |
+| **Arcee AI** | `plugins/model-providers/arcee/` | direct provider |
+| **Step Plan** | `plugins/model-providers/stepfun/` | StepFun |
 
-### 与 transport 的协作
+### Remote Model Catalog Manifest（v0.12.0）
 
-`get_provider_profile(name).api_mode` 决定走哪个 transport（[[provider-transport-architecture]]）。Profile 提供**声明式数据**，transport 提供**数据路径**，AIAgent 提供**运行时**（client lifecycle、streaming、auth、retry、interrupt）。
+OpenRouter + Nous Portal 的模型目录从**远端 manifest** 拉取，新模型上线不再要求 hermes 发版。
 
-详见 [[provider-transport-architecture]]。
+### Native Multimodal Image Routing（v0.12.0）
+
+图片现在按**模型实际 vision 能力**路由，不再使用 provider 默认值——多模态请求会自动落到能看图的那条 transport。
 
 ## 与其他系统的关系
 
 - [[context-compressor-architecture]] — 使用 get_model_context_length() 确定上下文限制
-- [[prompt-caching-optimization]] — 缓存成本信息来自 models.dev
+- [[prompt-caching-optimization]] — 缓存成本信息来自 models.dev，TTL 可配
 - [[auxiliary-client-architecture]] — 辅助模型通过 models.dev 解析上下文长度
-- [[provider-transport-architecture]] — ProviderProfile 提供声明式配置，Transport 走数据路径
+- [[provider-transport-architecture]] — Provider profile + Transport ABC 是同一张设计图的两面

@@ -1,10 +1,10 @@
 ---
 title: Cron 调度与自动化工作流
 created: 2026-04-07
-updated: 2026-05-09
+updated: 2026-05-10
 type: concept
-tags: [architecture, cron, automation, scheduling, no-agent, watchers]
-sources: [tools/cronjob_tools.py, cron/scheduler.py, cron/jobs.py, optional-skills/devops/watchers/]
+tags: [architecture, cron, automation, scheduling, no-agent, watchdog]
+sources: [tools/cronjob_tools.py, cron/scheduler.py, cron/jobs.py]
 ---
 
 > **v2026.5.7 增量**：
@@ -236,67 +236,62 @@ cron:
   output_dir: "~/.hermes/cron/output"
 ```
 
-## `no_agent` 看门狗模式（v0.13.0+，PR #19709）
+## `no_agent` 模式（v0.13.0）
 
-`cron/jobs.py:498` 新增字段 `no_agent: bool = False`，让 cron job **完全跳过 agent**，纯执行 `script`：
+`cron/jobs.py:498`：
 
 ```python
-def schedule_cron(
+def create_job(
     ...,
-    script: str | None = None,
-    no_agent: bool = False,         # script 模式（看门狗）
-    ...
+    no_agent: bool = False,
+    ...,
 ):
-    """
-    no_agent=True 时:
-      - script 是必需的（cron/jobs.py:581 强制）
-      - script 的 stdout 决定行为：空 = 静默，非空 = 原样投递
-      - prompt 仅作 name hint
-      - workdir 仍作 script 的 cwd
-    """
+    """When True, skip the agent entirely — run ``script`` on schedule.
+    Empty stdout is silent, non-empty gets delivered verbatim."""
 ```
 
-**适用场景**：
+**当 `no_agent=True`**，LLM 完全不介入：
 
-```yaml
-# 一个监视 RSS 的 watchdog
-schedule: "*/15 * * * *"
-no_agent: true
-script: "python ~/.hermes/skills/watchers/scripts/rss_watch.py https://feed.url"
-deliver: telegram:home
+| 字段 | 行为 |
+|---|---|
+| `script` | **必填**（否则报 "no_agent=True requires a script — with no agent and no script ..."）。脚本路径 / 命令 |
+| `prompt` | 忽略，只作为可选名字提示 |
+| `workdir` | subprocess cwd（不是 agent shell workdir） |
+| stdout 空 | 静默——不投递 |
+| stdout 非空 | 原文投递到目标平台（不经 LLM rewrite） |
+
+`cron/scheduler.py:1040`：
+
+```python
+if job.get("no_agent"):
+    err = "no_agent=True but no script is set for this job"
+    # ... 短路逻辑：直接 spawn subprocess，不 fork agent
 ```
 
-**watchers skill** 是 no_agent 模式的官方实现（`optional-skills/devops/watchers/`）：
+**用途**：
+- 运行 bash watchdog（disk usage、健康检查）
+- 把 `kubectl get pods` 这种命令的输出直接推到 chat
+- 跳过 LLM 的延迟和成本
 
-- RSS / Atom 订阅、HTTP JSON endpoint polling、GitHub repo issues / pulls / releases / commits
-- watermark dedup（只投递新 item）
-- 共享 watermark helper
+scheduler.py:711 注释：
 
-详见 [`optional-skills/devops/watchers/SKILL.md`](https://github.com/NousResearch/hermes-agent/tree/main/optional-skills/devops/watchers/SKILL.md)。
+> Shell support lets `no_agent=True` jobs ship classic bash watchdogs ...
 
-## `deliver=all` 路由意图（v0.13.0+，PR #21495）
+## Cron Prompt-Injection 扫描覆盖装配后的技能（v0.13.0）
 
-cron job 的 `deliver` 字段支持特殊值 `all`，表示**扇出到所有连接的 channel**（不指定具体平台）。
-
-## 安全：扫描 skill 内容做注入检测（v0.13.0+，PR #21350）
-
-P0 修复——cron prompt-injection 扫描器之前只看 `prompt` 字段，**v0.13.0** 起扫描组装后的完整 prompt（含 skill 内容），防止恶意 skill 注入指令通过 cron 触发。
-
-详见 [[security-defense-system]]。
+v0.13.0 安全 wave：cron 启动时扫的是**装配好的 skill content**（assembled skill content），不是 prompt 字面量。避免动态加载的 skill 在 cron 触发时走私 injection。详见 [[security-defense-system]]。
 
 ## 相关页面
 
 - [[messaging-gateway-architecture]] — 网关驱动调度器 tick() 循环；deliver=all
 - [[hook-system-architecture]] — `standalone_sender_fn` 跨进程投递（PR `93e25ceb1`）
 - [[gateway-session-management]] — 会话 origin 用于 Cron 投递路由
-- [[skills-system-architecture]] — watchers skill 是 no_agent 配套
-- [[security-defense-system]] — cron 注入扫描
+- [[kanban-multi-agent]] — Cron + Kanban 组合：定时投递 task 到 board
+- [[security-defense-system]] — Cron prompt-injection 扫描
 
 ## 相关文件
 
 - `tools/cronjob_tools.py` — Cron 工具
-- `cron/scheduler.py` — 调度器
-- `cron/jobs.py:498` — `no_agent` 字段
-- `cron/jobs.py:581` — `no_agent + script` 强制共存
-- `optional-skills/devops/watchers/` — RSS / HTTP / GitHub watcher 脚本
+- `cron/scheduler.py:1040` — `no_agent` 短路；`tick()` 由 Gateway 驱动
+- `cron/jobs.py:498` — `no_agent` 参数定义
 - `gateway/run.py` — 网关集成

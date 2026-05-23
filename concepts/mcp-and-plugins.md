@@ -1,10 +1,10 @@
 ---
 title: MCP 集成与插件系统
 created: 2026-04-07
-updated: 2026-05-07
+updated: 2026-05-10
 type: concept
-tags: [architecture, mcp, plugins, extensibility]
-sources: [tools/mcp_tool.py, tools/mcp_oauth.py, tools/mcp_oauth_manager.py, hermes_cli/plugins.py]
+tags: [architecture, mcp, plugins, extensibility, sse, oauth]
+sources: [tools/mcp_tool.py, tools/mcp_oauth.py, hermes_cli/plugins.py]
 ---
 
 > **v2026.5.7 MCP 升级**：
@@ -59,6 +59,13 @@ class MCPServerTask:
                 "url": config["url"],
                 "transport": transport,
             }
+        elif transport == "sse":              # v0.13.0
+            # mcp.client.sse.sse_client，SSE 协议的 MCP 服务器
+            # 走 mcp_tool.py:201 from mcp.client.sse import sse_client
+            self.servers[name] = {
+                "url": config["url"],
+                "transport": transport,
+            }
         
         # 获取服务器工具
         tools = await self._list_tools(name)
@@ -97,6 +104,17 @@ async def authenticate_mcp_server(server_config: dict) -> dict:
     
     return {}
 ```
+
+### v0.13.0 MCP 升级
+
+| 改进 | 影响 |
+|---|---|
+| **SSE Transport** | `transport: sse` 通过 `mcp.client.sse.sse_client` 走 Server-Sent Events 协议（`tools/mcp_tool.py:201`） |
+| **OAuth 转发** | OAuth token 跨 child server 转发，多层 MCP 服务器统一鉴权 |
+| **Stale-pipe retry** | 长跑 stdio MCP server 的连接掉了能自动重连 |
+| **Image results → MEDIA tag** | MCP 工具返回 image 现在以 `<MEDIA>` 形式进 conversation（之前 silent drop） |
+| **Keepalive on long-lived lifecycle waits** | 长 init / shutdown 不会被 idle timeout 杀掉 |
+| **TOCTOU 修复** | `mcp_oauth.py` 关闭 check-then-use 窗口（v0.13.0 安全 wave，详见 [[security-defense-system]]） |
 
 ## 插件系统
 

@@ -123,35 +123,52 @@
   - 核心内容: Gateway Hooks 事件驱动(8种事件+通配符)，Plugin System 三级来源(用户/项目/pip)，PluginContext API(工具注册/消息注入/CLI命令/钩子)，缓存友好上下文注入
 - index.md 更新为 37 页
 
-## [2026-05-09] update | sync wiki with hermes-agent v0.13.0 (v2026.5.7) + post-release (1100 commits)
-基于 hermes-agent HEAD `bfc84bdc6`（2026-05-09）和 tag `v2026.5.7` (`498bfc7bc`) 的逐行源码验证。
+## [2026-05-10] update | 对齐 Hermes v0.12.0 + v0.13.0（1960 commits）
+基于 `/tmp/hermes-agent` HEAD = cdb6e5e (2026-05-10) 的全量源码对照，新增/更新如下：
 
-**新增**：
-- `changelog/2026-05-09-update.md` —— 跨 v0.13.0 + 239 个 post-release commits 的全面更新日志
+**新增 changelog (1):**
+- changelog/2026-05-10-update.md — 覆盖 v0.12.0 (v2026.4.30) + v0.13.0 (v2026.5.7)，逐条标注源码行号
 
-**更新（10 个 wiki 页面）**：
-- `README.md` —— 版本徽章 v0.13.0 (v2026.5.7)、统计信息、changelog 列表新增条目
-- `concepts/messaging-gateway-architecture.md` —— Google Chat (第20平台)、Teams、MS Graph webhook、`allowed_*` 白名单、`[[as_document]]` 指令、会话自动恢复、通用 plugin platform hooks（PR #21306）
-- `concepts/smart-model-routing.md` —— ProviderProfile ABC 完整章节（28 个 bundled provider 插件）、5 个 profile 钩子、发现机制、用户 override
-- `concepts/provider-transport-architecture.md` —— 与 ProviderProfile 协作章节
-- `concepts/web-tools-architecture.md` —— SearXNG / Brave free / DDGS 三个新 backend、per-capability backend 拆分
-- `concepts/browser-tool-architecture.md` —— Lightpanda 引擎完整章节（auto/lightpanda/chrome 校验、自动 Chrome fallback、cache 鲁棒化）
-- `concepts/cron-scheduling.md` —— `no_agent` 看门狗模式、watchers skill、deliver=all、cron 注入扫描含 skill
-- `concepts/cli-architecture.md` —— `COMMAND_REGISTRY` 单一 source of truth、新 `/goal` `/sessions` `/topic` `/queue` `/steer` `/branch` `/snapshot` 等命令表、`/goal` Ralph 循环、销毁性命令二次确认
-- `concepts/hook-system-architecture.md` —— v0.13.0 完整 `VALID_HOOKS` 列表（含 `transform_llm_output`、`pre_gateway_dispatch`、`pre_approval_request`/`post_approval_response` observer-only）、HERMES_PLUGINS_DEBUG
-- `concepts/skills-system-architecture.md` —— Curator 子命令扩展（archive/prune/list-archived）、platforms frontmatter 全覆盖、watchers skill、新增 skill 列表
-- `concepts/security-defense-system.md` —— v0.13.0 8 个 P0 闭环完整章节（secret redaction default、Discord guild scope、WhatsApp strangers、TOCTOU、SSRF floor、debug share redact、cron skill 扫描）
-- `concepts/multi-agent-architecture.md` —— Kanban 持久化多 Agent 协作看板完整章节（4 模块、tool gating via HERMES_KANBAN_TASK、人/agent 入口分离、heartbeat/reclaim/zombie/hallucination gate/specify）
+**新增 concept 页面 (2):**
+- concepts/kanban-multi-agent.md — 持久化多 Agent 协作板
+  - 源码: hermes_cli/kanban.py(2228), kanban_db.py(4740), kanban_diagnostics.py(649), tools/kanban_tools.py(1130), plugins/kanban/
+  - 核心: SQLite 任务表 + heartbeat/reclaim/zombie 检测 + workspace 隔离(scratch/worktree/dir) + 幻觉防护 + per-task max_retries + 多板跨 profile
+- concepts/goal-and-ralph-loop.md — `/goal` Ralph 循环
+  - 源码: hermes_cli/goals.py(593)
+  - 核心: GoalState dataclass, JUDGE_SYSTEM_PROMPT, SessionDB state_meta 持久化, consecutive_parse_failures 防死循环, /resume/pause/clear
 
-源码验证摘要：
-- Provider 插件：`/tmp/hermes-agent/providers/base.py:165` + `providers/__init__.py:191` + `plugins/model-providers/` 28 dirs
-- 平台插件：`plugins/platforms/{teams,google_chat,irc}/plugin.yaml` + `gateway/platforms/msgraph_webhook.py:397` 行
-- 命令注册：`hermes_cli/commands.py:64+` `COMMAND_REGISTRY` + `commands.py:103,113` `/goal`, `/sessions`
-- Web backends：`tools/web_tools.py:129` 后端列表 + `tools/web_providers/{brave_free,ddgs,searxng}.py`
-- Browser engine：`tools/browser_tool.py:407+` Lightpanda + `_VALID_ENGINES` at line 559
-- Cron `no_agent`：`cron/jobs.py:498`（field） + `:581`（强制 script 共存）
-- Hooks：`hermes_cli/plugins.py:128 VALID_HOOKS`（含 5 个新 hook）
-- Kanban：`tools/kanban_tools.py:873` + `kanban_db.py:4576` + `kanban_diagnostics.py:649` + `kanban_specify.py:265`
-- Goal：`hermes_cli/goals.py` GoalManager
-- Checkpoints v2：`tools/checkpoint_manager.py:1638` 单仓 store
-- Secret redaction：`hermes_cli/config.py:1245` `redact_secrets: True` 默认
+**更新 concept 页面 (13):**
+- multi-agent-architecture — 第 5 种机制 Kanban
+- messaging-gateway-architecture — 20+ 平台、Google Chat/Teams/LINE 插件、`[[as_document]]` 指令、auto-resume
+- security-defense-system — v0.13.0 八个 P0 修复（redaction 默认/CVSS 8.1 Discord/WhatsApp 拒陌生人/TOCTOU/SSRF 地板/cron prompt-injection/debug share redact）
+- voice-mode-architecture — xAI Custom Voices 声音克隆、Piper 本地 TTS、TTS Provider Registry、`video_analyze` 工具
+- smart-model-routing — Provider 全面插件化、29 个 bundled 插件、LM Studio 一等公民、GMI/Azure Foundry/Tencent Tokenhub、Remote model catalog manifest、native multimodal image routing
+- hook-system-architecture — `transform_llm_output` 钩子、PluginContext 新增 register_platform/register_image_gen_provider/register_context_engine/register_skill
+- mcp-and-plugins — MCP SSE transport、OAuth 转发、stale-pipe retry、image → MEDIA tag、keepalive、TOCTOU 修复
+- cron-scheduling — `no_agent` watchdog 模式
+- prompt-caching-optimization — `cache_ttl: "1h"` 可配
+- web-tools-architecture — 7 个后端、SearXNG/Brave Free/DDGS、按 capability 选 backend
+- provider-transport-architecture — ProviderProfile ABC + plugins/model-providers/ 29 个
+- skills-system-architecture — Curator 子命令扩展（archive/prune/list-archived）、active-update bias、class-first prompt、bump_use 钩入
+- cli-architecture — `/goal`/`/kanban`/`/curator`/`/steer`/`/queue`/`/reload-skills`/`/clear`/`hermes -z` 一次性模式
+
+**根目录更新:**
+- index.md — 39 页，新增多 Agent 分类条目
+- README.md — badge 改 v0.13.0 (v2026.5.7)、39 pages、6 changelogs、Kanban + Goal 上链
+- log.md — 本条日志
+
+**源码核对锚点（全部对照 /tmp/hermes-agent）:**
+- hermes_cli/kanban.py:189,2181 / kanban_db.py:781,843 / kanban_diagnostics.py
+- hermes_cli/goals.py:108,148,282,391-410,546
+- tools/vision_tools.py:1167 (video_analyze), 1375 schema
+- tools/tts_tool.py:113 (Piper), 874 (xAI TTS+voice clone)
+- cron/jobs.py:498 / cron/scheduler.py:1040 (no_agent)
+- agent/redact.py:67 (HERMES_REDACT_SECRETS=true 默认)
+- agent/prompt_caching.py:43,58 (cache_ttl)
+- agent/transports/{anthropic,bedrock,chat_completions,codex}.py
+- providers/__init__.py / providers/base.py:25 / plugins/model-providers/ (29 bundled)
+- plugins/platforms/{google_chat,irc,line,teams}/
+- gateway/platforms/api_server.py:727 (X-Hermes-Session-Key)
+- gateway/run.py:3192 (auto-resume) / 9928 ([[as_document]])
+- hermes_cli/plugins.py:136 (transform_llm_output)
+- tools/mcp_tool.py:33,201 (SSE)

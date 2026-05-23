@@ -2,7 +2,7 @@
 
 > 内容目录。每个 wiki 页面按类型列出，附一行摘要。
 > 查询前先读此文件找到相关页面。
-> Last updated: 2026-05-09 | Total pages: 37 + 6 changelog | Tracked: hermes-agent v0.13.0 (v2026.5.7) + post-release
+> Last updated: 2026-05-10 | Total pages: 39
 
 ## Entities
 
@@ -33,32 +33,28 @@
 - [[large-tool-result-handling]] — 大型结果文件化、预飞行压缩、Surrogate 清理
 
 ### 安全与可靠性
-- [[security-defense-system]] — 5 层防御 + v0.13.0 8 个 P0 闭环（secret redaction default、guild scope、TOCTOU、SSRF floor）
+- [[security-defense-system]] — 5 层防御体系，100+ 威胁模式检测；v0.13.0 八个 P0 修复
 - [[interrupt-and-fault-tolerance]] — 中断传播、凭证池轮换、Fallback 模型链
 - [[credential-pool-and-isolation]] — 多密钥自动轮换、Profile 隔离
-- [[multi-agent-architecture]] — 多 Agent 体系，delegate/MoA/Background Review/send_message + Kanban 持久化看板（v0.13.0+）
+- [[multi-agent-architecture]] — 5 种多 Agent 机制（delegate / MoA / review / send_message / Kanban）
+- [[kanban-multi-agent]] — 持久化多 Agent 协作板（v0.13.0），SQLite + heartbeat + reclaim
+- [[goal-and-ralph-loop]] — `/goal` 命令的 Ralph 循环目标锁定（v0.13.0）
 
 ### 平台与扩展
-- [[cli-architecture]] — CLI 架构、`/goal`/`/sessions`/`/queue`/`/steer` 等命令、销毁性命令二次确认
+- [[cli-architecture]] — CLI 架构、斜杠命令补全、Skin 引擎；`/goal`/`/kanban`/`/curator`/`hermes -z`
 - [[configuration-and-profiles]] — 分层配置、Profile 隔离、自动迁移
-- [[hook-system-architecture]] — Gateway Hooks + Plugin System，含 `transform_llm_output`/`pre_gateway_dispatch`/approval observer hook（v0.13.0+）
-- [[mcp-and-plugins]] — MCP 集成（含 SSE transport）、插件钩子系统、OAuth 支持
+- [[hook-system-architecture]] — Hook 系统（Gateway + Plugin），`transform_llm_output`（v0.13.0）
+- [[mcp-and-plugins]] — MCP 集成、SSE transport、OAuth 转发、image MEDIA tag（v0.13.0）
+- [[provider-transport-architecture]] — Transport ABC + ProviderProfile 全面插件化（v0.13.0）
 - [[terminal-backends]] — 7 种终端后端（含 Vercel Sandbox）、环境抽象、持久化 Shell
-- [[cron-scheduling]] — 内置调度器、`no_agent` 看门狗模式、watchers skill、deliver=all
+- [[cron-scheduling]] — 内置调度器、自然语言调度、多平台投递；`no_agent` watchdog（v0.13.0）
 - [[trajectory-and-data-generation]] — 轨迹保存、批量运行器、RL 训练环境
 - [[prompt-builder-architecture]] — 系统提示模块化组装，注入防护+技能缓存+模型特定指导
 - [[context-compressor-architecture]] — 自动上下文压缩，结构化摘要+迭代更新+工具对完整性保障
 - [[model-tools-dispatch]] — 工具编排与调度，异步桥接+动态 schema 调整+参数类型强制
 - [[provider-transport-architecture]] — Provider Transport ABC + ProviderProfile 协作
 - [[gateway-session-management]] — 网关会话管理，多平台会话隔离+PII 脱敏+重置策略
-- [[messaging-gateway-architecture]] — 20+ 平台网关，含 Google Chat/Teams/MS Graph (v0.13.0+)、`allowed_*` 白名单、`[[as_document]]`、auto-resume
-- [[browser-tool-architecture]] — 多后端浏览器自动化 + Lightpanda 引擎（v0.13.0+）
-- [[web-tools-architecture]] — 多后端搜索/提取，含 SearXNG/Brave/DDGS（v0.13.0+） + per-capability backend 拆分
-- [[skin-engine]] — YAML 驱动的皮肤/主题系统
-- [[worktree-isolation]] — Git Worktree 并行隔离
-- [[code-execution-sandbox]] — 代码执行沙箱
-- [[context-references]] — @file/@diff/@url 引用系统
-- [[voice-mode-architecture]] — 语音模式（Push-to-talk → STT → TTS）
+- [[messaging-gateway-architecture]] — 20+ 平台（含 Teams/Google Chat/LINE 插件平台），auto-resume
 
 ### 更新日志
 - [[changelog/2026-04-09-update]] — 59 commits, 错误分类 + 三层溢出 + BlueBubbles
