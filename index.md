@@ -2,7 +2,7 @@
 
 > 内容目录。每个 wiki 页面按类型列出，附一行摘要。
 > 查询前先读此文件找到相关页面。
-> Last updated: 2026-05-22 | Total pages: 40 | Tracking: v0.14.0
+> Last updated: 2026-05-22 | Total pages: 45 concepts + 2 entities + 26 changelogs | Tracking: v0.14.0
 
 ## Entities
 
@@ -23,7 +23,15 @@
 - [[toolsets-system]] — 工具分组系统、递归解析、24 个 hermes-* 工具集
 - [[session-search-and-sessiondb]] — FTS5 搜索 + LLM 摘要的跨会话回忆
 - [[provider-transport-architecture]] — Provider Transport ABC（Anthropic / Chat / Responses / Bedrock）
-- [[provider-profile-plugins]] — **新** ProviderProfile ABC + 30 个 plugin（v0.13.0）
+- [[provider-plugin-system]] — **新** ProviderProfile ABC + 30 个 plugin（v0.13.0+）
+
+### 工具与能力
+- [[code-execution-sandbox]] — execute_code 沙箱，7 工具限制+UDS/File RPC 两种通信模式
+- [[context-references]] — @file/@folder/@diff/@url/@git 引用系统，安全沙箱+注入量限制
+- [[voice-mode-architecture]] — Push-to-talk 语音交互，STT（3 Provider）+ TTS（5 Provider）
+- [[lsp-integration]] — **新** LSP 语义诊断集成（v0.14），agent/lsp/ 11 modules + file-mutation footer 三层后写校验
+- [[checkpoints-architecture]] — Checkpoint Manager v2，透明文件系统快照（v0.13.0）
+- [[i18n-and-locales]] — i18n 国际化（v0.13.0），薄切片本地化（仅 hermes 自身静态消息）
 
 ### 性能与优化
 - [[parallel-tool-execution]] — 智能并发安全检测，三层分类 + 路径冲突检测
@@ -36,6 +44,7 @@
 - [[security-defense-system]] — 5 层防御体系，20 个 P0 闭合（v0.13.0+v0.14.0），100+ 威胁模式
 - [[interrupt-and-fault-tolerance]] — 中断传播、凭证池轮换、Fallback 模型链
 - [[credential-pool-and-isolation]] — 多密钥自动轮换、Profile 隔离
+- [[tool-loop-guardrails]] — 工具调用循环护栏（v0.12.0），exact failure / same-tool failure / idempotent no-progress 三维检测
 
 ### 多 Agent
 - [[multi-agent-architecture]] — 5 种 Agent 协作机制（delegate/MoA/Background Review/send_message/**Kanban**）
@@ -56,11 +65,33 @@
 - [[gateway-session-management]] — 网关会话管理，多平台会话隔离+PII 脱敏+重置策略
 - [[messaging-gateway-architecture]] — 22 平台统一网关（含 Teams/LINE/SimpleX/Google Chat 插件平台）
 - [[hermes-proxy]] — OAuth 订阅 → OpenAI 兼容本地代理（v0.14）
+- [[skin-engine]] — YAML 驱动的皮肤/主题系统
+- [[worktree-isolation]] — Git Worktree 并行隔离模式
 
-### 更新日志
-- [[2026-04-09-update]] — 59 commits
-- [[2026-04-10-update]] — 293 commits
-- [[2026-04-17-update]] — 641 commits (v0.10.0)
-- [[2026-04-18-update]] — 410 commits post-v0.10.0
+### 更新日志（按时间倒序）
+- [[2026-05-22-update]] — 2,578 commits（v0.12.0 → v0.14.0）
+- [[2026-05-20-update]] — v0.14.0（~2,480 commits）
+- [[2026-05-19-update]] — 2,418 commits（v2026.4.23 → v2026.5.16）
+- [[2026-05-18-update]] — v0.14.0（285 commits）
+- [[2026-05-17-update]] — v2026.5.16（988 commits）
+- [[2026-05-16-update]] — v2026.5.16（2,890 commits since v2026.4.23）
+- [[2026-05-15-update]] — v0.13.0（579 commits）
+- [[2026-05-14-update]] — 1,533 commits（v0.12.0 + v0.13.0 + post-release）
+- [[2026-05-13-update]] — v0.12.0 → v0.13.0（595 commits）
+- [[2026-05-12-update]] — v0.12.0 + v0.13.0（~2,015 commits）
+- [[2026-05-11-update]] — v0.12.0 + v0.13.0 + post-release
+- [[2026-05-10-update]] — v0.12.0 + v0.13.0（1,960 commits）
+- [[2026-05-09-update]] — v0.13.0 (v2026.5.7) + post-release（1,100 commits）
+- [[2026-05-07-update]] — v0.12.0 + v0.13.0（1,960 commits）
+- [[2026-05-07-v0.13.0]] — v0.13.0 release notes
+- [[2026-05-06-update]] — v0.12.0（211 commits）
+- [[2026-05-05-update]] — v0.12.0（99 commits）
+- [[2026-05-04-update]] — v0.12.0 (v2026.4.30) + 71 post-release commits
+- [[2026-05-02-update]] — v2026.4.30（1,338 commits）— The Curator Release
+- [[2026-04-30-update]] — v2026.4.30
+- [[2026-04-30-v0.12.0]] — v0.12.0 release notes
 - [[2026-04-29-update]] — 182 commits (v2026.4.23)
-- [[2026-05-14-update]] — **新** 1,533 commits（v0.12.0 + v0.13.0 + post-release）
+- [[2026-04-18-update]] — 410 commits post-v0.10.0
+- [[2026-04-17-update]] — 641 commits (v0.10.0)
+- [[2026-04-10-update]] — 293 commits
+- [[2026-04-09-update]] — 59 commits

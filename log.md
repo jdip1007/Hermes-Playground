@@ -152,3 +152,27 @@
   - auxiliary-client-architecture: auxiliary.curator 统一配置, auxiliary.prompt_caching.cache_ttl
 - README.md: badge 升级 v2026.5.16, changelog 索引 5→8, 跟踪版本 v2026.4.23→v2026.5.16, 最后更新日期 2026-04-29→2026-05-21
 - 验证基线: /tmp/hermes-agent clone at 2026-05-21（HEAD 0ce12a9），git tag v2026.5.16 / v2026.5.7 / v2026.4.30 三个 release notes 全文核对
+
+## [2026-05-23] update | 合并 21 个 daily sync 分支 + 清理重复命名
+
+合并所有 claude/kind-gates-* 定时任务分支到 master（2026-05-02 ~ 2026-05-22 共 21 次 daily sync）：
+- 策略: `git merge --no-ff -X theirs`（newer 分支胜出，对齐 hermes-agent 最新源码）
+- 保留 21 个 merge commits，每个对应一次日常 snapshot
+
+清理重复命名（同一概念多种文件名 → 保留最新版本）：
+- Ralph Loop: 6 个变体 → `goal-and-ralph-loop.md`（删除 persistent-goals-ralph-loop / persistent-goals / goals-and-ralph-loop / goal-loop-architecture / goal-loop-and-steering）
+- Kanban: 8 个变体 → `kanban-multi-agent-board.md`（删除 kanban-multi-profile-board / kanban-collaboration-board / kanban-multi-agent / kanban-architecture / kanban-system / kanban-orchestration / multi-agent-kanban）
+- i18n: 2 个变体 → `i18n-and-locales.md`（删除 i18n-localization）
+- Provider plugin: 2 个变体 → `provider-plugin-system.md`（删除 provider-profile-plugins）
+
+新增页面（来自定时任务，已源码核对仍然有效）:
+- tool-loop-guardrails (v0.12.0)
+- checkpoints-architecture (v0.13.0)
+- lsp-integration (v0.14.0)
+- i18n-and-locales (v0.13.0)
+- provider-plugin-system (v0.13/v0.14)
+- hermes-proxy (v0.14)
+- kanban-multi-agent-board (v0.13+)
+- goal-and-ralph-loop (v0.13/v0.14)
+
+最终状态：45 概念页 + 2 实体页 + 26 changelog，跟踪 hermes-agent v0.14.0

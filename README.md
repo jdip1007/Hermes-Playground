@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Wiki-Hermes_Agent-blue?style=for-the-badge&logo=markdown" alt="Wiki" height="28">
   <img src="https://img.shields.io/badge/Source-hermes--agent-green?style=for-the-badge&logo=github" alt="Source" height="28">
-  <img src="https://img.shields.io/badge/Knowledge_Base-40_pages-orange?style=for-the-badge&logo=obsidian" alt="Knowledge Base" height="28">
+  <img src="https://img.shields.io/badge/Knowledge_Base-45_pages-orange?style=for-the-badge&logo=obsidian" alt="Knowledge Base" height="28">
   <img src="https://img.shields.io/badge/Version-v0.14.0-purple?style=for-the-badge" alt="Version" height="28">
   <img src="https://img.shields.io/badge/Verified-Source_Code-brightgreen?style=for-the-badge" alt="Verified" height="28">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License" height="28">
@@ -25,7 +25,7 @@
 - [prompt-builder-architecture](concepts/prompt-builder-architecture.md): 系统提示模块化组装，注入防护+技能缓存+模型特定指导
 - [auxiliary-client-architecture](concepts/auxiliary-client-architecture.md): 辅助 LLM 客户端路由器，多 provider 解析链+自动降级
 - [provider-transport-architecture](concepts/provider-transport-architecture.md): Provider Transport ABC，统一抽象 Anthropic/Chat Completions/Responses API/Bedrock 的数据路径
-- [provider-profile-plugins](concepts/provider-profile-plugins.md): **NEW v0.13.0** Provider profile ABC + 30 个插件化 provider
+- [provider-plugin-system](concepts/provider-plugin-system.md): **NEW v0.13.0** ProviderProfile ABC + 30 个插件化 provider
 
 ### 记忆与会话
 
@@ -44,6 +44,8 @@
 - [context-references](concepts/context-references.md): @file/@folder/@diff/@url/@git 引用系统，安全沙箱+注入量限制
 - [fuzzy-matching-engine](concepts/fuzzy-matching-engine.md): 8 策略链模糊匹配，从精确到相似度匹配
 - [large-tool-result-handling](concepts/large-tool-result-handling.md): 三层溢出防护（工具内截断/单结果持久化/轮次聚合预算）
+- [lsp-integration](concepts/lsp-integration.md): **NEW v0.14** LSP 语义诊断集成，agent/lsp/ 11 modules + file-mutation footer 三层后写校验
+- [i18n-and-locales](concepts/i18n-and-locales.md): **NEW v0.13** i18n 薄切片本地化（仅 hermes 自身静态消息，不动 agent 输出）
 
 ### 性能与优化
 
@@ -57,6 +59,7 @@
 - [interrupt-and-fault-tolerance](concepts/interrupt-and-fault-tolerance.md): 中断传播、Fallback 模型链
 - [credential-pool-and-isolation](concepts/credential-pool-and-isolation.md): 多密钥自动轮换、Profile 隔离
 - [checkpoints-architecture](concepts/checkpoints-architecture.md): **NEW v0.13.0** Checkpoint v2 共享 shadow git store
+- [tool-loop-guardrails](concepts/tool-loop-guardrails.md): **NEW v0.12.0** 工具调用循环护栏，exact failure / same-tool failure / idempotent no-progress 三维检测
 
 ### 多 Agent
 
@@ -79,24 +82,29 @@
 - [cron-scheduling](concepts/cron-scheduling.md): 内置调度器、自然语言调度、多平台投递、`no_agent` watchdog 模式
 - [trajectory-and-data-generation](concepts/trajectory-and-data-generation.md): 轨迹保存、批量运行器、RL 训练环境
 
-### 更新日志
+### 更新日志（26 个，最新优先 — 完整列表见 [index.md](index.md)）
 
-- [2026-04-09-update](changelog/2026-04-09-update.md): 59 commits，结构化错误分类、统一执行层、三层溢出防护、BlueBubbles 等
+- [2026-05-22-update](changelog/2026-05-22-update.md): **v0.14.0 集大成** — Kanban、`/goal`+`/subgoal`、Hermes Proxy、PyPI + Windows、Provider/Browser/Web/Video/Image/TTS 全面插件化、Curator 1781 行、LSP semantic diagnostics、Codex app-server、跨 session 1h Claude cache、Cold-start -19s、Teams/LINE/SimpleX/Google Chat、12 P0 + 50 P1 关闭
+- [2026-05-20-update](changelog/2026-05-20-update.md): v0.14.0（~2,480 commits across v0.12.0/v0.13.0/v0.14.0）
+- [2026-05-16-update](changelog/2026-05-16-update.md): v2026.5.16（2,890 commits since v2026.4.23）
+- [2026-05-07-v0.13.0](changelog/2026-05-07-v0.13.0.md): **v0.13.0 release** — Provider plugin 化、Checkpoint v2、i18n、Curator 自治
+- [2026-04-30-v0.12.0](changelog/2026-04-30-v0.12.0.md): **v0.12.0 release (The Curator Release)** — Persistent Goals、Tool-call Loop Guardrails、Kanban、Teams、4 新 Provider
+- [2026-04-29-update](changelog/2026-04-29-update.md): 182 commits (v2026.4.23)，平台适配器插件化（PlatformRegistry + IRC）、Curator 后台技能维护、MiniMax OAuth、Vercel Sandbox、腾讯元宝
+- [2026-04-18-update](changelog/2026-04-18-update.md): 410 commits post-v0.10.0，Transport ABC 重构、Shell Hooks、Delegate Orchestrator、Step Plan/AI Gateway/xAI STT/KittenTTS、WeCom QR
+- [2026-04-17-update](changelog/2026-04-17-update.md): 641 commits (v0.10.0)，压缩 v3、Bedrock/Gemini/Ollama Provider、Tool Gateway、插件命名空间技能、钉钉 QR 认证、Dashboard 插件
 - [2026-04-10-update](changelog/2026-04-10-update.md): 293 commits，Context Engine 插件化、watch_patterns、WeChat、xAI、Discord/Slack 增强
-- [2026-04-17-update](changelog/2026-04-17-update.md): 641 commits (v0.10.0)，压缩 v3、Bedrock/Gemini/Ollama 新 Provider、Tool Gateway、插件命名空间技能、钉钉 QR 认证、Dashboard 插件
-- [2026-04-18-update](changelog/2026-04-18-update.md): 410 commits post-v0.10.0，Transport ABC 重构、Shell Hooks、Delegate Orchestrator、Step Plan/AI Gateway/xAI STT/KittenTTS、WeCom QR、Subagent 观测性
-- [2026-04-29-update](changelog/2026-04-29-update.md): 182 commits (v2026.4.23)，平台适配器插件化（PlatformRegistry + IRC 参考实现）、Curator 后台技能维护、MiniMax OAuth、Vercel Sandbox、腾讯元宝、`on_session_switch`、`/reload-skills`
-- [2026-05-22-update](changelog/2026-05-22-update.md): **2578 commits (v0.12.0 + v0.13.0 + v0.14.0)**，Kanban 多 Agent 看板、`/goal`+`/subgoal` Ralph loop、Hermes Proxy、PyPI 分发 + 原生 Windows、Provider/Browser/Web/Video/Image/TTS 全面插件化、Curator 升级到 1781 行、LSP semantic diagnostics、Codex app-server、跨 session 1h Claude cache、Cold-start -19s、新平台 Teams/LINE/SimpleX/Google Chat、12 P0 + 50 P1 关闭
+- [2026-04-09-update](changelog/2026-04-09-update.md): 59 commits，结构化错误分类、统一执行层、三层溢出防护、BlueBubbles 等
 
 ---
 
 ## 统计信息
 
-- **概念页面**: 40 个（+ kanban-multi-agent-board + goal-and-ralph-loop + hermes-proxy）
-- **更新日志**: 6 个
+- **概念页面**: 45 个
+- **实体页面**: 2 个
+- **更新日志**: 26 个
 - **源码覆盖**: 关键模块逐行验证
 - **跟踪版本**: v0.14.0（v2026.5.16）
-- **最后更新**: 2026-05-22（HEAD `09afafb87`）
+- **最后更新**: 2026-05-22
 
 
 ## 使用方式
