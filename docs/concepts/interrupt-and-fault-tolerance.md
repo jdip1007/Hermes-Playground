@@ -1,0 +1,600 @@
+---
+title: 中断传播与容错机制
+created: 2026-04-07
+updated: '2026-06-08'
+type: concept
+tags:
+- agent-system
+- fault-tolerance
+- interrupt
+- ai-ml
+sources:
+- title: Hermes-Wiki Repository
+  type: web
+  url: https://github.com/cclank/Hermes-Wiki
+confidence: high
+contested: false
+---
+# 中断传播与容错机制
+
+## 设计原理
+
+Agent 可能执行长时间运行的任务（多次工具调用、子代理委派）[1]。用户需要能够：
+1. **中断当前操作** — 发送新消息或按 Ctrl+C [1]
+2. **优雅处理失败** — API 错误、网络断开、凭证过期 [1]
+3. **自动恢复** — 重试、回退、凭证轮换 [1]
+4. **检测循环** — 同 args 反复失败 / read-only tool 无进展（v0.12.0 新增，详见 [Tool Loop Guardrails](tool-loop-guardrails.md)）[1]
+
+Hermes 实现了**多层中断和容错机制**[1]。
+
+## 容错层次 [1]
+
+| 层 | 模块 | 范围 | 触发 |
+|---|------|------|------|
+| Tool-call loop guardrails | `agent/tool_guardrails.py` | 单 turn 内的重复失败 / 无进展 | per-call after_call |
+| Iteration budget | `run_agent.py` | turn 总数 | 计数器 |
+| Error classifier | `agent/error_classifier.py` | API 级错误（rate / quota / auth）| 异常分类 |
+| Fallback chain | `auxiliary_client.py` | provider 切换 | 配置驱动 |
+| Credential pool | `tools/credential_pool.py` | 多密钥轮换 | 失败/限速 |
+| Compression recovery | `agent/context_compressor.py` | 上下文压缩异常 | 内嵌重试 + aux 失败通知 |
+
+## 中断机制 [1]
+
+### 中断标志 [1]
+
+```python
+class AIAgent:
+    def __init__(self):
+        self._interrupt_requested = False
+        self._interrupt_message = None
+    
+    @property
+    def is_interrupted(self) -> bool:
+        """检查是否请求了中断"""
+        return self._interrupt_requested
+    
+    def clear_interrupt(self):
+        """清除中断状态"""
+        self._interrupt_requested = False
+        self._interrupt_message = None
+```
+
+### 中断传播到子代理 [1]
+
+```python
+# 父代理可以中断所有子代理
+def _propagate_interrupt(self):
+    with self._active_children_lock:
+        for child in self._active_children:
+            child._interrupt_requested = True
+```
+
+### API 调用中断 [1]
+
+```python
+def _interruptible_api_call(self, api_kwargs: dict):
+    """在后台线程中运行 API 调用，使主循环可以检测中断"""
+    
+    result = {"response": None, "error": None}
+    request_client_holder = {"client": None}
+    
+    def _call():
+        try:
+            if self.api_mode == "codex_responses":
+                request_client_holder["client"] = self._create_request_openai_client(...)
+                result["response"] = self._run_codex_stream(...)
+            elif self.api_mode == "anthropic_messages":
+                result["response"] = self._anthropic_messages_create(api_kwargs)
+            else:
+                request_client_holder["client"] = self._create_request_openai_client(...)
+                result["response"] = request_client_holder["client"].chat.completions.create(**api_kwargs)
+        except Exception as e:
+            result["error"] = e
+        finally:
+            # 清理请求客户端
+            request_client = request_client_holder.get("client")
+            if request_client is not None:
+                self._close_request_openai_client(request_client, reason="request_complete")
+    
+    t = threading.Thread(target=_call, daemon=True)
+    t.start()
+    
+    while t.is_alive():
+        t.join(timeout=0.3)  # 每 300ms 检查一次中断
+        if self._interrupt_requested:
+            # 强制关闭进行中的 HTTP 连接
+            try:
+                if self.api_mode == "anthropic_messages":
+                    self._anthropic_client.close()
+                    self._anthropic_client = build_anthropic_client(...)
+                else:
+                    request_client = request_client_holder.get("client")
+                    if request_client is not None:
+                        self._close_request_openai_client(request_client, reason="interrupt_abort")
+            except Exception:
+                pass
+            raise InterruptedError("Agent interrupted during API call")
+    
+    if result["error"] is not None:
+        raise result["error"]
+    return result["response"]
+```
+
+### 主循环中断检查 [1]
+
+```python
+while api_call_count < self.max_iterations and self.iteration_budget.remaining > 0:
+    # 检查中断请求
+    if self._interrupt_requested:
+        interrupted = True
+        if not self.quiet_mode:
+            self._safe_print("⚠️ Interrupted by user")
+        break
+    
+    # ... 正常处理
+```
+
+### 流式 API 调用中断 [1]
+
+```python
+def _interruptible_streaming_api_call(self, api_kwargs: dict, ...):
+    """流式变体，支持实时 token 投递"""
+    
+    for chunk in stream:
+        if self._interrupt_requested:
+            break  # 停止接收流
+        
+        # ... 处理 chunk
+    
+    # 清理
+    if self._interrupt_requested:
+        raise InterruptedError("Agent interrupted during streaming")
+```
+
+## 容错机制 [1]
+
+### 凭证池轮换 [1]
+
+```python
+def _recover_with_credential_pool(self, *, status_code, has_retried_429, ...):
+    """通过凭证池轮换尝试恢复"""
+    
+    pool = self._credential_pool
+    if pool is None or status_code is None:
+        return False, has_retried_429
+    
+    if status_code == 402:
+        # 账单耗尽 — 立即轮换
+        next_entry = pool.mark_exhausted_and_rotate(status_code=402, ...)
+        if next_entry is not None:
+            self._swap_credential(next_entry)
+            return True, False
+    
+    if status_code == 429:
+        if not has_retried_429:
+            return False, True  # 第一次 429，重试相同凭证
+        # 第二次 429，轮换到下一个凭证
+        next_entry = pool.mark_exhausted_and_rotate(status_code=429, ...)
+        if next_entry is not None:
+            self._swap_credential(next_entry)
+            return True, False
+    
+    if status_code == 401:
+        # 尝试刷新当前凭证
+        refreshed = pool.try_refresh_current()
+        if refreshed is not None:
+            self._swap_credential(refreshed)
+            return True, has_retried_429
+        # 刷新失败 — 轮换到下一个凭证
+        next_entry = pool.mark_exhausted_and_rotate(status_code=401, ...)
+        if next_entry is not None:
+            self._swap_credential(next_entry)
+            return True, False
+    
+    return False, has_retried_429
+```
+
+### Fallback 模型链 [1]
+
+```python
+# 配置示例
+fallback_chain:
+  - model: "anthropic/claude-opus-4.6"
+    provider: "anthropic"
+  - model: "openai/gpt-4o"
+    provider: "openrouter"
+  - model: "google/gemini-2.5-pro"
+    provider: "openrouter"
+
+def _try_activate_fallback(self):
+    """激活下一个 fallback 模型"""
+    if self._fallback_index >= len(self._fallback_chain):
+        return False  # 无更多 fallback
+    
+    fallback = self._fallback_chain[self._fallback_index]
+    self._fallback_index += 1
+    
+    # 切换模型/凭证
+    self.model = fallback["model"]
+    self.provider = fallback["provider"]
+    # ... 重建客户端
+    
+    return True
+```
+
+### 结构化错误分类（error_classifier.py）[1]
+
+2026-04-09 引入的集中式错误分类器，替代了 `run_agent.py` 中分散的字符串匹配 [1]。所有 API 错误被分类为 19 种 `FailoverReason`（`agent/error_classifier.py:24-61`），每种对应不同的恢复策略：
+
+| 错误类型 | 恢复策略 |
+|---------|---------|
+| `auth` | 刷新/轮换凭证 |
+| `auth_permanent` | 刷新后仍失败 — 终止 |
+| `billing` | 立即切换 Provider |
+| `rate_limit` | 退避等待后轮换 |
+| `context_overflow` | 压缩上下文 |
+| `payload_too_large` | 压缩 payload |
+| `image_too_large` | 缩小原生图片后重试 |
+| `timeout` | 重建客户端 + 重试 |
+| `model_not_found` | fallback 到其他模型 |
+| `provider_policy_blocked` | 聚合器因账户隐私策略屏蔽唯一端点 |
+| `format_error` | 400 请求 — 终止或剥离后重试 |
+| `server_error` / `overloaded` | 重试 / 退避 |
+| `thinking_signature` | Anthropic thinking block 签名无效 |
+| `long_context_tier` | 降级到 200K 标准层级 |
+| `oauth_long_context_beta_forbidden` | Anthropic OAuth 订阅拒绝 1M 上下文 beta — 关闭 beta 后重试 |
+| `llama_cpp_grammar_pattern` | llama.cpp 拒绝 `pattern`/`format` 正则 — 从 tools 剥离后重试 |
+
+分类结果是结构化的 `ClassifiedError`，包含恢复提示：
+
+```python
+@dataclass
+class ClassifiedError:
+    reason: FailoverReason
+    retryable: bool = True
+    should_compress: bool = False
+    should_rotate_credential: bool = False
+    should_fallback: bool = False
+```
+
+重试循环直接读取这些字段决策，不再重复解析错误消息 [1]。
+
+#### xAI Grok 订阅 SSE 错误的优先匹配（`agent/error_classifier.py:510-541`）[1]
+
+`classify_api_error` 在 `status_code` 分支**之前**新增了一个最高优先级的模式块，专门匹配 xAI Grok 订阅权限错误 [1]。xAI 通过 SSE `type=error` 帧（`status_code=None`）返回 "do not have an active grok subscription" 或 "out of available resources"+"grok" 时，由于跳过了状态码分类，过去会落到 `unknown`（`retryable=True`），白白耗尽 `max_retries` [1]。现在这类帧被直接归类为 `FailoverReason.auth, retryable=False, should_fallback=True`，立即走 fallback 而不重试 [1]。
+
+### 连接健康检查 [1]
+
+```python
+def _cleanup_dead_connections(self) -> bool:
+    """检测并清理来自提供商故障的死 TCP 连接"""
+    
+    # 检查共享连接池中的死连接
+    cleaned = 0
+    for conn in self._connection_pool:
+        if not conn.is_healthy():
+            conn.close()
+            cleaned += 1
+    
+    return cleaned > 0
+
+# 在每轮对话开始前检查
+if self.api_mode != "anthropic_messages":
+    try:
+        if self._cleanup_dead_connections():
+            self._emit_status(
+                "🔌 Detected stale connections from a previous provider "
+                "issue — cleaned up automatically."
+            )
+    except Exception:
+        pass
+```
+
+### 凭证自动刷新 [1]
+
+```python
+def _try_refresh_nous_client_credentials(self, *, force: bool = True) -> bool:
+    """刷新 Nous Portal 凭证"""
+    try:
+        creds = resolve_nous_runtime_credentials(
+            min_key_ttl_seconds=max(60, int(os.getenv("HERMES_NOUS_MIN_KEY_TTL_SECONDS", "1800"))),
+            timeout_seconds=float(os.getenv("HERMES_NOUS_TIMEOUT_SECONDS", "15")),
+            force_mint=force,
+        )
+    except Exception:
+        return False
+    
+    api_key = creds.get("api_key")
+    base_url = creds.get("base_url")
+    if not isinstance(api_key, str) or not api_key.strip():
+        return False
+    
+    self.api_key = api_key.strip()
+    self.base_url = base_url.strip().rstrip("/")
+    self._client_kwargs["api_key"] = self.api_key
+    self._client_kwargs["base_url"] = self.base_url
+    
+    return self._replace_primary_openai_client(reason="nous_credential_refresh")
+
+def _try_refresh_anthropic_client_credentials(self) -> bool:
+    """刷新 Anthropic 凭证（OAuth token 轮换）"""
+    if self.api_mode != "anthropic_messages" or self.provider != "anthropic":
+        return False
+    
+    try:
+        new_token = resolve_anthropic_token()
+    except Exception:
+        return False
+    
+    if not isinstance(new_token, str) or not new_token.strip():
+        return False
+    if new_token == self._anthropic_api_key:
+        return False  # 无变化
+    
+    self._anthropic_client.close()
+    self._anthropic_client = build_anthropic_client(new_token, self._anthropic_base_url)
+    self._anthropic_api_key = new_token
+    
+    # 更新 OAuth 标志 — token 类型可能已更改
+    self._is_anthropic_oauth = _is_oauth_token(new_token)
+    return True
+```
+
+## 活动跟踪 [1]
+
+```python
+# 用于网关超时处理器和"仍在工作"通知
+self._last_activity_ts: float = time.time()
+self._last_activity_desc: str = "initializing"
+self._current_tool: str | None = None
+self._api_call_count: int = 0
+
+def _touch_activity(self, description: str):
+    """更新活动时间戳"""
+    self._last_activity_ts = time.time()
+    self._last_activity_desc = description
+
+def get_status(self) -> dict:
+    """获取当前状态（用于超时检测）"""
+    elapsed = time.time() - self._last_activity_ts
+    return {
+        "last_activity_ts": self._last_activity_ts,
+        "last_activity_desc": self._last_activity_desc,
+        "seconds_since_activity": round(elapsed, 1),
+        "current_tool": self._current_tool,
+        "api_call_count": self._api_call_count,
+        "budget_used": self.iteration_budget.used,
+        "budget_max": self.iteration_budget.max_total,
+    }
+```
+
+## Gateway 重启后自动续跑（2026-04-14）[1]
+
+Gateway 进程在 agent 调用工具**之后、生成最终回复之前**被重启(SIGTERM、崩溃、`drain_timeout`),session transcript 会停在一条 `role: "tool"` 上——之前的做法是用户必须手动 `/retry`(从头回放,丢失所有进度)或说 "continue" [1]。现在当下一条用户消息到达时,Gateway 检测到历史尾部是 tool result,自动注入一条 system note:
+
+```
+[System note: Your previous turn was interrupted before you could process the
+last tool result(s). The conversation history contains tool outputs you haven't
+responded to yet. Please finish processing those results and summarize what was
+accomplished, then address the user's new message below.]
+
+<用户的新消息原文>
+```
+
+### 实现(`gateway/run.py:8679-8692`) [1]
+
+```python
+# Auto-continue: if the loaded history ends with a tool result,
+# the previous agent turn was interrupted mid-work
+if agent_history and agent_history[-1].get("role") == "tool":
+    message = SYSTEM_NOTE + "\n\n" + message
+```
+
+注入点在 `_run_agent()` 的 run_sync closure 里,**紧挨** `agent.run_conversation()` 之前 [1]。Agent 看到的是完整历史(含未处理的 tool results)加这条 system note,然后继续运行——所以它先总结之前的工作,再处理用户的新消息 [1]。
+
+### 设计关键点 [1]
+
+| 设计决策 | 说明 |
+|---|---|
+| **无 schema 变更** | 不新增 session flags 或持久化字段,纯粹检测尾部消息角色 |
+| **适用所有重启场景** | Clean shutdown / crash / SIGTERM / drain timeout 都覆盖 |
+| **保留用户消息** | 用户原始消息仍然在 system note 之后,不会丢 |
+| **suspended session 不触发** | 如果 session 是 suspended 状态(非正常关闭),历史被丢弃,用户从空白开始,避免误 auto-continue 过时内容 |
+| **关机通知改文案** | 关机时发出去的通知从 "Use /retry after restart to continue" 改成 "Send any message after restart to resume where it left off"——现在这才是准确的 |
+
+### 对比旧行为 [1]
+
+```text
+旧流程(手动 /retry):
+  用户: "deploy v2.3"
+  agent: [calls terminal "kubectl apply"] → [tool result: "deployment started"]
+  [Gateway 崩溃/重启]
+  用户: "did it work?"
+  → 用户必须手动输入 /retry 回放对话 → agent 从头跑 kubectl apply(可能重复部署!)
+
+新流程(auto-continue):
+  用户: "deploy v2.3"
+  agent: [calls terminal "kubectl apply"] → [tool result: "deployment started"]
+  [Gateway 崩溃/重启]
+  用户: "did it work?"
+  → Gateway 检测到尾部是 tool → 注入 system note → agent 看到 tool result + 用户新消息
+  → agent: "部署已启动(kubectl apply 成功).关于你的问题..."
+```
+
+**关键安全性**:旧流程的 `/retry` 会重放副作用(再跑一遍 kubectl apply);新流程只是让 agent 解读**已发生的** tool result,不会重复执行 [1]。
+
+## 优越性分析 [1]
+
+### 与其他 Agent 框架对比 [1]
+
+| 特性 | Hermes | Cursor | OpenCode |
+|------|--------|--------|----------|
+| 用户中断 | ✅ Ctrl+C/新消息 | ✅ | ✅ |
+| 子代理中断传播 | ✅ | N/A | N/A |
+| 凭证池轮换 | ✅ 多密钥自动轮换 | ❌ | ❌ |
+| Fallback 模型链 | ✅ 自动切换 | ❌ | ❌ |
+| 连接健康检查 | ✅ 自动清理 | ❌ | ❌ |
+| 凭证自动刷新 | ✅ OAuth/token | ❌ | ❌ |
+| 活动跟踪 | ✅ 超时检测 | ❌ | ❌ |
+
+## 配置指南 [1]
+
+### 环境变量 [1]
+
+```bash
+# Nous 凭证刷新
+HERMES_NOUS_MIN_KEY_TTL_SECONDS=1800  # 最小密钥 TTL
+HERMES_NOUS_TIMEOUT_SECONDS=15        # 刷新超时
+
+# 流式读取超时
+HERMES_STREAM_READ_TIMEOUT=60.0       # 流式读取超时（秒）
+HERMES_API_TIMEOUT=1800.0             # API 总超时（秒）
+```
+
+## Checkpoints v2（v0.13.0+）[1]
+
+`tools/checkpoint_manager.py`（**1638 行**）：state 持久化重写为 v2 layout（line 30, 213, 340-362）[1]：
+
+- **真正的 pruning** —— `max_snapshots` 配置（`tools/checkpoint_manager.py:966`），旧快照被剔除而不只是标记 [1]
+- **Disk guardrails** —— "Checkpoint store exceeded...MB" 检测（`tools/checkpoint_manager.py:1097`），超阈值立即停止积累 [1]
+- **No more orphan shadow repos** —— 之前 v1 留下的"幽灵 shadow git repo"在 v2 被完整收回 [1]
+
+加上 v0.13.0 同步引入的 **gateway auto-resume**（`gateway/run.py:3543,3565` "Scheduled auto-resume"、`:5620 mark_resume_pending`），整体故障恢复链路更紧 [1]：
+
+```
+gateway 进程被 SIGKILL
+  ↓
+checkpoint v2 已保存当前 agent state
+  ↓
+gateway 重启
+  ↓
+auto-resume 检测到 pending session → 加载 checkpoint → 续跑
+```
+
+## TLS FD 回收竞态三层防御（2026-05-23, PR #29507）[1]
+
+生产事故：`kanban.db` 在没有 schema 改动的情况下被 24 字节的 TLS application-data record 改写 ——[[kanban-multi-agent-board|kanban DB 抗污染]] 处理的是受害侧，本节处理的是根因 [1]。
+
+### 故障链 [1]
+
+```
+helper 调 socket.shutdown(SHUT_RDWR) + socket.close()
+                                        ↑ stranger thread（中断检查 / stale-call 检测）
+release FD 整数到内核
+内核把同一整数 recycle 给 kanban dispatcher 下一次 open(kanban.db)
+但 httpx worker 还在 SSL BIO 缓存里持有这个 FD 整数
+worker 延迟的 TLS flush 写一条 24-byte 应用数据 record
+                                  ↓
+            写到了 kanban.db 的 SQLite header 上
+```
+
+### Layer-1：`force_close_tcp_sockets` 只 shutdown 不 close（commit `e2a7d73`）[1]
+
+`agent/agent_runtime_helpers.py` +55 −18 [1]：
+
+- 移除 `socket.close()`，**只保留 `shutdown(SHUT_RDWR)`** —— 任意线程安全（只发 FIN + 中断 `recv`/`send`，不释放 FD）[1]
+- owning httpx worker 自己 unwind 时会通过同一个 Python `socket.socket` 对象 close —— 该对象在 `close(2)` 之前把 `_fd` 原子置 -1，没有 FD aliasing 窗口 [1]
+- 日志字段 `tcp_force_closed=N` 保留语义（现在 counts shutdowns），dashboard / 日志解析器无需改动 [1]
+
+### Layer-2：跨线程 client.close() 改为 abort + defer（commit `30c22f1`）[1]
+
+`agent/chat_completion_helpers.py:97-141`（非流式）+ `:1312-1345`（流式）：
+
+```python
+def _set_request_client(client):
+    request_client_holder["thread_ident"] = threading.get_ident()
+    request_client_holder["client"] = client
+
+def _close_request_client_once(...):
+    stranger_thread = (
+        request_client_holder.get("thread_ident")
+        != threading.get_ident()
+    )
+    if stranger_thread:
+        agent._abort_request_openai_client(request_client, reason=reason)
+        # 只 shutdown(SHUT_RDWR) pool sockets + 写 deferred_close=stranger_thread 标记
+        # holder 保持 populated → owning worker 的 finally 来做真正 close
+    else:
+        agent._close_request_openai_client(request_client)
+        # 正常 close
+```
+
+新日志字段 `deferred_close=stranger_thread` 区分两种 close 通道，便于生产 triage [1]。
+
+### Layer-3：回归测试 (commit `5b6f0b6`) [1]
+
+`tests/run_agent/test_create_openai_client_reuse.py` +12 行：pin shutdown-only + thread-aware close contract [1]。
+
+三层独立 —— 任一回滚不会立刻重开 advisory [1]。Kanban 那一侧已经独立加了 `KanbanDbCorruptError` 失败闭合（详见 [Kanban Multi Agent Board](kanban-multi-agent-board.md) §DB 抗污染），定居一道纵深防御 [1]。
+
+## Streaming 完成可见性三连（2026-05-24）[1]
+
+之前几条"流式响应静默结束"的事故在同一天合并修复 [1]：
+
+### Guardrail halt 消息推到客户端（`38b8d0d` + `186bf25 test`，#30770）[1]
+
+`agent/conversation_loop.py:3478-3486` —— `tool guardrail halt` 分支退出 turn 时，原代码只 append final_response 到 messages，**没**通过 stream callback 推给客户端 [1]。SSE 流静默关闭，Open WebUI 等客户端看到空 finish chunk —— 与 crash 无法区分 [1]。
+
+```python
+# agent/conversation_loop.py:3478-3486
+if final_response:
+    agent._safe_print(f"\n{final_response}\n")
+    if agent.stream_delta_callback:
+        try:
+            agent.stream_delta_callback(final_response)
+            agent.stream_delta_callback(None)
+        except Exception:
+            pass
+break
+```
+
+`+49 行` 新测试（`tests/run_agent/test_tool_call_guardrail_runtime.py`），revert 即失败 [1]。
+
+### Plugin `transform_llm_output` 流式后可见（5 commit 链）[1]
+
+之前 `transform_llm_output` plugin hook 在 streaming 已发完后修改 `final_response`，gateway / ACP 都因 `streamed_message=True` 跳过 final send —— hook 修改对客户端**不可见** [1]。
+
+修复链：
+
+| commit | 文件:行 | 改动 |
+|--------|---------|------|
+| (链头) | `agent/conversation_loop.py:4081, 4100, 4152` | 新增 `_response_transformed` 标志；hook 返回非空字符串时置 True；写入 result dict |
+| `a4ceead` | `gateway/run.py:17044` | `run_sync` 返回字典 cherry-pick 加 `response_transformed` 字段 |
+| `5cb21e3` | `gateway/run.py:17680-17717` + `gateway/stream_consumer.py:196-199` | `_transformed=True` 时不抑制 final send，但**编辑** streamed message in-place（用 `stream_consumer.message_id` + `adapter.edit_message(...)`），不发重复消息 |
+| `7eb6c7f` + `60d20a3` | `acp_adapter/server.py:1537-1544` | `if final_response and conn and (not streamed_message or result.get("response_transformed"))` —— 只在被 transform 的路径上抹掉 `streamed_message` 屏蔽 |
+
+`gateway/stream_consumer.py:196-199` 新增 public property [1]：
+
+```python
+@property
+def message_id(self) -> str | None:
+    """The Discord/chat message ID of the last-sent or edited message."""
+    return self._message_id
+```
+
+### Partial-stream `finish_reason=length` 修复（`9140be7` + `20b3703` + `6cafcf9 test`，#30963）[1]
+
+网络中断的 partial stream stub 之前 `finish_reason="stop"`，触发"正常结束"路径而非长度续传路径，最后一段被丢 [1]。
+
+- `agent/chat_completion_helpers.py:97-141` + `:1312-1345`：text-only partial stream stub 强制 `finish_reason="length"` [1]。
+- `agent/conversation_loop.py:42-50` 续传路径专用 prompt 模板（区分网络中断 vs 模型主动 length-truncation），共享 `length_continue_retries=3` 预算与 `truncated_response_parts` merging [1]。
+- +258 行测试 pin contract（network-error continuation prompt 必须送到 model call #2，`final_response` stitch 两半）[1]。
+
+## 相关页面 [1]
+- [[Checkpoints Architecture|checkpoints-architecture]]
+
+- [Credential Pool And Isolation](credential-pool-and-isolation.md) — 凭证池与轮换机制
+- [Multi Agent Architecture](multi-agent-architecture.md) — 子代理中断传播与预算隔离
+- [Agent Loop And Prompt Assembly](agent-loop-and-prompt-assembly.md) — AIAgent 中断标志与主循环
+- [Kanban Multi Agent Board](kanban-multi-agent-board.md) — DB 抗污染（FD 回收事故的受害侧防御）
+
+### 相关文件
+
+- `agent/error_classifier.py` — 结构化 API 错误分类（19 种 FailoverReason）
+- `run_agent.py` — 中断机制、重试循环
+- `agent/credential_pool.py` — 凭证池
+- `tools/interrupt.py` — 中断工具
+- `tools/checkpoint_manager.py` — Checkpoints v2（state 持久化 + pruning + disk guardrails）
+- `gateway/run.py` — Auto-resume（lines 3543, 3565, 5620）
+- `agent/agent_runtime_helpers.py` — `force_close_tcp_sockets` shutdown-only（2026-05-23+）
+- `agent/chat_completion_helpers.py:97-141, 1312-1345` — Thread-aware close contract（`_abort_request_openai_client` / `_close_request_openai_client`）

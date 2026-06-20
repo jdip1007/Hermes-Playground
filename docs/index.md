@@ -1,0 +1,244 @@
+---
+home: true
+---
+
+# Wiki Index
+
+> Content catalog. Every wiki page listed under its type with a one-line summary.
+> Last updated: 2026-06-20 | Total pages: 333
+
+## Entities
+
+- [Aiagent Class](entities/aiagent-class.md) — AIAgent Class: 位置
+- [Australian Bureau Statistics](entities/australian-bureau-statistics.md) — Australian Bureau of Statistics (ABS): National statistical agency overview, census operations, flagship publications, data services and methodology standards
+- [Bulie V Commissioner Centre Of Vital Interests](entities/bulie-v-commissioner-centre-of-vital-interests.md) — Bulie v Commissioner of Taxation [2026] ARTA 1003: Landmark tribunal case overturning ATO residency determination; centre of vital interests test under Australia-Singapore tax treaty tie-breaker rules
+- [Alison Australia Realestate](entities/alison-australia-realestate.md) — Alison (澳洲Alison老師) — Australian Real Estate Expert: Overview
+- [Andrej Karpathy](entities/andrej-karpathy.md) — Andrej Karpathy: Key Contributions
+- [Claude Code](entities/claude-code.md) — Claude Code: Architecture Patterns (from leaked source)
+- [Csl Limited](entities/csl-limited.md) — CSL Limited (CSL.AX): Overview
+- [Deepseek V4](entities/deepseek-v4.md) — DeepSeek-V4: Overview
+- [Deepseek](entities/deepseek.md) — DeepSeek: Overview
+- [Driftwm](entities/driftwm.md) — DriftWM — Infinite Canvas Wayland Compositor: Core Concept
+- [Ecc Repo](entities/ecc-repo.md) — ECC (affaan-m/ECC): Key Contributions
+- [Finch Agent](entities/finch-agent.md) — Finch Data Analysis Agent: Overview
+- [Memorystore Class](entities/memorystore-class.md) — MemoryStore Class: 位置
+- [Paperqa](entities/paperqa.md) — PaperQA: Overview
+- [Portfolio Jonathan Aus](entities/portfolio-jonathan-aus.md) — Portfolio: Jonathan AUS: Overview
+- [Ralph Koijen](entities/ralph-koijen.md) — Ralph Koijen: Key Work
+- [Robert G Webster](entities/robert-g-webster.md) — Robert G. Webster: Overview
+- [Robin Multi Agent System](entities/robin-multi-agent-system.md) — Robin Multi-Agent System: Overview
+- [Rtk Repo](entities/rtk-repo.md) — RTK (rtk-ai/rtk): Key Contributions
+- [Xavier Gabaix](entities/xavier-gabaix.md) — Xavier Gabaix: Key Work
+- [Yi Guan](entities/yi-guan.md) — Yi Guan: Overview
+
+## Concepts
+
+- [Agentic Llm](concepts/agentic-llm.md) — Agentic LLM: AI agents operating LLMs in autonomous loops with tools — ReAct pattern, LangGraph/CrewAI/AutoGen frameworks, RAG vs agentic distinction, and production roadmap
+- [Anhedonia And Depression](concepts/anhedonia-and-depression.md) — Anhedonia in Depression: DSM-5 core symptom, neural mechanisms (Pizzagalli 2014), consummatory vs anticipatory types
+- [Llm Wiki Vector Search Implementation](concepts/llm-wiki-vector-search-implementation.md) — LLM Wiki Vector Search Implementation: Semantic search across wiki pages using BAAI/bge-small-en-v1.5 embeddings, cosine similarity retrieval, and numpy-based index storage
+- [Longbridge Skills Ecosystem](concepts/longbridge-skills-ecosystem.md) — Longbridge Skills Ecosystem: 13-module financial data and trading platform covering US/HK/A-share/SG/Crypto markets with CLI, SDKs, MCP integration
+- [Agarose Plug Dna Extraction](concepts/agarose-plug-dna-extraction.md) — Agarose plug DNA extraction using phenol-chloroform method for HMW gDNA purification
+- [Adaptive Sampling Nanopore](concepts/adaptive-sampling-nanopore.md) — Oxford Nanopore adaptive sampling: real-time read selection via polarity reversal, enrichment/depletion modes, buffer optimization
+- [Animal Tissue Re Pore C Preparation](concepts/animal-tissue-re-pore-c-preparation.md) — Animal tissue cryo-grinding and DNA extraction from Rattus norvegicus brain/muscle for RE-Pore-C chromatin conformation analysis
+- [Brain Tissue Dna Extraction](concepts/brain-tissue-dna-extraction.md) — Human brain tissue DNA extraction using QIAGEN MagAttract HMW DNA Kit (8–15 µg from 25 mg, automatable)
+- [Buffy Coat Dna Extraction](concepts/buffy-coat-dna-extraction.md) — Buffy coat DNA extraction from rabbit blood via Ficoll-Paque density gradient + MagAttract HMW DNA kit
+- [C Elegans Dna Extraction](concepts/c-elegans-dna-extraction.md) — C. elegans (SX3254/N2) DNA extraction using QIAGEN Puregene Cell Kit with semi-selective precipitation size selection
+- [Cfdna Info Repository](concepts/cfdna-info-repository.md) — Oxford Nanopore cfDNA information repository: methods and best practices for nanopore cell-free DNA sequencing (~15× coverage per flow cell)
+- [Dna Extraction Kits Comparison](concepts/dna-extraction-kits-comparison.md) — Comprehensive comparison of 10 DNA extraction kits, 4 lysis buffers, 3 shearing methods, and 2 size selection approaches used in Oxford Nanopore protocols: catalog numbers, reagents, yields, sample types, and recommendations
+- [Colony Pcr Dna Extraction](concepts/colony-pcr-dna-extraction.md) — Whole genome colony PCR from bacterial colonies (E. coli verified) using Rapid PCR Barcoding Kit
+- [Covaris G Tube Shearing](concepts/covaris-g-tube-shearing.md) — gDNA shearing using Covaris g-TUBE centrifugal force (6000 rpm, ~8 kb average fragments)
+- [Dry Blood Spots Dna Extraction](concepts/dry-blood-spots-dna-extraction.md) — Automated gDNA extraction from FTA cards using QIAGEN EZ2 Connect (10× 3 mm discs optimal)
+- [Environmental Water Edna Extraction](concepts/environmental-water-edna-extraction.md) — Environmental water eDNA extraction: ZymoBIOMICS DNA Miniprep Kit yields best community representation
+- [Fastprep 96 High Throughput Shearing](concepts/fastprep-96-high-throughput-shearing.md) — High throughput DNA shearing (up to 192 samples) using FastPrep-96 at 1600 SPM for 5 min
+- [Frog Muscle Dna Extraction](concepts/frog-muscle-dna-extraction.md) — Xenopus tropicalis muscle DNA extraction using QIAGEN Blood & Cell Culture DNA Midi Kit
+- [Gram Negative Bacterial Dna Extraction](concepts/gram-negative-bacterial-dna-extraction.md) — E. coli DNA extraction using QIAGEN Genomic-tip 500/G with chloramphenicol pre-treatment (4.5× yield increase)
+- [High Output Human Blood Sequencing](concepts/high-output-human-blood-sequencing.md) — High output long read sequencing from human blood: flow cell wash/reload yields +25% data, scales to 48 genomes/72h on P48
+- [Human Saliva Dna Extraction](concepts/human-saliva-dna-extraction.md) — Human saliva DNA extraction using QIAGEN Blood & Cell Culture DNA Midi Kit with semi-selective precipitation size selection
+- [Lizard Tissue Dna Extraction](concepts/lizard-tissue-dna-extraction.md) — Green anole lizard (Anolis carolinensis) tail DNA extraction from ethanol-preserved or fresh tissue
+- [Megaruptor 3 Extraction Method](concepts/megaruptor-3-extraction-method.md) — gDNA shearing using Diagenode Megaruptor 3 for reduced input requirements and pore blocking
+- [Multiplex Cfdna Extraction](concepts/multiplex-cfdna-extraction.md) — Multiplex human blood cfDNA extraction using QIAamp MinElute ccfDNA Midi Kit (≥6 ng per barcode optimal)
+- [Mycobacterium Tuberculosis Dna Extraction](concepts/mycobacterium-tuberculosis-dna-extraction.md) — M. tuberculosis DNA extraction from Löwenstein–Jensen culture using PrepMan Ultra + glass bead beating
+- [Plasmid Dna Extraction](concepts/plasmid-dna-extraction.md) — Plasmid DNA extraction using QIAGEN Plasmid Plus Midi Kit, sequenced with Rapid Sequencing V14 protocol
+- [Promethion 24Hr Genome Workflow](concepts/promethion-24hr-genome-workflow.md) — PromethION 24-hour genome end-to-end workflow from blood to variant calls using SQK-LSK114, Megaruptor 3 shearing, wf-human-variation EPI2ME analysis
+- [Rabbit Liver Dna Extraction](concepts/rabbit-liver-dna-extraction.md) — Rabbit liver DNA extraction using QIAGEN Blood & Cell Culture DNA Midi Kit (up to 80 mg tissue)
+- [Rat Stool Dna Extraction](concepts/rat-stool-dna-extraction.md) — Rat stool DNA extraction using QIAGEN DNeasy Blood & Tissue Kit with custom lysis buffer per Maudet et al.
+- [Salmon Blood Dna Extraction](concepts/salmon-blood-dna-extraction.md) — Atlantic salmon blood DNA extraction (90% ethanol storage at −80°C yields highest output vs tissue)
+- [Salmon Tissue Dna Extraction](concepts/salmon-tissue-dna-extraction.md) — Atlantic salmon tissue (brain/heart/liver/spleen/fin) DNA extraction using MagAttract HMW DNA kit
+- [Soil Dna Extraction](concepts/soil-dna-extraction.md) — Soil DNA extraction using QIAGEN DNeasy PowerMax Soil Kit (8 g starting material, do not exceed 10 g)
+- [Spri Size Selection](concepts/spri-size-selection.md) — SPRI size selection for >1.5–2 kb DNA fragments using custom 0.7× AMPure XP beads improving median read length
+— Lysis Buffer Components: Chaotropic salts (GuHCl, GITC), detergents (Triton X-100, SDS), chelating agents (EDTA), Proteinase K, benzyl alcohol phase separation for inhibitor removal
+- [Cap Ngs Clinical Test Standards](concepts/CAP-NGS-clinical-test-standards.md) — CAP Laboratory Standards for NGS Clinical Tests: Overview
+- [Default Mode Network Depression](concepts/default-mode-network-depression.md) — Default Mode Network Hyperactivity in Depression: fMRI evidence (Hamilton 2015, Sheline 2010, Reuben 2017 longitudinal)
+- [Empathic Distress Compassion Fatigue](concepts/empathic-distress-compassion-fatigue.md) — Empathic Distress and Compassion Fatigue: Batson's empathy-altruism hypothesis, personal distress vs empathic concern distinction
+- [Flow State And Self Consciousness](concepts/flow-state-and-self-consciousness.md) — Flow State and Self-Consciousness: Csikszentmihályi's flow theory, explicit monitoring theory, yips phenomenon, unproven link to high self-consciousness
+- [Hypervigilance Childhood Trauma](concepts/hypervigilance-childhood-trauma.md) — Hypervigilance from Childhood Trauma: Attachment theory (Bowlby 1969), ACE study (Felitti 1998), Teicher fMRI evidence of amygdala enlargement
+- [Metacognitive Therapy Wells](concepts/metacognitive-therapy-wells.md) — Metacognitive Therapy (Wells' S-REF Model): Positive/negative metacognitive beliefs about rumination, 70%+ remission rates in RCTs
+- [Private Self Consciousness](concepts/private-self-consciousness.md) — Private Self-Consciousness: Fenigstein et al. (1975) trait measurement, Carver & Scheier self-discrepancy theory, relationship to rumination and metacognition
+- [Rumination Psychology](concepts/rumination-psychology.md) — Rumination in Clinical Psychology: Nolen-Hoeksema's Response Styles Theory, Watkins' brooding vs reflection distinction, Moberly & Watkins RCT evidence
+- [Ont R10 Avian Influenza Surveillance](concepts/ONT-R10-avian-influenza-surveillance.md) — Oxford Nanopore R10 Chemistry for Avian Influenza Genomic Surveillance: Overview
+- [Academic Research Skills Suite](concepts/academic-research-skills-suite.md) — Academic Research Skills (ARS) Suite: Overview
+- [Adhd Productivity Strategies](concepts/adhd-productivity-strategies.md) — ADHD Productivity Strategies: Overview
+- [Adhd](concepts/adhd.md) — ADHD (Attention Deficit Hyperactivity Disorder): Overview
+- [[adhd-gifted-differential-diagnosis]] — ADHD vs Gifted Traits: Differential Diagnosis Challenges, Multi-Method Assessment Protocols and Research Gaps
+- [Agent Architecture Patterns](concepts/agent-architecture-patterns.md) — Agent Architecture Patterns: Pattern Categories
+- [Ai Agent Runaway Incidents](concepts/ai-agent-runaway-incidents.md) — AI Agent Runaway Incidents and Failure Modes: Overview
+- [Agentic Search](concepts/agentic-search.md) — Agentic Search: Retrieval strategies (grep vs vector) in LLM agent systems across harness types and tool-calling architectures
+- [Agent Introspection Debugging](concepts/agent-introspection-debugging.md) — Agent Introspection Debugging: Four Phases
+- [Agent Loop And Prompt Assembly](concepts/agent-loop-and-prompt-assembly.md) — Agent Loop and Prompt Assembly: AIAgent 核心循环
+- [Agent Memory Taxonomy](concepts/agent-memory-taxonomy.md) — Agent Memory Taxonomy: The Four Types
+- [Ancient Learning Rules Debunked](concepts/ancient-learning-rules-debunked.md) — Ancient Learning Rules Debunked: Rule 1: "To get good at something, practice it more"
+- [Antimicrobial Resistance](concepts/antimicrobial-resistance.md) — Antimicrobial Resistance (AMR): Overview
+- [Astro Photography Guide](concepts/astro-photography-guide.md) — Astro Photography Setup Guide: Astro Photography: Setup Guide & Capturing Tips
+- [Ato Tax Residency](concepts/ato-tax-residency.md) — ATO Tax Residency: Overview of Australian tax residency framework, domestic tests, dual residency and treaty tie-breakers, certificate of residency procedures
+- [Ato Tax Residency Tests](concepts/ato-tax-residency-tests.md) — ATO Tax Residency Tests: Detailed breakdown of the four statutory tests (resides, domicile, 183-day, superannuation) with factors, examples and application rules
+- [Attention Is Not What You Need](concepts/attention-is-not-what-you-need.md) — Attention Is Not What You Need (Zhang Chong, 2025): Grassmann flows as attention-free alternative
+- [Grassmann Flows Geometric Attention Alternatives](concepts/grassmann-flows-geometric-attention-alternatives.md) — Grassmann Flows & Geometric Attention Alternatives: Deep dive on manifold-based alternatives to self-attention
+- [Attention Mechanisms Nn](concepts/attention-mechanisms-nn.md) — Attention Mechanisms in Neural Networks: A Comprehensive Mathematical Treatment: Overview
+- [Atl Al Cell Lysis Buffers](concepts/atl-al-cell-lysis-buffers.md) — ATL and AL Buffers: Composition, mechanism of action, Proteinase K synergy for bacterial DNA extraction
+- [Auramine Orange Stain Mycobacteria](concepts/auramine-orange-stain-mycobacteria.md) — Auramine Orange Stain for Mycobacterial Detection in Cervical Lymphadenitis: Overview
+- [Australian Property Investment Principles](concepts/australian-property-investment-principles.md) — Australian Property Investment Principles — 7 Rules Framework: Overview
+- [Automated Scientific Discovery](concepts/automated-scientific-discovery.md) — Automated Scientific Discovery: Definition
+- [Auxiliary Client Architecture](concepts/auxiliary-client-architecture.md) — Auxiliary Client 辅助客户端架构: 概述
+- [Avian Chlamydia Abortus Netherlands](concepts/avian-chlamydia-abortus-netherlands.md) — Avian *Chlamydia abortus* Circulation and Community-Acquired Pneumonia Outbreak (Netherlands): Overview
+- [Avian Influenza Nanopore Wgs Evaluation](concepts/avian-influenza-nanopore-wgs-evaluation.md) — Avian Influenza Whole-Genome Sequencing on Nanopore MinION: Overview
+- [Benchmarking Viromics Illumina Nanopore Pacbio](concepts/benchmarking-viromics-illumina-nanopore-pacbio.md) — Benchmarking Viromics: Illumina vs Nanopore vs PacBio: Overview
+- [Bioinformatics](concepts/bioinformatics.md) — Bioinformatics: Overview
+- [Browser Tool Architecture](concepts/browser-tool-architecture.md) — Browser Tool 浏览器自动化架构: 概述
+- [Blood Culture Broth Dna Extraction](concepts/blood-culture-broth-dna-extraction.md) — Blood Culture Broth Bacterial DNA Extraction: Direct extraction protocols, SPS removal challenges, Qiagen DNeasy workflow
+- [Cap Ngs Clinical Test Standards](concepts/CAP-NGS-clinical-test-standards.md) — CAP Laboratory Standards for NGS Clinical Tests: Overview
+- [Checkpoints Architecture](concepts/checkpoints-architecture.md) — Checkpoint Manager v2 — 透明文件系统快照: 概述
+- [Cli Architecture](concepts/cli-architecture.md) — CLI 架构与终端交互设计: 设计原理
+- [Clinical Metagenomics Viral Detection](concepts/clinical-metagenomics-viral-detection.md) — Clinical Metagenomics for Viral Pathogen Detection and Surveillance: Overview
+- [Cognitive Disengagement Syndrome](concepts/cognitive-disengagement-syndrome.md) — Cognitive Disengagement Syndrome (Sluggish Cognitive Tempo): Distinct syndrome from ADHD characterized by daydreaming, mental confusion, hypoactivity, and internalizing symptoms
+- [Code Execution Sandbox](concepts/code-execution-sandbox.md) — 代码执行沙箱（execute_code）: 概述
+- [Compressed Sparse Attention Csa](concepts/compressed-sparse-attention-csa.md) — Compressed Sparse Attention (CSA): Overview
+- [Configuration And Profiles](concepts/configuration-and-profiles.md) — 配置管理与多 Profile 架构: 概述
+- [Context Compaction Strategies](concepts/context-compaction-strategies.md) — Context Compaction Strategies: What to Keep vs Discard
+- [Context Compressor Architecture](concepts/context-compressor-architecture.md) — Context Compressor 上下文压缩架构: 概述
+- [Context References](concepts/context-references.md) — Context References（@ 引用系统）: 概述
+- [Credential Pool And Isolation](concepts/credential-pool-and-isolation.md) — 凭证池与环境隔离系统: 设计原理
+- [Crispr Amr Diagnostics](concepts/crispr-amr-diagnostics.md) — CRISPR-Based Rapid Diagnostics for Antimicrobial Resistance: Overview
+- [Crispr Cas9](concepts/crispr-cas9.md) — CRISPR-Cas9 Genome Editing: Overview
+- [Critical Thinking](concepts/critical-thinking.md) — Critical Thinking: Definition and Scope
+- [Cron Scheduling](concepts/cron-scheduling.md) — Cron 调度与自动化工作流: 设计原理
+- [Ctx M Esbls](concepts/ctx-m-esbls.md) — The Spread of CTX-M-Type Extended-Spectrum β-Lactamases: Overview
+- [Dashboard Auth Oauth Gate](concepts/dashboard-auth-oauth-gate.md) — Dashboard OAuth 鉴权闸门（v0.14 增量）: 定位与触发条件
+- [Dissociative Identity Disorder Trauma Soul](concepts/dissociative-identity-disorder-trauma-soul.md) — Dissociative Identity Disorder, Trauma, and the Soul: Overview
+- [Distillation Scaling Laws](concepts/distillation-scaling-laws.md) — Distillation Scaling Laws: Overview
+- [Dual Detection Legionella Pcr](concepts/dual-detection-legionella-pcr.md) — Dual Detection of *Legionella pneumophila* and *Legionella* Species by Real-Time PCR: Overview
+- [Elastic Markets Hypothesis](concepts/elastic-markets-hypothesis.md) — Inelastic Markets Hypothesis: Overview
+- [Emerging Rna Viruses Genomic Adaptation](concepts/emerging-rna-viruses-genomic-adaptation.md) — Emerging & Re-emerging RNA Viruses: Genomic Adaptation: Overview
+- [Enterobacter Spp Taxonomy Clinical Amr](concepts/enterobacter-spp-taxonomy-clinical-amr.md) — Enterobacter spp.: Taxonomy, Clinical Aspects, and Emerging Antimicrobial Resistance: Overview
+- [Esbl Community Carriage Norway](concepts/esbl-community-carriage-norway.md) — Community Carriage of ESBL-Producing E. coli and K. pneumoniae — Population Structure and Risk Factors: Overview
+- [Esbl Overview Chinese Review](concepts/esbl-overview-chinese-review.md) — Extended-Spectrum β-Lactamases (ESBL): Overview — Chinese Review Article: Overview
+- [Forked Agent Pattern](concepts/forked-agent-pattern.md) — Forked Agent Pattern: Cache-Safe Forking
+- [Fuzzy Matching Engine](concepts/fuzzy-matching-engine.md) — 模糊匹配引擎 — 8 策略链: 设计原理
+- [Gateway Session Management](concepts/gateway-session-management.md) — Gateway Session 会话管理架构: 概述
+- [Genome Based Salmonella Serotyping](concepts/genome-based-salmonella-serotyping.md) — Genome-Based Salmonella Serotyping as the New Gold Standard: Overview
+- [Goal And Ralph Loop](concepts/goal-and-ralph-loop.md) — /goal 与 /subgoal（Ralph Loop）: 概述
+- [Hermes Proxy](concepts/hermes-proxy.md) — Hermes Proxy (OAuth → OpenAI 兼容本地代理): 概述
+- [Hook System Architecture](concepts/hook-system-architecture.md) — Hook 系统架构: 概述
+- [[hermes-optimization]] — Hermes Optimization: Patterns, techniques, and tricks for improving agent work
+- [Gram Positive Bacterial Dna Midi Kit Extraction](concepts/gram-positive-bacterial-dna-midi-kit-extraction.md) — Gram-Positive Bacterial DNA Extraction using QIAGEN Blood & Cell Culture DNA Midi Kit: Large-scale protocol (1 × 10¹¹ cells) yielding 125–140 µg HMW DNA with spooling instead of centrifugation
+- [Gram Positive Bacterial Dna Puregene Extraction](concepts/gram-positive-bacterial-dna-puregene-extraction.md) — Gram-Positive Bacterial DNA Extraction using QIAGEN Puregene Cell Kit + Lytic Enzyme Solution: 19-step protocol for gram-positive organisms (2 × 10⁹ cells) yielding 1–2 µg HMW DNA
+- [Human Cell Line Dna Genomic Tip Extraction](concepts/human-cell-line-dna-genomic-tip-extraction.md) — Human Cell Line DNA Extraction using QIAGEN Genomic-tip (Blood & Cell Culture DNA Maxi Kit): 1 × 10⁸ cell protocol yielding 400–450 ng/µl HMW DNA for Nanopore sequencing
+- [Human Cell Line Dna Puregene Extraction](concepts/human-cell-line-dna-puregene-extraction.md) — Human Cell Line DNA Extraction using QIAGEN Puregene Cell Kit (Oxford Nanopore Protocol v3): 14-step protocol yielding 20–30 µg HMW DNA for Nanopore sequencing
+- [Human Vs Llm Writing](concepts/human_vs_llm_writing.md) — Human vs LLM Writing Comparison: Key Findings
+- [I18N And Locales](concepts/i18n-and-locales.md) — i18n 国际化与多语言架构: 1. 设计原则：薄切片
+- [Iching Life Crossroads](concepts/iching-life-crossroads.md) — 易經之命運的3道坎 (I Ching: Three Crossroads of Destiny): Overview
+- [Index Chill Dead Thesis](concepts/index-chill-dead-thesis.md) — Index & Chill Thesis: Sustainability of Passive Index Investing — Claim-by-claim analysis
+- [Interrupt And Fault Tolerance](concepts/interrupt-and-fault-tolerance.md) — 中断传播与容错机制: 设计原理
+- [Justin Sung Learning Guide](concepts/justin-sung-learning-guide.md) — Justin Sung's 4-Hour Learning Guide: Three Pillars of Effective Learning
+- [Kanban Multi Agent Board](concepts/kanban-multi-agent-board.md) — Kanban Multi-Agent Board: 概述
+- [Large Tool Result Handling](concepts/large-tool-result-handling.md) — 大型工具结果处理与上下文保护: 设计原理
+- [Learning Strategies Schema Building](concepts/learning-strategies-schema-building.md) — Learning Strategies & Schema Building: Five Common Learning Myths vs Better Approaches
+- [Llm Cost Optimization](concepts/llm-cost-optimization.md) — 8 LLM Cost Optimization Techniques: Input Optimization
+- [Llm Wiki Lint Workflow](concepts/llm-wiki-lint-workflow.md) — LLM Wiki Lint Workflow (brtrx): Design Principle
+- [Llm Wiki Pattern](concepts/llm-wiki-pattern.md) — LLM Wiki Pattern: Core Idea
+- [Llm Thinking Vs Human Reasoning](concepts/llm_thinking_vs_human_reasoning.md) — LLM Thinking vs Human Reasoning — Cognitive Architecture & Capability Gaps: Core Distinction
+- [Lysis Buffer Components](concepts/lysis-buffer-components.md) — Lysis buffer components comparison: chaotropic salts (GuHCl, GuSCN), detergents (Triton X-100, SDS, NP-40, CHAPS, N-lauroyl-sarcosine), enzymes (lysozyme, Proteinase K, RNase A), buffers (Tris-HCl) and chelators (EDTA) with properties, mechanisms, safety data, and kit applications
+- [Lsp Integration](concepts/lsp-integration.md) — LSP 语义诊断集成: 1. 关键设计：git-workspace 门控
+- [Manifold Constrained Hyper Connections Mhc](concepts/manifold-constrained-hyper-connections-mhc.md) — Manifold-Constrained Hyper-Connections (mHC): Overview
+- [Mcp And Plugins](concepts/mcp-and-plugins.md) — MCP 集成与插件系统: 设计原理
+- [Memory Handling Working Memory](concepts/memory-handling-working-memory.md) — Memory Handling and Working Memory Strategies: The Memory Model
+- [Memory System Architecture](concepts/memory-system-architecture.md) — Memory System Architecture: 概述
+- [Messaging Gateway Architecture](concepts/messaging-gateway-architecture.md) — Messaging Gateway Architecture: 概述
+- [Metagenomics](concepts/metagenomics.md) — Metagenomics: Overview
+- [Microbiome](concepts/microbiome.md) — Human Microbiome: Overview
+- [Mixture Of Experts Moe](concepts/mixture-of-experts-moe.md) — Mixture-of-Experts (MoE): Overview
+- [Model Tools Dispatch](concepts/model-tools-dispatch.md) — Model Tools 工具编排与调度架构: 概述
+- [Multi Agent Architecture](concepts/multi-agent-architecture.md) — Hermes 多 Agent 架构: 概述
+- [Multiplex Nanopore Arboviral Detection](concepts/multiplex-nanopore-arboviral-detection.md) — Multiplex Nanopore Sequencing for Arboviral Detection (Ampli-FlaCk): Overview
+- [Muon Optimizer](concepts/muon-optimizer.md) — Muon Optimizer: Overview
+- [Nanomp Dual Process Nanopore Lrti](concepts/nanoMP-dual-process-nanopore-LRTI.md) — NanoMP Dual-Process Nanopore Sequencing for Lower Respiratory Infections: Overview
+- [Nanopore Applications Virus Research](concepts/nanopore-applications-virus-research.md) — Nanopore Sequencing Applications in Virus Research: Overview
+- [Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md) — Nanopore Sequencing (MinION): Overview
+- [Next Generation Sequencing](concepts/next-generation-sequencing.md) — Next-Generation Sequencing (NGS): Overview
+- [Output Filtering Strategies](concepts/output-filtering-strategies.md) — Output Filtering Strategies: Six Strategies
+- [Pandemic Influenza Emergence](concepts/pandemic-influenza-emergence.md) — Pandemic Influenza Emergence Mechanisms: Overview
+- [Parallel Tool Execution](concepts/parallel-tool-execution.md) — 并行工具执行系统: 设计原理
+- [Phylogenetic Tree Statistics Treestats](concepts/phylogenetic-tree-statistics-treestats.md) — Phylogenetic Tree Statistics: The `treestats` R Package: Overview
+- [Phylogenetics Phylodynamics](concepts/phylogenetics-phylodynamics.md) — Phylogenetics & Phylodynamics: Key Points
+- [Pretraining Without Attention Bigs](concepts/pretraining-without-attention-bigs.md) — Pretraining Without Attention (BiGS) — Paper Analysis: Overview
+- [Productivity General](concepts/productivity-general.md) — General Productivity Principles: Core Principles
+- [Prompt Builder Architecture](concepts/prompt-builder-architecture.md) — Prompt Builder 系统提示构建架构: 概述
+- [Prompt Caching Optimization](concepts/prompt-caching-optimization.md) — Prompt Caching 优化架构: 概述
+- [Provider Plugin System](concepts/provider-plugin-system.md) — ProviderProfile 插件系统: 1. `ProviderProfile` ABC
+- [Provider Transport Architecture](concepts/provider-transport-architecture.md) — Provider Transport 架构: 概述
+- [Promethion 24Hr Genome Workflow](concepts/promethion-24hr-genome-workflow.md) — PromethION 24-hour genome end-to-end workflow from blood to variant calls using SQK-LSK114, Megaruptor 3 shearing, wf-human-variation EPI2ME analysis
+- [[psychology-high-intelligence]] — Psychology of High Intelligence: Cognitive architecture, emotional amplification, social isolation mechanisms, existential burdens, and evidence-based verification against PubMed literature
+- [Psychogenic Machine Ai Psychosis](concepts/psychogenic-machine-ai-psychosis.md) — The Psychogenic Machine: Simulating AI Psychosis, Delusion Reinforcement and Harm Enablement in LLMs: Overview
+- [Rabbit Muscle Dna Atl Buffer Extraction](concepts/rabbit-muscle-dna-atl-buffer-extraction.md) — Rabbit Muscle DNA Extraction using QIAGEN Genomic-tip with ATL Buffer: Two-stage Proteinase K digestion protocol yielding 10–20 µg HMW DNA from up to 100 mg tissue
+- [Rabbit Lung Dna Atl Buffer Extraction](concepts/rabbit-lung-dna-atl-buffer-extraction.md) — Rabbit Lung DNA Extraction using QIAGEN Genomic-tip with ATL Buffer: Two-stage Proteinase K digestion protocol yielding ~50 µg HMW DNA from up to 100 mg lung tissue
+- [Rabbit Skin Dna Genomic Tip Extraction](concepts/rabbit-skin-dna-genomic-tip-extraction.md) — Rabbit Skin DNA Extraction using QIAGEN Genomic-tip with G2 buffer: Protocol for up to 100 mg skin tissue yielding 30–60 µg HMW DNA with overnight Proteinase K digestion
+- [Rabbit Muscle Dna Genomic Tip Extraction](concepts/rabbit-muscle-dna-genomic-tip-extraction.md) — Rabbit Muscle DNA Extraction using QIAGEN Genomic-tip (Blood & Cell Culture DNA Midi Kit): Protocol for up to 100 mg muscle tissue yielding 30–50 µg HMW DNA with overnight Proteinase K digestion
+- [Rabbit Skin Dna Atl Buffer Extraction](concepts/rabbit-skin-dna-atl-buffer-extraction.md) — Rabbit Skin DNA Extraction using QIAGEN Genomic-tip with ATL Buffer: Two-stage Proteinase K digestion protocol yielding 10–20 µg HMW DNA from up to 100 mg skin tissue
+- [Rabbit Lung Dna G2 Buffer Extraction](concepts/rabbit-lung-dna-g2-buffer-extraction.md) — Rabbit Lung DNA Extraction using QIAGEN Genomic-tip with G2 Buffer: Single overnight Proteinase K digestion protocol yielding ~50 µg HMW DNA from up to 100 mg lung tissue
+- [Realtime Pcr Chlamydia Diagnosis](concepts/realtime-pcr-chlamydia-diagnosis.md) — Real-Time PCR Diagnosis of *Chlamydia pneumoniae*, *C.* psittaci, and *C.* abortus on Opened Molecular Platforms: Overview
+- [Ridom Spa Sequencing Protocol](concepts/ridom-spa-sequencing-protocol.md) — Ridom spa Sequencing Protocol — Standardized Method for S. aureus Typing: Overview
+- [Risk Odds Hazard Ratios](concepts/risk-odds-hazard-ratios.md) — Risk Ratios, Odds Ratios, and Hazard Ratios
+- [Rna Synthesis Genomic Research](concepts/rna-synthesis-genomic-research.md) — RNA Synthesis — Glen Research Application Note on Long Oligonucleotide Production: Overview
+- [Rna Virus Macroevolution](concepts/rna-virus-macroevolution.md) — RNA Virus Macroevolution Modes: Overview
+- [Science Reason Trusted Editorial](concepts/science-reason-trusted-editorial.md) — Science Needs Reason to Be Trusted — Hossenfelder Editorial on Scientific Integrity: Overview
+- [Security Defense System](concepts/security-defense-system.md) — 安全防御体系 — 多层注入检测: 设计原理
+- [Sequencing Cost Economics](concepts/sequencing-cost-economics.md) — Sequencing Cost Economics (2015-2026): Abstract
+- [Session Search And Sessiondb](concepts/session-search-and-sessiondb.md) — Session Search and SessionDB: 概述
+- [Single Cell Sequencing](concepts/single-cell-sequencing.md) — Single-Cell Sequencing: Overview
+- [Skills And Memory Interaction](concepts/skills-and-memory-interaction.md) — Skills and Memory Interaction: 设计哲学
+- [Skills System Architecture](concepts/skills-system-architecture.md) — Skills System Architecture: 概述
+- [Skin Engine](concepts/skin-engine.md) — 皮肤引擎（Skin/Theme）: 概述
+- [Sleep Regularity Mortality](concepts/sleep-regularity-mortality.md) — Sleep Regularity as a Stronger Predictor of Mortality Risk than Sleep Duration: Overview
+- [Smart Model Routing](concepts/smart-model-routing.md) — Smart Model Routing 智能模型路由: v0.11.0 - v0.14.0 新增的 provider / 推理路径
+- [Spa Typing Staph Aureus Iraq](concepts/spa-typing-staph-aureus-iraq.md) — Spa Typing of Staphylococcus aureus from Iraq Outpatients: Overview
+- [State Space Models Ssm](concepts/state-space-models-ssm.md) — State-Space Models (SSMs) for Deep Learning: Definition
+- [[twice-exceptional-adhd-confound]] — The Twice-Exceptional (2e) Problem: How ADHD symptoms are misattributed to high intelligence in gifted psychology research, masking effects, and differential diagnosis challenges
+- [Transformer Architecture](concepts/transformer-architecture.md) — Attention Is All You Need: The Transformer Architecture (Vaswani et al., NIPS 2017)
+- [Sustained Focus Strategies](concepts/sustained-focus-strategies.md) — Sustained Focus Strategies (8-Hour Deep Work): Phase 1 — Entering Focus
+- [Taxonkit Ncbi Taxonomy](concepts/taxonkit-ncbi-taxonomy.md) — TaxonKit - NCBI Taxonomy Toolkit: TaxonKit - A Practical and Efficient NCBI Taxonomy Toolkit
+- [Temporal Dynamics Human Transmissible Rna Viruses](concepts/temporal-dynamics-human-transmissible-rna-viruses.md) — Temporal Dynamics, Discovery, and Emergence of Human-Transmissible RNA Viruses: Overview
+- [Terminal Backends](concepts/terminal-backends.md) — 终端后端与环境抽象层: 设计原理
+- [Tool Loop Guardrails](concepts/tool-loop-guardrails.md) — 工具调用循环护栏: 概述
+- [Tool Registry Architecture](concepts/tool-registry-architecture.md) — Tool Registry 工具注册系统架构: 概述
+- [Toolsets System](concepts/toolsets-system.md) — Toolsets System: 概述
+- [Trajectory And Data Generation](concepts/trajectory-and-data-generation.md) — 轨迹保存与训练数据生成: 这个系统解决什么问题
+- [Universal Sars Cov 2 Tiled Amplicons Nanopore](concepts/universal-sars-cov-2-tiled-amplicons-nanopore.md) — Universal SARS-CoV-2 Tiled Amplicon Sequencing on Nanopore: Overview
+- [Verification First Workflow](concepts/verification-first-workflow.md) — Verification-First Workflow: Four Steps
+- [Vagueness Ato Tax Residency Tests](concepts/vagueness-ato-tax-residency-tests.md) — Vagueness of ATO Tax Residency Tests: Analysis of undefined key terms, conflicting examples, qualitative weighting and practical consequences of the open-textured residency framework
+- [Viral Selection Tree Topology](concepts/viral-selection-tree-topology.md) — Signatures of Natural Selection in Viral Phylogeny Tree Topology Shape: Overview
+- [Voice Mode Architecture](concepts/voice-mode-architecture.md) — 语音模式架构: 概述
+- [Web Tools Architecture](concepts/web-tools-architecture.md) — Web Tools 搜索/提取架构: 概述
+- [What Every Programmer Should Know About Memory](concepts/what-every-programmer-should-know-about-memory.md) — What Every Programmer Should Know About Memory — Ulrich Drepper: Overview
+- [Worktree Isolation](concepts/worktree-isolation.md) — Git Worktree 隔离: 概述
+- [Zero Knowledge Proofs](concepts/zero-knowledge-proofs.md) — Zero-Knowledge Proofs: Three Properties
+- [Hallmarks Aging Skin](concepts/hallmarks-aging-skin.md) — 12 Hallmarks of Aging mapped to cutaneous biology (genomic instability, telomere attrition, senescence, etc.)
+- [Inflammaging Systemic Connection](concepts/inflammaging-systemic-connection.md) — Chronic inflammation linking skin aging to cardiovascular disease, bone loss, cognitive decline, and gut health
+- [Senotherapeutics Skin Aging](concepts/senotherapeutics-skin-aging.md) — Senolytics (D+Q), senomorphics (rapamycin), NAD+ boosters, and mitochondrial medicines for skin rejuvenation
+- [Skin Health Biological Aging](concepts/skin-health-biological-aging.md) — Skin as window into systemic biological aging; exposome concept; bidirectional skin-systemic connections
+
+## Comparisons
+
+- [Ces Vs Adhd Comparison](comparisons/ces-vs-adhd-comparison.md) — Cognitive Disengagement Syndrome vs ADHD: Differential Diagnosis Framework, Mechanism Distinctions and Treatment Implications
+
+## Queries
+
+- [Deep Thinker Psychology Evidence Assessment](queries/deep-thinker-psychology-evidence-assessment.md) — Deep Thinker Psychology: Clinical evidence assessment of Aperture's "The Depressing Psychology of Deep Thinkers" (2025) — 70% grounded, 20% oversimplified, 10% invention

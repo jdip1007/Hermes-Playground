@@ -1,0 +1,451 @@
+---
+title: Auxiliary Client 辅助客户端架构
+created: 2026-04-08
+updated: '2026-06-08'
+type: concept
+tags:
+- agent-system
+- tool
+- ai-ml
+sources:
+- title: Hermes-Wiki Repository
+  type: web
+  url: https://github.com/cclank/Hermes-Wiki
+confidence: high
+contested: false
+---
+# Auxiliary Client — 辅助客户端架构
+
+## 概述
+
+Auxiliary Client 位于 `agent/auxiliary_client.py`（约 225KB / 5286 行），是 Hermes Agent 的**辅助 LLM 客户端路由器**。它为所有非主对话的 LLM 任务（上下文压缩、会话搜索摘要、视觉分析、Web 提取、技能快照生成等）提供统一的提供商解析和调用接口 [1]。
+
+核心理念：**所有辅助任务共享同一个提供商解析链，避免每个消费者重复实现 fallback 逻辑** [1]。
+
+> **v0.12.0（2026-05-05）变更**：辅助模型 lookup 现在**优先读 `ProviderProfile.default_aux_model`**（`agent/auxiliary_client.py:228`），仅在 profile 缺失或字段为空时才退回到 legacy 硬编码字典 `_API_KEY_PROVIDER_AUX_MODELS_FALLBACK`。新 provider 一律应通过 `plugins/model-providers/<name>/__init__.py` 设 profile.default_aux_model，不要再加进 fallback 字典。详见 [Provider Transport Architecture](provider-transport-architecture.md) 与 changelog `2026-05-05-update`。
+
+## 架构原理
+
+### 设计目标
+
+辅助任务与主对话不同：
+- **成本敏感**：不需要用最贵的模型，快速廉价即可 [1]
+- **可靠性要求高**：不能因为一个 provider 欠费就整个功能不可用 [1]
+- **多模态需求**：部分任务需要视觉能力 [1]
+- **异步支持**：Web 提取等任务需要 async [1]
+
+Auxiliary Client 通过**多层 provider 解析 + 自动降级 + 客户端缓存**解决这些问题 [1]。
+
+### 提供商解析链（auto 模式）
+
+`_resolve_auto()` 分两步：
+
+```
+Step 1: 非聚合器主提供商 → 直接用主模型凭证
+        （main_provider 不在 {"openrouter", "nous"} 时）
+
+Step 2: 走 _get_provider_chain() 降级链（按序）:
+  1. ("openrouter",   _try_openrouter)        OPENROUTER_API_KEY
+  2. ("nous",         _try_nous)              ~/.hermes/auth.json 活跃 provider
+  3. ("local/custom", _try_custom_endpoint)   config.yaml model.base_url + key
+  4. ("api-key",      _resolve_api_key_provider)  直接 API Key provider
+                                              (DeepSeek/Alibaba/ZAI/Kimi/MiniMax 等)
+  → 全部失败 → None（功能不可用）
+```
+
+**关键设计**：如果用户的主提供商是 Alibaba、DeepSeek、ZAI 等非聚合器，Step 1 会**直接使用主提供商的凭证**，无需额外配置 OpenRouter key。这大幅降低了使用门槛 [1]。
+
+**`openai-codex` 故意不在 `_get_provider_chain()` 里**：ChatGPT-账户 Codex 端点只接受一个不断变化、未公开的模型 allow-list，用猜测的模型 ID 回退到它失败率很高。Codex 仅在用户主 provider *本身就是* `openai-codex` 时（Step 1），或调用方显式带 model 请求它时使用 [1]。
+
+### 不健康 provider 缓存
+
+当某辅助 provider 返回 HTTP 402（额度耗尽），`_mark_provider_unhealthy()` 把它标记为不健康 `_AUX_UNHEALTHY_TTL_SECONDS`（600 秒）。`_resolve_auto()` 的 Step 2 与 `_try_payment_fallback()` 都会查 `_is_provider_unhealthy()` 并跳过，避免每次 aux 调用都对一个已耗尽的 provider 浪费一个 RTT。缓存仅进程内、条目自动过期（充值后无需手动恢复） [1]。
+
+## 核心组件
+
+### 1. 适配器层（Adapter Pattern）
+
+Auxiliary Client 最大的架构亮点是**适配器模式**——让所有不同的 API 格式统一表现为 `client.chat.completions.create()` 接口 [1]。
+
+#### Codex Responses API 适配器
+
+```python
+class _CodexCompletionsAdapter:
+    """Drop-in shim: 接受 chat.completions.create() kwargs，
+    路由到 Codex Responses streaming API"""
+
+class CodexAuxiliaryClient:
+    """OpenAI 客户端兼容包装器，通过 Codex Responses API 路由"""
+```
+
+**转换细节**：
+- chat.completions 的 `content` 格式 → Responses API 的 `input` 格式
+- `{"type": "text", "text": "..."}` → `{"type": "input_text", "text": "..."}`
+- `{"type": "image_url", ...}` → `{"type": "input_image", ...}`
+- 流式响应 → 收集 output items + text deltas → 重建 chat.completions 格式
+- 支持工具调用（function_call）
+- 当 `get_final_response()` 返回空时，从流事件回填
+
+#### Anthropic Messages API 适配器
+
+```python
+class _AnthropicCompletionsAdapter:
+    """OpenAI 客户端兼容包装器，基于原生 Anthropic 客户端"""
+```
+
+通过 `agent.anthropic_adapter` 中的 `build_anthropic_kwargs` 和 `normalize_anthropic_response` 实现双向转换。
+
+#### 异步适配器
+
+```python
+class _AsyncCodexCompletionsAdapter:
+    """通过 asyncio.to_thread() 包装同步适配器"""
+
+class AsyncCodexAuxiliaryClient:
+    """匹配 AsyncOpenAI.chat.completions.create() 的异步包装器"""
+```
+
+### 2. 中央路由器（resolve_provider_client）
+
+```python
+def resolve_provider_client(
+    provider: str,          # "openrouter", "nous", "openai-codex", "auto"...
+    model: str = None,      # 模型覆盖
+    async_mode: bool = False,
+    raw_codex: bool = False,
+    explicit_base_url: str = None,
+    explicit_api_key: str = None,
+) -> Tuple[client, resolved_model]:
+```
+
+**单一入口点**：所有辅助消费者都应该通过此函数或公开辅助函数获取客户端，禁止临时查找认证环境变量 [1]。
+
+### 3. 自动检测（_resolve_auto）
+
+```python
+def _resolve_auto():
+    # Step 1: 非聚合器主提供商 → 直接用主模型
+    main_provider = _read_main_provider()
+    if main_provider not in {"openrouter", "nous"}:
+        client, resolved = resolve_provider_client(main_provider, main_model)
+        if client: return client, resolved
+    
+    # Step 2: 聚合器/降级链
+    for label, try_fn in _get_provider_chain():
+        client, model = try_fn()
+        if client: return client, model
+```
+
+**优越性**：先用主提供商（减少额外配置），再走降级链（确保可靠性） [1]。
+
+### 4. 任务级配置系统
+
+```python
+def _resolve_task_provider_model(task, provider, model, base_url, api_key):
+    """
+    优先级:
+      1. 显式参数 (provider/model/base_url/api_key)
+      2. 环境变量覆盖 (AUXILIARY_{TASK}_*, CONTEXT_{TASK}_*)
+      3. 配置文件 (auxiliary.{task}.* 或 compression.*)
+      4. "auto" (完整自动检测链)
+    """
+```
+
+**灵活性**：每个任务可以独立配置 provider、model、base_url、api_key [1]。
+
+### 5. 客户端缓存与事件循环管理
+
+```python
+_client_cache: Dict[tuple, tuple] = {}
+_client_cache_lock = threading.Lock()
+```
+
+**缓存策略**：
+- Key: `(provider, async_mode, base_url, api_key, loop_id)` [1]
+- 异步客户端包含 **事件循环 ID**，防止跨循环复用导致死锁 [1]
+- 检测到循环关闭时自动清理过期缓存 [1]
+
+**事件循环安全防护**：
+```python
+def neuter_async_httpx_del():
+    """禁用 AsyncHttpxClientWrapper.__del__ 的 aclose() 调度
+    
+    当 AsyncOpenAI 客户端被 GC 时，__del__ 会在 prompt_toolkit 的事件
+    循环上调度 aclose()，但底层 TCP transport 绑定在另一个循环上，
+    导致 RuntimeError("Event loop is closed")
+    """
+    AsyncHttpxClientWrapper.__del__ = lambda self: None
+
+def cleanup_stale_async_clients():
+    """每轮 agent 循环后清理过期的异步客户端"""
+    
+def shutdown_cached_clients():
+    """CLI 关闭前清理所有缓存客户端"""
+```
+
+这是 Hermes Agent 解决 **prompt_toolkit + async OpenAI SDK** 兼容性问题的关键代码 [1]。
+
+### 6. 分层 fallback：配置链 + 主 Agent 安全网 + 支付/限流/连接降级
+
+辅助调用的失败恢复分三类失败信号 × 两条 fallback 路径：
+
+**失败信号**：
+- `_is_payment_error(exc)` — HTTP 402、429 / 无状态码但带 `credits`、`insufficient funds`、`can only afford`、`billing`、`payment required`，以及 Bedrock / Vertex AI 的 daily quota 关键字（`quota exceeded`、`too many tokens per day`、`resource exhausted` 等——日 token 配额耗尽语义等同于 credit 耗尽）
+- `_is_rate_limit_error(exc)` — 限流（429）
+- `_is_connection_error(exc)` — 连接/超时（之后还会 `_evict_cached_client_instance(client)` 丢掉脏 client）
+
+**fallback 路径**（`call_llm` / `acall_llm` 内）：
+
+```
+should_fallback 触发条件:
+    resolved_provider == "auto"
+    OR _is_payment_error(first_err)       # capacity error 绕过 explicit-provider gate
+    OR _is_connection_error(first_err)
+
+is_auto:                                  # auto 用户
+    → _try_payment_fallback(resolved_provider, task, reason)
+      （沿 _get_provider_chain() 找下一个健康 provider）
+
+explicit-provider:                        # 用户配置了具体 aux provider
+    → 1. _try_configured_fallback_chain(task, ..., reason)
+         读 auxiliary.<task>.fallback_chain 列表，按序尝试
+         （每个 entry: {provider, model?, base_url?, api_key?}）
+    → 2. _try_main_agent_model_fallback(failed_provider, task, reason)
+         最后一道安全网——用主 agent 的 provider + model
+         （跳过 main_provider == failed_provider 与不健康 provider）
+
+全部耗尽 → 一次 user-visible warning + 抛出原始错误
+```
+
+`_try_main_agent_model_fallback` 的标签为 `main-agent(<provider>)`；只在显式 aux provider 模式下作为兜底（auto 模式不需要——它的 Step 1 就是主 agent 模型）。命中 payment error 还会把那个 provider 用 `_mark_provider_unhealthy()` 标 600 秒不健康，后续 aux 调用绕过它 [1]。
+
+**`config.yaml` 中的配置链示例**：
+
+```yaml
+auxiliary:
+  compression:
+    provider: anthropic
+    model: claude-haiku-4-5
+    fallback_chain:
+      - { provider: openrouter, model: google/gemini-3-flash-preview }
+      - { provider: nous }
+      - { provider: deepseek, model: deepseek-chat }
+```
+
+此外还有一条参数级 fallback：`max_tokens` 参数被 reasoning 模型拒绝时自动改用 `max_completion_tokens` 重试。
+
+### 7. 与 ProviderProfile 的集成
+
+Aux 默认模型解析优先读 `ProviderProfile.default_aux_model`，找不到时才回退到 `_API_KEY_PROVIDER_AUX_MODELS_FALLBACK` 字典（保留兼容尚未迁移到 profile 的 provider）。新 provider 应直接在它的 `ProviderProfile` 上设置 `default_aux_model`——不必再改 auxiliary_client。Transport 选择路径也复用主 agent 的 `get_transport()`（`agent/transports/__init__.py`），见调用点 `auxiliary_client.py:975 / 1019`，避免协议适配代码漂移 [1]。
+
+### 8. 公开 API
+
+| 函数 | 用途 |
+|---|---|
+| `get_text_auxiliary_client(task)` | 获取文本任务的同步客户端 |
+| `get_async_text_auxiliary_client(task)` | 获取文本任务的异步客户端 |
+| `call_llm(task, messages, ...)` | 中央同步 LLM 调用入口（含分层 fallback） |
+| `async_call_llm(task, messages, ...)` | 中央异步 LLM 调用入口（含分层 fallback） |
+| `extract_content_or_reasoning(response)` | 提取响应内容，支持 reasoning 模型 |
+| `get_available_vision_backends()` | 获取当前可用的视觉后端列表 |
+| `get_auxiliary_extra_body()` | 获取 provider 特定的 extra_body |
+| `auxiliary_max_tokens_param(value)` | 返回正确的 max tokens 参数名 |
+
+## 设计优越性
+
+### 对比分散式方案
+
+| 维度 | 分散方案（每个消费者独立实现） | Auxiliary Client（集中式） |
+|---|---|---|
+| 认证逻辑 | 每个文件各自读 env/config | 一处解析，处处使用 |
+| Fallback | 每个消费者各自实现 | 统一的降级链 |
+| 支付降级 | 通常缺失 | 自动检测 + 切换 |
+| 客户端缓存 | 重复创建连接 | 共享缓存，减少开销 |
+| 事件循环安全 | 容易遗漏 | 统一管理 |
+| 新 provider 接入 | 需要改 N 个文件 | 只需加一个 try_* 函数 |
+
+### 适配器模式的优越性
+
+- **调用者零感知**：context_compressor、web_tools、session_search 都只调用 `client.chat.completions.create()`，不需要知道底层是 Chat Completions、Responses API 还是 Messages API [1]
+- **可测试性**：每个适配器可独立测试 [1]
+- **可扩展性**：新 API 格式只需增加一个适配器类 [1]
+
+## 配置与操作
+
+### config.yaml 配置
+
+```yaml
+auxiliary:
+  compression:
+    provider: auto        # 或 openrouter, nous, custom, anthropic, deepseek, ...
+    model: gemini-3-flash
+    timeout: 30
+    # 可选：失败时的有序 fallback 链（仅在 provider != "auto" 时生效）
+    fallback_chain:
+      - { provider: openrouter, model: google/gemini-3-flash-preview }
+      - { provider: nous }
+  vision:
+    provider: auto
+    model: claude-haiku-4-5
+  web_extract:
+    provider: openrouter
+    model: google/gemini-3-flash-preview
+    api_key: sk-xxx
+    base_url: https://custom-endpoint.com/v1
+  curator:                # v0.12.0 起：Curator 统一归在 auxiliary 之下
+    provider: auto
+    model: claude-haiku-4-5
+  prompt_caching:         # v0.12.0+
+    cache_ttl: 5m         # 或 1h（cost-vs-warmth tradeoff）
+```
+
+### Curator 统一归在 `auxiliary.curator`（v0.12.0+）
+
+`agent/curator.py:1606-1614`、`hermes_cli/config.py:3895`：Curator 不再是独立配置 namespace，而是和 compression/vision/web_extract 平级的 auxiliary 任务。从 `hermes model` 里挑 Curator 用的模型、从 dashboard 里管。详见 [Skills System Architecture](skills-system-architecture.md)。
+
+### prompt_caching 也归在 auxiliary 之下（v0.12.0+）
+
+`auxiliary.prompt_caching.cache_ttl` 默认 `"5m"`，可选 `"1h"`（`agent/prompt_caching.py:51`、`agent/agent_init.py:475-485`）。详见 [Prompt Caching Optimization](prompt-caching-optimization.md)。
+
+### 环境变量覆盖
+
+```bash
+# 为特定任务设置 provider
+export AUXILIARY_VISION_PROVIDER=anthropic
+export AUXILIARY_COMPRESSION_MODEL=claude-haiku-4-5
+export AUXILIARY_WEB_EXTRACT_BASE_URL=https://my-endpoint/v1
+export AUXILIARY_WEB_EXTRACT_API_KEY=sk-xxx
+```
+
+### Plugin 注册新 auxiliary task slot（2026-05-24，`e752c94`）
+
+`hermes_cli/plugins.py:825 PluginContext.register_auxiliary_task(key, ...)` 让插件声明自有 auxiliary task slot 而不动核心。详见 [Hook System Architecture](hook-system-architecture.md) "v2026.5.x 插件增强 → `ctx.register_auxiliary_task()`"。
+
+gateway 启动时：
+
+```python
+# gateway/run.py:780-820 _resolve_runtime_agent_kwargs
+_aux_bridged_keys = {"vision", "web_extract", "approval"}
+try:
+    from hermes_cli.plugins import get_plugin_auxiliary_tasks
+    for _entry in get_plugin_auxiliary_tasks():
+        _aux_bridged_keys.add(_entry["key"])
+except Exception:
+    pass
+
+for _task_key in _aux_bridged_keys:
+    _task_cfg = _auxiliary_cfg.get(_task_key, {})
+    # ... 桥接 provider/model/base_url/api_key 到 AUXILIARY_<KEY>_*
+```
+
+`get_plugin_auxiliary_tasks()`（`hermes_cli/plugins.py:1668`）汇总所有插件注册的 task entry，循环统一桥接，避免每个插件 fork 核心。
+
+### 查看可用视觉后端
+
+```python
+from agent.auxiliary_client import get_available_vision_backends
+print(get_available_vision_backends())
+# 输出: ['openrouter', 'nous', 'anthropic'] (取决于配置)
+```
+
+## v0.14 增量 — Codex Responses API 修复簇（2026-05-27 wave）
+
+> Codex 是 OpenAI Responses API（不是 Chat Completions）的内部 SDK 接入。从单日合入的 11 个 codex 子修复看，本 wave 把 Codex adapter 从「容易失败」转为「失败时进入 graceful 路径」。
+
+主线进展：从 SDK `responses.stream()` helper 切换到直接 consume events，让 partial / null output / large prefill / encrypted_content 三类失效都能在 adapter 层进入 graceful 路径，不再上升为整个 turn 的失败。
+
+| Commit | 修复 |
+|--------|------|
+| `cb38ce2` | **refactor(codex): drop SDK `responses.stream()` helper; consume events directly (#33042)** — 转直接事件消费 |
+| `e8955f2` | **fix(codex): drop dead model slugs that HTTP 400 on ChatGPT Pro (#33424)** — 模型 catalog 清理 |
+| `fc47b72` | **fix(codex): omit `tools` key from Codex Responses kwargs when no tools registered** — 空 tools key 触发 API 拒绝 |
+| `283bb81` | **fix(agent): tolerate large codex stream prefill** |
+| `486d632` | **fix(auxiliary): coerce `None final.output` to empty list in Codex aux adapter** |
+| `69dfcdc` | **fix(auth): codex chat path falls back to `credential_pool` when singleton is empty** |
+| `f1422ff` | **fix(gateway): classify Codex 429 quota as rate-limit, not missing credentials** — 错误分类修正 |
+| `2bbd534` | **fix(cli): sync `credential_pool` on Codex re-auth** |
+| `9c69204` | **fix(codex_responses_adapter): drop foreign-issuer reasoning on replay** |
+| `b1a46b3` | **fix(codex): drop transient `rs_tmp` reasoning replay state** |
+| `4243b6d` | **fix(codex): update silent-hang workaround hint** |
+| `b6ca56f` | **fix(codex-responses): gracefully recover from `invalid_encrypted_content` (salvage #10144, #33035)** |
+| `43a3f11` | **fix(agent): recover Codex streams with null output** |
+| `bba5097` | **fix: parse Codex image generation SSE directly** |
+
+### Provider fallback 凭据池隔离（2026-05-27）
+
+- `2e18160` **fix(agent): isolate credential pool on provider fallback** — fallback 触发时不再 leak 凭据池给非预期 provider
+- `414a5bc` **fix(auth): fall back to global auth.json in `_load_provider_state`**
+- `c6a992e` **fix(security): derive `<VENDOR>_API_KEY` from host as final credential fallback**
+
+### switch_model 失败 rollback（2026-05-27）
+
+- `f0de3cd` **fix(agent): roll back `switch_model()` state when client rebuild fails (#33228)** — 模型切换时 client rebuild 异常不再让 agent 卡在半切换状态
+
+### Auxiliary 统一 main-model fallback（2026-05-25 wave，已在上次同步）
+
+`auxiliary_client.py` 在 vision / web_extract / compression 各 task 上都接 main-model fallback —— 详见 [2026 05 25 Update](../changelogs/2026-05-25-update.md)。
+
+## v0.15.1 维护窗口增量（2026-05-31，hermes `eb3cf9750`）
+
+### 1. Cumulative-Resend 工具参数修复 → 6h 后 revert（streaming saga）
+
+**Round 1 — `ca03486b6 fix(streaming): stop duplicating tool-call args from cumulative-resend providers (#35718)`**：
+
+- DeepSeek / Baidu Qianfan 的 stream tool-call **不是 delta 模式**：每个 chunk 重发**截至目前完整 args**，而不是新片段。
+- 通用 stream 累加器盲目 `+=` 把 `{"x":` + `{"x":1}` 拼成 `{"x":{"x":1}`，json.loads 失败被清成 `{}`。
+- 修：每槽加 cumulative-resend latch —— delta 是 prev 严格超集（`len(_new) > len(_prev)` 且 `_new.startswith(_prev)`）就触发，把新累积值替换而非追加。
+
+**Round 2 — `2b5268f71 revert: drop cumulative-resend tool-arg heuristic from shared streaming path (#35718) (#35860)` (6h 后)**：
+
+- latch 误触正常 provider 的 delta：部分 delta 也会**偶然满足** `startswith`（如先发 `{"x":1`、后发 `{"x":1, "y":2}` —— 第二条既是 delta extension 也是第一条的 superset）。
+- 把正常增量误判为累积重发，反而**漏数据**。
+- → 共享 streaming path 不带 cumulative-resend 启发式；DeepSeek / Qianfan 的修复需另开 **provider 局部分支**。
+
+**教训**：在 polymorphic stream protocol 上做启发式判定要么 100% 准要么不要做。
+
+### 2. Anthropic thinking-signature 在 orphan-strip 后降级（`64628ea89`）
+
+`fix(anthropic): demote dead thinking signature when orphan-strip mutates the latest turn`：
+
+- Claude 4.6+（含 Opus 4.8）的 extended-thinking 模型在 assistant turn 同时携带**并行 `tool_use` 块**时也输出**签名的 `thinking` 块**。Anthropic 服务端对该签名校验**完整原始 turn content**。
+- 当 orphan-strip（剥离没有 `tool_result` 配对的 `tool_use` 块）改写了**最新 turn** 后，原签名因校验 hash 变化而失效。
+- 修：检测 orphan-strip mutate 了最新 turn 后，把 thinking 块从 "signed thinking" 降级为**普通文本块**（保留内容，去签名字段）。不再因签名校验失败拒整轮。
+
+[Provider Transport Architecture](provider-transport-architecture.md) 的 Anthropic transport 会经此规范化层。
+
+### 3. 辅助 LLM 默认不再 cap max_tokens（`2062a8400`，#34530/#34845）
+
+`fix(auxiliary): stop capping output with max_tokens by default`：
+
+- 默认 `max_tokens` cap 让 summary / vision / web_extract 等长输出被截。
+- 改：默认不 cap；用户可在 config 显式 set。
+
+### 4. Custom provider auxiliary 路由（`40fcb9658` + `622e53437`）
+
+`fix(auxiliary): pass base_url/api_key/api_mode through set_runtime_main for custom providers`：
+
+- 用户配 `custom:openclaw-router` 时，`set_runtime_main()` 仅存 provider + model 到 process-local globals。
+- auxiliary_client 解析时拿不到 base_url / api_key / api_mode → 走默认 provider endpoint 失败。
+- 修：runtime main 状态完整携带 4 元组 `(provider, model, base_url, api_key, api_mode)`。
+- e2e 测试 `622e53437` 断言 custom-provider aux 解析正确路由。
+
+### 5. Agent outer-loop 异常分类（`59b0ea98c` + `fb0ab2764`）
+
+Turn-completion explainer —— 详见 [Agent Loop And Prompt Assembly](agent-loop-and-prompt-assembly.md) §2026-05-31 增量。
+
+---
+
+## 与其他系统的关系
+
+- [Provider Transport Architecture](provider-transport-architecture.md) — auxiliary_client 复用 `get_transport()` 与 `ProviderProfile`（`default_aux_model`）
+- [Context Compressor Architecture](context-compressor-architecture.md) — 使用 `get_text_auxiliary_client("compression")`
+- [Tool Registry Architecture](tool-registry-architecture.md) — web_tools 和 browser_tool 通过 registry 注册
+- [Credential Pool And Isolation](credential-pool-and-isolation.md) — 使用 `load_pool()` 获取凭证
+- [Prompt Builder Architecture](prompt-builder-architecture.md) — 辅助客户端不参与主对话提示构建
+- [Model Tools Dispatch](model-tools-dispatch.md) — model_tools.py 通过 auxiliary_client 处理侧边任务
+
+## Related Pages
+
+- [[Configuration And Profiles|configuration-and-profiles]]
+- [[Gateway Session Management|gateway-session-management]]
+---
