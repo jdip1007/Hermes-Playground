@@ -1,0 +1,15 @@
+# GitHub Pages Jekyll Config for LLM Wiki
+# MkDocs mkdocs.yml is ignored by GitHub Pages — this file enables proper rendering
+
+markdown: kramdown
+kramdown:
+  input: GFM  # GitHub Flavored Markdown — supports tables, strikethrough, autolinks
+  syntax_highlighter: rouge
+
+# Use minima base theme (included with GitHub Pages) — extends with custom CSS below
+theme: minima
+
+exclude:
+  - __pycache__
+  - "*.pyc"
+  - node_modules
