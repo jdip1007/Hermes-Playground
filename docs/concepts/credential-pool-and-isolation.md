@@ -1,5 +1,7 @@
+
+
 ---
-title: 凭证池与环境隔离系统
+title: Credential pool and environment isolation system
 created: 2026-04-07
 updated: '2026-06-08'
 type: concept
@@ -15,83 +17,83 @@ sources:
 confidence: high
 contested: false
 ---
-# 凭证池与环境隔离系统
+# Credential pool and environment isolation system
 
-## 设计原理
+## Design principles
 
-企业场景需要多个 API 密钥实现：[1]
-1. **负载均衡** — 多个密钥分担请求
-2. **故障转移** — 一个密钥限速时自动切换
-3. **成本控制** — 不同密钥有不同预算
+Enterprise scenarios require multiple API key implementations: [1]
+1. **Load Balancing** — Multiple key sharing requests
+2. **Failover** — Automatically switches when a key is rate-limited
+3. **Cost Control** — Different keys have different budgets
 
-Hermes 实现了**凭证池系统**，支持多密钥自动轮换。[1]
+Hermes implements a credential pool system that supports automatic rotation of multiple keys. [1]
 
-## 凭证池架构
+## Credential pool architecture
 
-核心数据结构位于 `agent/credential_pool.py`（不是 `tools/`）：[1]
+The core data structure is located in `agent/credential_pool.py` (not `tools/`): [1]
 
-- **`PooledCredential`** — 单个凭证条目（dataclass），包含 `runtime_api_key`、`runtime_base_url`、耗尽状态和计数
-- **`CredentialPool`** — 凭证池，管理多个凭证的选择、轮换和恢复
+- **`PooledCredential`** — A single credential entry (dataclass) containing `runtime_api_key`, `runtime_base_url`, depletion status, and count
+- **`CredentialPool`** — Credential pool, manages the selection, rotation and recovery of multiple credentials
 
-### 4 种选池策略
+### 4 pool selection strategies
 
 ```yaml
 # config.yaml
 credential_pool:
-  strategy: round_robin  # 默认
+  strategy: round_robin  # default
 ```
 
-| 策略 | 行为 |
+| Strategy | Behavior |
 |------|------|
-| `fill_first` | 一直用第一个，直到耗尽才切下一个 |
-| `round_robin` | 依次轮换，均匀分担 |
-| `random` | 随机选一个可用的 |
-| `least_used` | 选使用次数最少的 |
+| `fill_first` | Keep using the first one until it runs out before cutting off the next one |
+| `round_robin` | Rotate in turn and share evenly |
+| `random` | Randomly select an available |
+| `least_used` | Choose the least used |
 
-### 关键方法[1]
+### Key method[1]
 
-- `select()` — 按策略选择下一个可用凭证
-- `mark_exhausted(entry)` — 标记耗尽 + 自动轮换（耗尽 TTL 为 1 小时，过期自动恢复）
-- `try_refresh(entry)` — OAuth token 刷新
-- `has_available()` — 是否还有可用凭证
+- `select()` — Selects the next available credential by policy
+- `mark_exhausted(entry)` — Tag exhaustion + automatic rotation (exhaustion TTL is 1 hour, automatic recovery after expiration)
+- `try_refresh(entry)` — OAuth token refresh
+- `has_available()` — whether there are any credentials available
 
-## 凭证轮换逻辑[1]
+## Voucher rotation logic[1]
 
 ```python
-# 402 (账单耗尽) — 立即轮换
+# 402 (billing exhausted) — rotate immediately
 if status_code == 402:
     next_entry = pool.mark_exhausted_and_rotate(status_code=402, ...)
     if next_entry:
         self._swap_credential(next_entry)
         return True, False
 
-# 429 (速率限制) — 第一次重试，第二次轮换
+# 429 (rate limit) — retry first time, rotate second time
 if status_code == 429:
     if not has_retried_429:
-        return False, True  # 重试相同凭证
+        return False, True  # retry with same credential
     next_entry = pool.mark_exhausted_and_rotate(status_code=429, ...)
     if next_entry:
         self._swap_credential(next_entry)
         return True, False
 
-# 401 (未授权) — 先刷新，失败则轮换
+# 401 (unauthorized) — refresh first, rotate on failure
 if status_code == 401:
     refreshed = pool.try_refresh_current()
     if refreshed:
         self._swap_credential(refreshed)
         return True, has_retried_429
-    # 刷新失败 — 轮换
+    # refresh failed — rotate
     next_entry = pool.mark_exhausted_and_rotate(status_code=401, ...)
     if next_entry:
         self._swap_credential(next_entry)
         return True, False
 ```
 
-## 凭证交换[1]
+## Credential Exchange[1]
 
 ```python
 def _swap_credential(self, entry) -> None:
-    """交换凭证"""
+    """Swap credential"""
     runtime_key = getattr(entry, "runtime_api_key", None)
     runtime_base = getattr(entry, "runtime_base_url", None) or self.base_url
     
@@ -113,77 +115,77 @@ def _swap_credential(self, entry) -> None:
     self._replace_primary_openai_client(reason="credential_rotation")
 ```
 
-## OAuth 死 token 隔离（quarantine）[1]
+## OAuth dead token quarantine(quarantine)[1]
 
-MiniMax / Codex / xAI OAuth 现在会在**终止性刷新失败**时隔离死 token：当刷新触发需要重新登录的 `AuthError`（`relogin_required`）时，`access_token`、`refresh_token`、`expires_at` 会从 `auth.json` 中剥离，并写入一条 `last_auth_error` 记录。这样后续调用会**快速失败**，不再发起网络重试（`hermes_cli/auth.py:6795-6811`，沿用既有的 Nous 隔离模式）。
+MiniMax/Codex/xAI OAuth now isolates dead tokens on **terminating refresh failure**: when a refresh triggers `AuthError` (`relogin_required`) that requires a re-login, `access_token`, `refresh_token`, `expires_at` are stripped from `auth.json` and a `last_auth_error` record is written. In this way, subsequent calls will fail quickly and no network retries will be initiated (`hermes_cli/auth.py:6795-6811`, continuing the existing Nous isolation mode).
 
-## Nous Invoke JWT 优先[1]
+## Nous Invoke JWT takes precedence [1]
 
-Nous 推理认证现在优先使用一个**作用域受限的 invoke JWT**（`auth.json` 中的 `invoke_jwt`），直接作为推理的 `access_token`。当 JWT 认证不可用或失败时，回退到旧的不透明 24 小时会话密钥（`hermes_cli/auth.py:16-17,89-94`）。设置 `HERMES_AGENT_USE_LEGACY_SESSION_KEYS` 可强制使用旧路径用于调试或回滚。
+Nous inference authentication now prefers to use a **scope-restricted invoke JWT** (`invoke_jwt` in `auth.json`), directly as the `access_token` for inference. Fallback to the old opaque 24-hour session key (`hermes_cli/auth.py:16-17,89-94`) when JWT authentication is unavailable or fails. Setting `HERMES_AGENT_USE_LEGACY_SESSION_KEYS` forces the use of the old path for debugging or rollback.
 
-## 环境隔离[1]
+## Environmental isolation[1]
 
 ```python
-# HERMES_HOME 隔离
+# HERMES_HOME isolation
 def get_hermes_home() -> Path:
-    """获取 Hermes 主目录（支持 Profile 覆盖）"""
+    """Get Hermes home directory (supports Profile override)"""
     env_override = os.getenv("HERMES_HOME")
     if env_override:
         return Path(env_override)
     return Path.home() / ".hermes"
 
-# Profile 支持
-# ~/.hermes/ 是默认 Profile
-# HERMES_HOME=/path/to/custom 使用自定义 Profile
+# Profile support
+# ~/.hermes/ is the default Profile
+# HERMES_HOME=/path/to/custom uses custom Profile
 ```
 
-### Profile 隔离的内容[1]
+### Profile isolated content[1]
 
-| 内容 | 隔离 | 共享 |
+| content | isolation | shared |
 |------|------|------|
-| 配置 (config.yaml) | ✅ | ❌ |
-| 密钥 (.env) | ✅ | ❌ |
-| 技能 (~/.hermes/skills/) | ✅ | ❌ |
-| 记忆 (~/.hermes/memories/) | ✅ | ❌ |
-| 会话数据库 | ✅ | ❌ |
-| 代码仓库 | ❌ | ✅ |
+| Configuration (config.yaml) | ✅ | ❌ |
+| Key (.env) | ✅ | ❌ |
+| Skills (~/.hermes/skills/) | ✅ | ❌ |
+| Memories (~/.hermes/memories/) | ✅ | ❌ |
+| session database | ✅ | ❌ |
+| code repository | ❌ | ✅ |
 
-## 终端后端环境隔离[1]
+## Terminal backend environment isolation[1]
 
 ```python
 # tools/environments/
-# 每个终端后端提供隔离的执行环境
+# Each terminal backend provides an isolated execution environment
 
-local.py      # 本地执行（共享文件系统）
-docker.py     # Docker 容器隔离
-ssh.py        # SSH 远程执行
-modal.py      # Modal 无服务器隔离
-daytona.py    # Daytona 沙箱隔离
-singularity.py # Singularity 容器隔离
+local.py      # local execution (shared filesystem)
+docker.py     # Docker container isolation
+ssh.py        # SSH remote execution
+modal.py      # Modal serverless isolation
+daytona.py    # Daytona sandbox isolation
+singularity.py # Singularity container isolation
 ```
 
-## 优越性分析[1]
+## Superiority Analysis[1]
 
-### 与其他 Agent 框架对比
+### Comparison with other Agent frameworks
 
-| 特性 | Hermes | Cursor | OpenCode |
+| characteristic | Hermes | Cursor | OpenCode |
 |------|--------|--------|----------|
-| 凭证池 | ✅ 多密钥轮换 | ❌ | ❌ |
-| 自动故障转移 | ✅ 402/429/401 | ❌ | ❌ |
-| OAuth 刷新 | ✅ 自动 | ❌ | ❌ |
-| Profile 隔离 | ✅ HERMES_HOME | ❌ | ❌ |
-| 终端后端隔离 | ✅ 6 种后端 | ❌ | ✅ Docker |
+| Credential pool | ✅Multiple key rotation | ❌ | ❌ |
+| Automatic failover | ✅ 402/429/401 | ❌ | ❌ |
+| OAuth refresh | ✅ Automatic | ❌ | ❌ |
+| Profile isolation | ✅ HERMES_HOME | ❌ | ❌ |
+| Terminal backend isolation | ✅ 6 backends | ❌ | ✅ Docker |
 
-## 相关页面
+## Related pages
 - [[Multi Agent Architecture|multi-agent-architecture]]
 - [[Agent Loop And Prompt Assembly|agent-loop-and-prompt-assembly]]
 
-- [Interrupt And Fault Tolerance](interrupt-and-fault-tolerance.md) — 中断传播与容错机制（凭证轮换逻辑）
-- [Auxiliary Client Architecture](auxiliary-client-architecture.md) — 辅助客户端使用凭证池获取认证
-- [Configuration And Profiles](configuration-and-profiles.md) — Profile 隔离与凭证管理
+- [Interrupt And Fault Tolerance](interrupt-and-fault-tolerance.md) — Interrupt propagation and fault tolerance mechanism (credential rotation logic)
+- [Auxiliary Client Architecture](auxiliary-client-architecture.md) — A secondary client obtains authentication using a credential pool
+- [Configuration And Profiles](configuration-and-profiles.md) — Profile isolation and credential management
 
-## 相关文件
+## Related documents
 
-- `agent/credential_pool.py` — 凭证池（4 种策略 + 耗尽恢复）
-- `hermes_cli/auth.py` — 凭证解析、OAuth 死 token 隔离、Nous invoke JWT
-- `tools/environments/` — 终端后端环境
+- `agent/credential_pool.py` — Credential Pool (4 strategies + exhaustion recovery)
+- `hermes_cli/auth.py` — Credential parsing, OAuth dead token isolation, Nous invoke JWT
+- `tools/environments/` — terminal backend environment

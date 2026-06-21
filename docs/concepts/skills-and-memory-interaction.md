@@ -16,37 +16,37 @@ sources:
 confidence: high
 contested: false
 ---
-# 技能与记忆的交互
+# Skills and Memory Interaction
 
-## 设计哲学
+## Design Philosophy
 
-Skills 和 Memory 是 Hermes Agent 的两种**不同类型的持久化机制**，它们互补而非竞争[1]：
+Skills and Memory are two **different types of persistence mechanisms** for the Hermes Agent; they complement rather than compete with each other[1]:
 
-| 维度 | Memory | Skills |
+| Dimension | Memory | Skills |
 |------|--------|--------|
-| **存储内容** | 事实、偏好、经验教训 | 程序化知识、工作流 |
-| **容量** | MEMORY.md: 2200 字符<br>USER.md: 1375 字符[1] | 无硬性限制[1] |
-| **格式** | 条目列表（§ 分隔） | Markdown 文档 + 文件结构[1] |
-| **用途** | 快速查阅稳定事实 | 复杂任务的完整指南[1] |
-| **加载方式** | 注入系统提示[1] | 渐进式披露（元数据 → 完整内容）[1] |
-| **何时使用** | 用户偏好、环境事实、工具特性 | 5+ 工具调用的复杂工作流[1] |
+| **Stored Content** | Facts, preferences, lessons learned | Procedural knowledge, workflows |
+| **Capacity** | MEMORY.md: 2200 characters<br>USER.md: 1375 characters[1] | No hard limit[1] |
+| **Format** | Item list (§ separated) | Markdown documents + file structure[1] |
+| **Purpose** | Quick reference for stable facts | Complete guides for complex tasks[1] |
+| **Loading Method** | Injected into system prompt[1] | Progressive disclosure (metadata → full content)[1] |
+| **When to Use** | User preferences, environmental facts, tool quirks | Complex workflows with 5+ tool calls[1] |
 
-## 决策树
+## Decision Tree
 
 ```text
-完成任务后，问：
+After completing a task, ask:
 
-这个知识是...
-├─ 一个简单的稳定事实？ → 保存到 Memory
-│   （如 "用户喜欢中文"、"服务器在 /root"）
+Is this knowledge...
+├─ A simple, stable fact? → Save to Memory
+│   (e.g., "User prefers Chinese", "Server is at /root")
 │
-└─ 一个复杂的程序化流程？ → 创建为 Skill
-    （如 "部署 ML 模型的步骤"、"调试 X 问题的流程"）
+└─ A complex procedural workflow? → Create as a Skill
+    (e.g., "Steps to deploy an ML model", "Process for debugging issue X")
 ```
 
-## 行为指导
+## Behavioral Guidelines
 
-### Memory 指导（注入系统提示）[1]
+### Memory Guidelines (Injected into System Prompt)[1]
 
 ```text
 You have persistent memory across sessions. Save durable facts using the memory tool:
@@ -61,7 +61,7 @@ Do NOT save task progress, session outcomes, completed-work logs, or temporary
 TODO state to memory; use session_search to recall those from past transcripts.[1]
 ```
 
-### Skills 指导（注入系统提示）[1]
+### Skills Guidelines (Injected into System Prompt)[1]
 
 ```text
 After completing a complex task (5+ tool calls), fixing a tricky error,
@@ -73,27 +73,27 @@ patch it immediately with skill_manage(action='patch') — don't wait to be aske
 Skills that aren't maintained become liabilities.[1]
 ```
 
-## 技能自我改进循环[1]
+## Skill Self-Improvement Loop[1]
 
 ```text
-1. Agent 执行复杂任务（5+ 工具调用）
+1. Agent executes a complex task (5+ tool calls)
    ↓
-2. 检测到新模式或工作流
+2. Detects a new pattern or workflow
    ↓
-3. 使用 skill_manage(action='create') 创建技能
+3. Creates a skill using skill_manage(action='create')
    ↓
-4. 下次遇到类似任务 → skills_list 发现该技能
+4. Next time a similar task is encountered → skills_list discovers the skill
    ↓
-5. skill_view 加载完整指令
+5. skill_view loads full instructions
    ↓
-6. 执行过程中发现问题 → skill_manage(action='patch') 修复
+6. Issues found during execution → Fix with skill_manage(action='patch')
    ↓
-7. 技能持续改进[1]
+7. Skill continuously improves[1]
 ```
 
-## Session Search 的作用[1]
+## Role of Session Search[1]
 
-`session_search` 是第三种持久化机制，用于回忆**过去的对话**[1]：
+`session_search` is the third persistence mechanism, used to recall **past conversations**[1]:
 
 ```text
 When the user references something from a past conversation or you suspect
@@ -101,33 +101,33 @@ relevant cross-session context exists, use session_search to recall it before
 asking them to repeat themselves.[1]
 ```
 
-三种机制对比[1]：
+Comparison of the Three Mechanisms[1]:
 
-| 机制 | 内容 | 检索方式 |
+| Mechanism | Content | Retrieval Method |
 |------|------|----------|
-| **Memory** | 稳定事实 | 每轮自动注入系统提示[1] |
-| **Skills** | 程序化知识 | 按需加载（渐进式披露）[1] |
-| **Session Search** | 过去对话记录 | FTS5 全文搜索 + LLM 摘要[1] |
+| **Memory** | Stable facts | Automatically injected into system prompt every turn[1] |
+| **Skills** | Procedural knowledge | Loaded on demand (progressive disclosure)[1] |
+| **Session Search** | Past conversation records | FTS5 full-text search + LLM summarization[1] |
 
-## 实际示例[1]
+## Practical Examples[1]
 
-### 保存到 Memory[1]
+### Saving to Memory[1]
 
 ```python
-# 用户纠正
-memory(action='add', target='user', content='用户偏好使用中文交流')
+# User correction
+memory(action='add', target='user', content='User prefers communicating in Chinese')
 
-# 环境事实
-memory(action='add', target='memory', content='服务器是 Ubuntu 22.04，Python 3.11')
+# Environmental fact
+memory(action='add', target='memory', content='Server is Ubuntu 22.04, Python 3.11')
 
-# 工具特性
-memory(action='add', target='memory', content='patch 工具使用模糊匹配，minor whitespace 差异不会破坏它')[1]
+# Tool quirk
+memory(action='add', target='memory', content='patch tool uses fuzzy matching; minor whitespace differences will not break it')[1]
 ```
 
-### 创建为 Skill[1]
+### Creating as a Skill[1]
 
 ```python
-# 复杂工作流
+# Complex workflow
 skill_manage(
     action='create',
     name='deploy-ml-model',
@@ -135,27 +135,27 @@ skill_manage(
 )[1]
 ```
 
-## 维护优先级[1]
+## Maintenance Priority[1]
 
 ```text
 Memory > Skills > Session Search[1]
 ```
 
-- **Memory** 最重要 — 每轮都注入，直接影响行为[1]
-- **Skills** 次之 — 按需加载，但影响复杂任务质量[1]
-- **Session Search** 最后 — 用于回忆上下文，不是核心行为[1]
+- **Memory** is most important — injected every turn, directly influences behavior[1]
+- **Skills** are next — loaded on demand, but affect the quality of complex tasks[1]
+- **Session Search** is last — used for recalling context, not core behavior[1]
 
-## 相关页面
+## Related Pages
 - [[Agent Loop And Prompt Assembly|agent-loop-and-prompt-assembly]]
 
-- [Skills System Architecture](skills-system-architecture.md) — 技能系统渐进式披露架构
-- [Memory System Architecture](memory-system-architecture.md) — 记忆系统冻结快照与原子写入
-- [Session Search And Sessiondb](session-search-and-sessiondb.md) — 会话搜索作为第三种持久化机制
+- [Skills System Architecture](skills-system-architecture.md) — Progressive disclosure architecture for the skills system
+- [Memory System Architecture](memory-system-architecture.md) — Frozen snapshots and atomic writes for the memory system
+- [Session Search And Sessiondb](session-search-and-sessiondb.md) — Session search as the third persistence mechanism
 
-## 相关文件
+## Related Files
 
-- `agent/prompt_builder.py` — 指导文本定义
-- `tools/memory_tool.py` — Memory 实现
-- `tools/skills_tool.py` — Skills 实现
-- `tools/session_search_tool.py` — Session Search 实现
-- `hermes_state.py` — SessionDB（FTS5 搜索）
+- `agent/prompt_builder.py` — Guideline text definitions
+- `tools/memory_tool.py` — Memory implementation
+- `tools/skills_tool.py` — Skills implementation
+- `tools/session_search_tool.py` — Session Search implementation
+- `hermes_state.py` — SessionDB (FTS5 search)

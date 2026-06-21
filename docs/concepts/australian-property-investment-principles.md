@@ -7,7 +7,7 @@ tags: [finance]
 sources:
   - type: transcript
     url: "https://www.youtube.com/watch?v=kUZuIY7FB6o"
-    title: "7個房地產致富法則 (7 Real Estate Wealth Rules)" by Alison (澳洲Alison老師)
+title: "7 Real Estate Wealth Rules (7 Real Estate Wealth Rules)" by Alison (Australian Teacher Alison)
     date: 2026-06-07
 confidence: medium
 contested: false

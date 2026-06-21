@@ -1,5 +1,5 @@
 ---
-title: Checkpoint Manager v2 — 透明文件系统快照
+title: Checkpoint Manager v2 — Transparent Filesystem Snapshots
 created: 2026-05-14
 updated: '2026-06-08'
 type: concept
@@ -13,53 +13,53 @@ sources:
 confidence: high
 contested: false
 ---
-# Checkpoint Manager v2 — 透明文件系统快照
+# Checkpoint Manager v2 — Transparent Filesystem Snapshots
 
-## 概述
+## Overview
 
-`tools/checkpoint_manager.py` (1638 行) 在 `write_file` / `patch` / `terminal --dangerous` 之前**每轮**自动创建 shadow-git 快照，让用户可以回滚到任何 turn 之前的状态 [1]。v0.13.0 是大版本重写（**v2**），把 *per-project* shadow repo 改成 *单 shared bare-ish store*，对象去重 + 真 prune [1]。
+`tools/checkpoint_manager.py` (1638 lines) automatically creates a shadow-git snapshot **every turn** before `write_file` / `patch` / `terminal --dangerous`, allowing users to roll back to the state prior to any turn [1]. v0.13.0 is a major rewrite (**v2**), changing the *per-project* shadow repo to a *single shared bare-ish store*, with object deduplication + true pruning [1].
 
-> 关键定位：**这不是工具** —— LLM 永远看不到 checkpoint manager 在 schema 里 [1]。它是透明基础设施，受 `checkpoints` 配置 flag 或 `--checkpoints` CLI flag 控制 [1]。
+> Key positioning: **This is NOT a tool** — the LLM never sees the checkpoint manager in the schema [1]. It is transparent infrastructure, controlled by the `checkpoints` config flag or the `--checkpoints` CLI flag [1].
 
-## v1 → v2 变更
+## v1 → v2 Changes
 
-### v1 的问题（`tools/checkpoint_manager.py:24-30` 注释）[1]
+### Issues with v1 (comments at ``tools/checkpoint_manager.py:24-30``) [1]
 
-- 每个 working directory 一个完整 shadow git repo [1]
-- objects 不跨项目去重 [1]
-- 多项目用户磁盘暴涨 [1]
-- prune 形同虚设 [1]
+- One complete shadow git repo per working directory [1]
+- Objects are not deduplicated across projects [1]
+- Disk usage skyrockets for multi-project users [1]
+- Pruning is practically ineffective [1]
 
-### v2 设计：单 shared store
+### v2 Design: Single Shared Store
 
 ```
 ~/.hermes/checkpoints/
-    store/                           ← 单 bare-ish git repo
-        HEAD, config, objects/       ← git 内部（跨项目共享）
-        refs/hermes/<hash16>         ← 每项目分支 tip
-        indexes/<hash16>             ← 每项目 git index
+    store/                           ← single bare-ish git repo
+        HEAD, config, objects/       ← git internals (shared across projects)
+        refs/hermes/<hash16>         ← per-project branch tip
+        indexes/<hash16>             ← per-project git index
         projects/<hash16>.json       ← {workdir, created_at, last_touch}
-        info/exclude                 ← 共享默认排除规则
-    .last_prune                      ← auto-prune 幂等标记
-    legacy-<timestamp>/              ← 自动迁移走的 pre-v2 per-project shadow repos
+        info/exclude                 ← shared default exclusion rules
+    .last_prune                      ← auto-prune idempotency marker
+    legacy-<timestamp>/              ← pre-v2 per-project shadow repos automatically migrated here
 ```
 
-`hash16` 是 working directory 的 SHA hash 前 16 个字符，作为 namespace [1]。
+`hash16` is the first 16 characters of the SHA hash of the working directory, used as a namespace [1].
 
-## 自动迁移
+## Automatic Migration
 
-`migrate_legacy_shadows()`（`tools/checkpoint_manager.py:340`）[1]：
+`migrate_legacy_shadows()` (``tools/checkpoint_manager.py:340``) [1]:
 
-- 第一次 v2 init 扫描 `CHECKPOINT_BASE` [1]
-- 把 *任何 pre-v2 shadow repo*（顶级目录里有 `HEAD` 文件的）+ 散乱目录搬到 `legacy-<timestamp>/` 子目录 [1]
-- v2 reserved 顶级条目（`store/`、`.last_prune`、`legacy-*`）跳过 [1]
-- v2 从干净状态启动，旧数据可手动恢复或随 legacy 一起按 retention 清理 [1]
+- Scans `CHECKPOINT_BASE` on first v2 init [1]
+- Moves *any pre-v2 shadow repo* (directories containing a `HEAD` file at the top level) + scattered directories into a `legacy-<timestamp>/` subdirectory [1]
+- Skips v2 reserved top-level entries (`store/`, `.last_prune`, `legacy-*`) [1]
+- v2 starts from a clean state; old data can be manually restored or cleaned up along with legacy files according to retention policies [1]
 
-## 实现要点
+## Implementation Details
 
-### git 状态完全隔离
+### Complete Git State Isolation
 
-`GIT_DIR` + `GIT_WORK_TREE` + `GIT_INDEX_FILE` 三个环境变量都指向 shared store —— **不**污染用户项目目录的 `.git/` [1]：
+The three environment variables ``GIT_DIR`` + ``GIT_WORK_TREE`` + ``GIT_INDEX_FILE`` all point to the shared store —— **do not** pollute the user project directory's `.git/` [1]:
 
 ```python
 env = {
@@ -69,20 +69,20 @@ env = {
 }
 ```
 
-每次 commit 用 namespaced 分支 `refs/hermes/<hash16>`，objects 去重 [1]。
+Each commit uses a namespaced branch `refs/hermes/<hash16>`, with object deduplication [1].
 
-### `DEFAULT_EXCLUDES`（line 78-117）
+### ``DEFAULT_EXCLUDES`` (line 78-117)
 
-预定义全局忽略，覆盖 [1]：
+Predefined global ignores, overriding [1]:
 
-- 依赖 / build 输出：`node_modules/`、`dist/`、`build/`、`target/`、`.next/`、`.nuxt/`
-- 缓存：`__pycache__`、`*.pyc`、`.pytest_cache`、`.mypy_cache`、`.ruff_cache`、`coverage/`
-- 虚拟环境：`.venv/`、`venv/`、`env/`
-- VCS：`.git/`、`.hg/`、`.svn/`
-- Hermes 约定：`.worktrees/`（避免递归 snapshot 兄弟 worktree）[1]
-- 编译/二进制：`*.so`、`*.dylib`、`*.dll`、`*.o`、`*.a`、`*.jar`、`*.class`
+- Dependencies / build outputs: `node_modules/`, `dist/`, `build/`, `target/`, `.next/`, `.nuxt/`
+- Caches: `__pycache__`, `*.pyc`, `.pytest_cache`, `.mypy_cache`, `.ruff_cache`, `coverage/`
+- Virtual environments: `.venv/`, `venv/`, `env/`
+- VCS: `.git/`, `.hg/`, `.svn/`
+- Hermes conventions: `.worktrees/` (avoids recursively snapshotting sibling worktrees) [1]
+- Compiled/Binary: `*.so`, `*.dylib`, `*.dll`, `*.o`, `*.a`, `*.jar`, `*.class`
 
-### prune（`prune_checkpoints` line 1223）
+### Prune (``prune_checkpoints`` line 1223)
 
 ```python
 def prune_checkpoints(
@@ -92,66 +92,66 @@ def prune_checkpoints(
 ) -> dict:
 ```
 
-三步 [1]：
+Three steps [1]:
 
-1. **Orphan**：`workdir` 字段不存在的 ref（项目已删除）→ 删 [1]
-2. **Stale**：`last_touch` 早于 `now - retention_days * 86400` → 删 [1]
-3. **Size cap**：`max_total_size_mb > 0` 时，逐项目按最旧 checkpoint 删，直到总大小低于阈值 [1]
+1. **Orphan**: refs where the `workdir` field no longer exists (project deleted) → delete [1]
+2. **Stale**: `last_touch` older than `now - retention_days * 86400` → delete [1]
+3. **Size cap**: When `max_total_size_mb > 0`, delete per project starting from the oldest checkpoint until total size falls below the threshold [1]
 
-最后 `git gc --prune=now` 回收 unreferenced objects [1]。`legacy-*` 目录也按 retention 自动清 [1]。
+Finally, ``git gc --prune=now`` reclaims unreferenced objects [1]. `legacy-*` directories are also automatically cleaned up according to retention policies [1].
 
-`.last_prune` 文件提供幂等保护，避免多次 hermes 启动连续跑 prune [1]。
+The `.last_prune` file provides idempotency protection, preventing consecutive prune runs across multiple Hermes starts [1].
 
-## 触发条件
+## Trigger Conditions
 
-`maybe_checkpoint_before_tool()`（构造函数 line 601）—— *每轮 turn 最多一次* [1]：
+``maybe_checkpoint_before_tool()`` (constructor line 601) —— *at most once per turn* [1]:
 
-- tool 名属于 `write_file` / `patch` / `terminal` 且带 destructive flag → 在 tool execute **之前**抓快照 [1]
-- 同一 turn 多次写入只在第一次 snapshot —— 完整保留到下一个 turn 的所有未提交修改 [1]
+- Tool name belongs to `write_file` / `patch` / `terminal` with a destructive flag → captures snapshot **before** tool execution [1]
+- Multiple writes in the same turn only trigger one snapshot on the first write —— fully preserving all uncommitted changes up to the next turn [1]
 
-## 用户接口
+## User Interface
 
 ```
-hermes checkpoints list                    # 当前项目的快照
-hermes checkpoints show <id>               # 看 diff
-hermes checkpoints rollback <id>           # 回滚到某快照
-hermes checkpoints prune                   # 立即执行 prune
-hermes checkpoints config                  # 看 retention/cap 配置
+hermes checkpoints list                    # snapshots for current project
+hermes checkpoints show <id>               # view diff
+hermes checkpoints rollback <id>           # roll back to a specific snapshot
+hermes checkpoints prune                   # execute prune immediately
+hermes checkpoints config                  # view retention/cap configuration
 ```
 
-`hermes_cli/checkpoints.py` 暴露 CLI；slash 命令 `/checkpoints` 共享同一 argparse surface [1]。
+``hermes_cli/checkpoints.py`` exposes the CLI; the slash command `/checkpoints` shares the same argparse surface [1].
 
-## 配置（`config.yaml`）
+## Configuration (``config.yaml``)
 
 ```yaml
 checkpoints:
   enabled: true
-  retention_days: 7         # 7 天后过期
-  max_total_size_mb: 500    # 总盘符上限；0 = 不限
+retention_days: 7         # Expires after 7 days
+max_total_size_mb: 500    # Maximum total size limit; 0 = unlimited
 ```
 
-## 验证总结
+## Verification Summary
 
-| 声明 | 验证 |
+| Claim | Verification |
 |------|------|
-| 单 shared store | `tools/checkpoint_manager.py:71` `_STORE_DIRNAME = "store"` |
-| Objects 跨项目去重 | 仅一个 `objects/` 目录 + namespace refs `refs/hermes/<hash16>` |
-| Per-project namespace | 通过 `hash16` SHA 前缀 |
-| 自动迁移 pre-v2 | `migrate_legacy_shadows()` line 340 |
-| 真 prune | `prune_checkpoints` line 1223，含 `git gc --prune=now` |
-| Size cap | `max_total_size_mb` line 589 + `_enforce_size_cap()` line 1087 |
-| 不污染用户 `.git/` | `GIT_DIR` + `GIT_WORK_TREE` + `GIT_INDEX_FILE` 全部指向 shared store |
-| LLM 看不到 | `tools/checkpoint_manager.py:12` —— "This is NOT a tool" |
+| Single shared store | ``tools/checkpoint_manager.py:71`` `_STORE_DIRNAME = "store"` |
+| Cross-project object deduplication | Only one `objects/` directory + namespace refs `refs/hermes/<hash16>` |
+| Per-project namespace | Via `hash16` SHA prefix |
+| Automatic pre-v2 migration | ``migrate_legacy_shadows()`` line 340 |
+| True pruning | ``prune_checkpoints`` line 1223, includes ``git gc --prune=now`` |
+| Size cap | ``max_total_size_mb`` line 589 + ``_enforce_size_cap()`` line 1087 |
+| Does not pollute user `.git/` | ``GIT_DIR`` + ``GIT_WORK_TREE`` + ``GIT_INDEX_FILE`` all point to shared store |
+| Invisible to LLM | ``tools/checkpoint_manager.py:12`` —— "This is NOT a tool" |
 
-## 相关页面
+## Related Pages
 - [[Session Search And Sessiondb|session-search-and-sessiondb]]
 - [[Interrupt And Fault Tolerance|interrupt-and-fault-tolerance]]
 
-- [Worktree Isolation](worktree-isolation.md) — `.worktrees/` 兄弟目录被 checkpoint 主动排除
-- [Security Defense System](security-defense-system.md) — `terminal` 的危险命令模式 + checkpoint 是回滚保险
-- [Cli Architecture](cli-architecture.md) — `/checkpoints` 斜杠命令
+- [Worktree Isolation](worktree-isolation.md) — `.worktrees/` sibling directories are actively excluded by checkpoints
+- [Security Defense System](security-defense-system.md) — `terminal` dangerous command mode + checkpoint serves as rollback insurance
+- [Cli Architecture](cli-architecture.md) — `/checkpoints` slash command
 
-## 相关文件
+## Related Files
 
-- `tools/checkpoint_manager.py` — 主实现（1638 行）
-- `hermes_cli/checkpoints.py` — `hermes checkpoints` CLI
+- ``tools/checkpoint_manager.py`` — Main implementation (1638 lines)
+- ``hermes_cli/checkpoints.py`` — ``hermes checkpoints`` CLI
