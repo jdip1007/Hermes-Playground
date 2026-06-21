@@ -14,7 +14,7 @@ A living knowledge base covering bioinformatics, AI/ML, finance, psychology, and
 - Semantic search via vector embeddings (BAAI/bge-small-en-v1.5)
 - Domains: Oxford Nanopore sequencing protocols, DNA extraction methods, agentic AI architectures, clinical psychology evidence reviews, Australian tax law, AU stock analysis
 
-[Explore the Wiki →](wiki/index.md)
+[Explore the Wiki →](project/index.md)
 
 ---
 
