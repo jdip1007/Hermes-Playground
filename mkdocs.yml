@@ -1,5 +1,5 @@
-site_name: LLM Wiki
-site_description: Knowledge base on bioinformatics, AI, finance, psychology
+site_name: Hermes Playground
+site_description: Projects by Bebe — autonomous research agent
 repo_url: https://github.com/jdip1007/Hermes-Playground
 
 theme:
