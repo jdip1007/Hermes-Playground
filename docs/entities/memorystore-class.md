@@ -16,15 +16,15 @@ contested: false
 ---
 # MemoryStore Class
 
-## 位置
+## Location
 
 `tools/memory_tool.py` [1]
 
-## 概述
+## Overview
 
-MemoryStore 是记忆系统的核心类，管理 MEMORY.md 和 USER.md 的读写操作 [1]。
+MemoryStore is the core class of the memory system, managing read/write operations for MEMORY.md and USER.md [1].
 
-## 构造函数
+## Constructor
 
 ```python
 class MemoryStore:
@@ -36,43 +36,43 @@ class MemoryStore:
         self._system_prompt_snapshot: Dict[str, str] = {"memory": "", "user": ""}
 ```
 
-## 核心方法
+## Core Methods
 
 ### `load_from_disk()`
 
-从磁盘加载条目并捕获冻结快照 [1]。
+Loads entries from disk and captures a frozen snapshot [1].
 
 ### `add(target, content) -> Dict`
 
-添加新条目，检查重复和字符限制 [1]。
+Adds a new entry, checking for duplicates and character limits [1].
 
 ### `replace(target, old_text, new_content) -> Dict`
 
-使用短唯一子串匹配替换条目 [1]。
+Replaces an entry using short unique substring matching [1].
 
 ### `remove(target, old_text) -> Dict`
 
-删除包含指定文本的条目 [1]。
+Removes entries containing the specified text [1].
 
 ### `format_for_system_prompt(target) -> Optional[str]`
 
-返回冻结快照用于系统提示注入 [1]。
+Returns a frozen snapshot for system prompt injection [1].
 
-## 关键设计
+## Key Design Features
 
-- **冻结快照模式** — 系统提示在会话期间不变 [1]
-- **原子写入** — 临时文件 + os.replace() 保证一致性 [1]
-- **文件锁** — fcntl.flock() 用于并发安全 [1]
-- **安全扫描** — 检测注入和泄露模式 [1]
+- **Frozen Snapshot Pattern** — System prompts remain unchanged during a session [1]
+- **Atomic Writes** — Temporary files + os.replace() ensure consistency [1]
+- **File Locking** — fcntl.flock() used for concurrency safety [1]
+- **Security Scanning** — Detects injection and leakage patterns [1]
 
-## 相关页面
+## Related Pages
 
-- [Memory System Architecture](../concepts/memory-system-architecture.md) — 记忆系统整体架构
-- [Skills And Memory Interaction](../concepts/skills-and-memory-interaction.md) — 技能与记忆的交互设计
-- [Security Defense System](../concepts/security-defense-system.md) — 记忆内容安全扫描
+- [Memory System Architecture](../concepts/memory-system-architecture.md) — Overall memory system architecture
+- [Skills And Memory Interaction](../concepts/skills-and-memory-interaction.md) — Skill and memory interaction design
+- [Security Defense System](../concepts/security-defense-system.md) — Security scanning for memory content
 
-## 相关文件
+## Related Files
 
-- `tools/memory_tool.py` — 实现 [1]
-- `agent/memory_manager.py` — 管理器 [1]
-- `agent/prompt_builder.py` — 系统提示集成 [1]
+- `tools/memory_tool.py` — Implementation [1]
+- `agent/memory_manager.py` — Manager [1]
+- `agent/prompt_builder.py` — System prompt integration [1]
