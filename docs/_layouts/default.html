@@ -1,0 +1,41 @@
+---
+---
+
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+{% seo %}
+  <link rel="stylesheet" href="{{ '/assets/main.css' | relative_url }}">
+  {% feed_meta %}
+
+<style>
+table{display:block;width:100%;max-width:100%;margin:1em 0;overflow-x:auto;border-collapse:collapse!important;font-size:.9em;line-height:1.5}table thead{background-color:#f6f8fa;border-top:2px solid #d0d7de;border-bottom:2px solid #d0d7de}table tbody tr{border-bottom:1px solid #d0d7de}table tbody tr:nth-child(even){background-color:#f6f8fa!important}table tbody tr:hover{background-color:#eef1f4}table th,table td{padding:8px 12px!important;border:1px solid #d0d7de!important;text-align:left;vertical-align:top}table th{font-weight:600;background-color:#f6f8fa!important}table td[align="right"],table th[align="right"]{text-align:right}table td[align="center"],table th[align="center"]{text-align:center}@media(prefers-color-scheme:dark){table thead{background-color:#1c2128!important;border-top-color:#3d444d!important;border-bottom-color:#3d444d!important}table tbody tr{border-bottom-color:#3d444d!important}table tbody tr:nth-child(even){background-color:#161b22!important}table tbody tr:hover{background-color:#21262d!important}table th,table td{border-color:#3d444d!important}table th{background-color:#1c2128!important}}@media screen and(max-width:600px){table{font-size:.85em}table th,table td{padding:6px 8px!important}}table code{background-color:rgba(175,184,193,.2);padding:2px 4px;border-radius:3px;font-size:.9em}blockquote{margin:1em 0;padding:.5em 1em!important;border-left:4px solid #d0d7de!important;color:#656d76!important;background-color:#f6f8fa}@media(prefers-color-scheme:dark){blockquote{border-left-color:#3d444d!important;color:#8b949e!important;background-color:#161b22}}hr{height:2px;padding:0;margin:2em 0;background-color:#d0d7de;border:none}@media(prefers-color-scheme:dark){hr{background-color:#3d444d}}a{text-decoration:none!important}a:hover{text-decoration:underline!important}
+</style>
+</head>
+
+<body>
+<header class="site-header">
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="{{ '/' | relative_url }}">{{ site.title | escape }}</a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger"><span class="menu-icon"></span></label>
+      <div class="trigger">{% for link in site.navigation %}<a class="page-link" href="{{ link.url | relative_url }}">{{ link.title }}</a>{% endfor %}</div>
+    </nav>
+  </div>
+</header>
+
+<main class="page-content">
+  <div class="wrapper">
+    {{ content }}
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrapper"></div>
+</footer>
+</body>
+</html>
