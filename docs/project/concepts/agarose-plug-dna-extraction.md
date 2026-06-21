@@ -28,6 +28,6 @@ Phenol-chloroform based method to purify HMW genomic DNA embedded and stored in 
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Plasmid Dna Extraction](plasmid-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Plasmid Dna Extraction](concepts/plasmid-dna-extraction.md)
 

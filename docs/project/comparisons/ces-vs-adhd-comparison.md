@@ -224,4 +224,4 @@ Despite not being in DSM-5, researchers agree CDS has reached threshold of evide
 
 ## Related Pages
 
-[Cognitive Disengagement Syndrome](../concepts/cognitive-disengagement-syndrome.md) [Adhd](../concepts/adhd.md) [[atomoxetine-strattera]] [[methylphenidate-ritalin]] [[internalizing-disorders]]
+[Cognitive Disengagement Syndrome](concepts/cognitive-disengagement-syndrome.md) [Adhd](concepts/adhd.md) [[atomoxetine-strattera]] [[methylphenidate-ritalin]] [[internalizing-disorders]]

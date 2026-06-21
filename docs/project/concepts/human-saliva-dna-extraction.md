@@ -26,6 +26,6 @@ Method to extract HMW genomic DNA from human saliva pooled from multiple individ
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Multiplex Cfdna Extraction](multiplex-cfdna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Multiplex Cfdna Extraction](concepts/multiplex-cfdna-extraction.md)
 

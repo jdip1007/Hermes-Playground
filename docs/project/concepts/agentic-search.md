@@ -77,6 +77,6 @@ Conclusions tied to long-memory conversational QA grounded in multi-session chat
 
 ## Related Concepts
 
-- [Agent Architecture Patterns](agent-architecture-patterns.md) — Broader patterns for agent system design
-- [Context Compaction Strategies](context-compaction-strategies.md) — Managing context window pressure in long-horizon tasks
-- [Llm Wiki Pattern](llm-wiki-pattern.md) — Knowledge base pattern that uses retrieval as a core mechanism
+- [Agent Architecture Patterns](concepts/agent-architecture-patterns.md) — Broader patterns for agent system design
+- [Context Compaction Strategies](concepts/context-compaction-strategies.md) — Managing context window pressure in long-horizon tasks
+- [Llm Wiki Pattern](concepts/llm-wiki-pattern.md) — Knowledge base pattern that uses retrieval as a core mechanism

@@ -136,10 +136,10 @@ The tests operate as a cascade:[5]
 
 ## Dual Residency and Treaty Tie-Breakers
 
-When a person is found to be a dual resident under domestic laws, the relevant double tax agreement provides tie-breaker rules that determine which country has taxing rights.[2] The hierarchy typically proceeds: permanent home → centre of vital interests (personal + economic relations) → habitual abode → nationality → mutual agreement between competent authorities. See [Bulie V Commissioner Centre Of Vital Interests](../entities/bulie-v-commissioner-centre-of-vital-interests.md) for a detailed application.
+When a person is found to be a dual resident under domestic laws, the relevant double tax agreement provides tie-breaker rules that determine which country has taxing rights.[2] The hierarchy typically proceeds: permanent home → centre of vital interests (personal + economic relations) → habitual abode → nationality → mutual agreement between competent authorities. See [Bulie V Commissioner Centre Of Vital Interests](entities/bulie-v-commissioner-centre-of-vital-interests.md) for a detailed application.
 
 ## Related Topics
 
-[Ato Tax Residency](ato-tax-residency.md)
-[Bulie V Commissioner Centre Of Vital Interests](../entities/bulie-v-commissioner-centre-of-vital-interests.md)
-[Vagueness Ato Tax Residency Tests](vagueness-ato-tax-residency-tests.md)
+[Ato Tax Residency](concepts/ato-tax-residency.md)
+[Bulie V Commissioner Centre Of Vital Interests](entities/bulie-v-commissioner-centre-of-vital-interests.md)
+[Vagueness Ato Tax Residency Tests](concepts/vagueness-ato-tax-residency-tests.md)

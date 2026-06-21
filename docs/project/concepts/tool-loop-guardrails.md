@@ -1,5 +1,5 @@
 ---
-title: Tool call loop guardrail
+title: 工具调用循环护栏
 created: 2026-05-04
 updated: '2026-06-08'
 type: concept
@@ -14,13 +14,13 @@ sources:
 confidence: high
 contested: false
 ---
-# Tool Call Loop Guardrails
+# 工具调用循环护栏（Tool Call Loop Guardrails）
 
-## Overview
+## 概述
 
-`agent/tool_guardrails.py`(Line 455) Implement a **pure functional controller**, track the tool call mode of the agent in each round, and give a warning (default) or hard stop (opt-in) when a "loop" is found. Design principle: **warning-first** - By default, it only warns but does not block. Hard stop must be explicitly enabled.[1]
+`agent/tool_guardrails.py`（455 行）实现一个**纯函数式控制器**，跟踪每轮内 agent 的 tool call 模式，发现"loop"时给出 warning（默认）或 hard stop（opt-in）。设计原则：**warning-first**——默认只警告不阻止，hard stop 必须显式开启。[1]
 
-Source code:
+源码：
 
 ```
 agent/tool_guardrails.py:1-7
@@ -30,36 +30,36 @@ whether those decisions become warning guidance, synthetic tool results, or
 controlled turn halts.
 ```
 
-## Three loop modes
+## 三种 loop 模式
 
-### 1. Exact Failure Loop — Repeat failure with args
+### 1. Exact Failure Loop — 同 args 重复失败
 
-Signature =`(tool_name, sha256(canonical_json(args)))`. The cumulative number of failed calls with the same signature.[1]
+签名 = `(tool_name, sha256(canonical_json(args)))`。同签名调用累计失败次数。[1]
 
-| trigger | Default threshold | Behavior |
+| 触发 | 默认阈值 | 行为 |
 |------|---------|------|
 | `exact_failure_warn_after` | 2 | warn |
-| `exact_failure_block_after` | 5 | block (only hard_stop_enabled=true) |
+| `exact_failure_block_after` | 5 | block（仅 hard_stop_enabled=true） |
 
-### 2. Same Tool Failure Loop — the same tool fails with any args
+### 2. Same Tool Failure Loop — 同工具任意 args 失败
 
-according to`tool_name`Aggregate the failure count for this round.[1]
+按 `tool_name` 聚合该轮失败计数。[1]
 
-| trigger | Default threshold | Behavior |
+| 触发 | 默认阈值 | 行为 |
 |------|---------|------|
 | `same_tool_failure_warn_after` | 3 | warn |
-| `same_tool_failure_halt_after` | 8 | halt (only hard_stop_enabled=true) |
+| `same_tool_failure_halt_after` | 8 | halt（仅 hard_stop_enabled=true） |
 
-### 3. Idempotent No-Progress Loop — read-only tool with the same args and results
+### 3. Idempotent No-Progress Loop — 只读工具同 args 同结果
 
-only right`IDEMPOTENT_TOOL_NAMES`(read_file/search_files/web_search/web_extract/session_search/browser_snapshot/mcp_filesystem_*) takes effect. The result is used`_result_hash()`Hash - first`safe_json_loads`Normalized to sha256.[1]
+只对 `IDEMPOTENT_TOOL_NAMES`（read_file / search_files / web_search / web_extract / session_search / browser_snapshot / mcp_filesystem_*）生效。结果用 `_result_hash()` 哈希——先 `safe_json_loads` 规范化后 sha256。[1]
 
-| trigger | Default threshold | Behavior |
+| 触发 | 默认阈值 | 行为 |
 |------|---------|------|
 | `no_progress_warn_after` | 2 | warn |
-| `no_progress_block_after` | 5 | block (only hard_stop_enabled=true) |
+| `no_progress_block_after` | 5 | block（仅 hard_stop_enabled=true） |
 
-## Tool classification
+## 工具分类
 
 `tool_guardrails.py:19-59`：
 
@@ -86,9 +86,9 @@ MUTATING_TOOL_NAMES = frozenset({
 })
 ```
 
-`_is_idempotent()`Double check: exclude mutating first, and then confirm it is in the idempotent set. Unlabeled tools (MCP/plug-ins) are not considered idempotent, and no-progress detection will not cause accidental damage.[1]
+`_is_idempotent()` 双重检查：先排除 mutating，再确认在 idempotent 集合内。无标签的工具（MCP/插件）一律不算 idempotent，no-progress 检测不会误伤。[1]
 
-## decision-making structure
+## 决策结构
 
 ### `ToolGuardrailDecision`（`tool_guardrails.py:143-172`）
 
@@ -111,7 +111,7 @@ class ToolGuardrailDecision:
         return self.action in {"block", "halt"}
 ```
 
-**Key Attributes**:`warn`Execution is still allowed (`allows_execution=True`), only runtime guidance is appended.`block`Intercept before calling,`halt`Stop the round after calling it.[1]
+**关键属性**：`warn` 仍允许执行（`allows_execution=True`），只附加运行时指引。`block` 在调用前拦截，`halt` 在调用后停止该轮。[1]
 
 ### `ToolCallSignature`（`tool_guardrails.py:126-141`）
 
@@ -122,11 +122,11 @@ class ToolCallSignature:
     args_hash: str   # sha256 of canonical_tool_args(args)
 ```
 
-`canonical_tool_args`use`sort_keys=True, separators=(",", ":"), default=str`Serialization ensures args order is independent.`to_metadata()`Only expose hash, **do not expose raw args** to telemetry.[1]
+`canonical_tool_args` 用 `sort_keys=True, separators=(",", ":"), default=str` 序列化，确保 args 顺序无关。`to_metadata()` 只暴露 hash，**不暴露 raw args** 到 telemetry。[1]
 
-## Workflow
+## 工作流程
 
-`ToolCallGuardrailController`at the beginning of each round`reset_for_turn()`：[1]
+`ToolCallGuardrailController` 在每轮开始 `reset_for_turn()`：[1]
 
 ```python
 def reset_for_turn(self):
@@ -138,43 +138,43 @@ def reset_for_turn(self):
 
 ### `before_call(tool_name, args)`
 
-`tool_guardrails.py:238-280`. **Only if`hard_stop_enabled=True`** Just checked.[1]
-- If the signature exact_failure_count ≥ block threshold → return`block`,Record`_halt_decision`。
-- If it is idempotent and no_progress repeat_count ≥ block threshold → return`block`。
-- otherwise`allow`。
+`tool_guardrails.py:238-280`。**仅当 `hard_stop_enabled=True`** 才检查。[1]
+- 如果该签名 exact_failure_count ≥ block 阈值 → 返回 `block`，记录 `_halt_decision`。
+- 如果是 idempotent 且 no_progress repeat_count ≥ block 阈值 → 返回 `block`。
+- 否则 `allow`。
 
 ### `after_call(tool_name, args, result, failed=None)`
 
 `tool_guardrails.py:282-375`。[1]
 
-**Failure path**:
-1. The signature`_exact_failure_counts +1`
-2. the tool`_same_tool_failure_counts +1`
-3. Clear the no_progress record of the signature
-4. Check same_tool halt → halt threshold →`halt`
-5. Check exact warn threshold →`warn`
-6. Check same_tool warn threshold →`warn`
+**失败路径**：
+1. 该签名 `_exact_failure_counts +1`
+2. 该工具 `_same_tool_failure_counts +1`
+3. 清掉该签名的 no_progress 记录
+4. 检查 same_tool halt → halt 阈值 → `halt`
+5. 检查 exact warn 阈值 → `warn`
+6. 检查 same_tool warn 阈值 → `warn`
 
-**Success Path**:
-1. Clear exact_failure / same_tool count
-2. if not idempotent →`allow`
-3. calculate`_result_hash(result)`, compared with the last record of this signature:
-   - Same →`repeat_count +1`
-   - different →`repeat_count = 1`
+**成功路径**：
+1. 清掉 exact_failure / same_tool 计数
+2. 若不是 idempotent → `allow`
+3. 计算 `_result_hash(result)`，与该签名上次记录比较：
+   - 相同 → `repeat_count +1`
+   - 不同 → `repeat_count = 1`
 4. `repeat_count ≥ no_progress warn 阈值` → `warn`
 
-## Failure detection
+## Failure 检测
 
-`classify_tool_failure()`（`tool_guardrails.py:188-218`) mirror`agent.display._detect_tool_failure`, **Guarantee guardrail judgment and visible to CLI users`[error]`Label consistent**. on the production path`run_agent.py`Always pass explicitly`failed=`;This function is the backbone of testing and tools.[1]
+`classify_tool_failure()`（`tool_guardrails.py:188-218`）镜像 `agent.display._detect_tool_failure`，**保证护栏判断和 CLI 用户可见的 `[error]` 标签一致**。生产路径上 `run_agent.py` 总是显式传 `failed=`；这个函数是测试和工具的兜底。[1]
 
-Special handling:
-- `terminal`: Parse result as dict,`exit_code != 0`regarded as failure
+特殊处理：
+- `terminal`: 解析 result 为 dict，`exit_code != 0` 视为失败
 - `memory`: `success: false` + `"exceed the limit"` → `[full]`
-- General:`"error"` / `"failed"`/ by`Error`Beginning →`[error]`
+- 通用：`"error"` / `"failed"` / 以 `Error` 开头 → `[error]`
 
-## output
+## 输出
 
-### `toolguard_synthetic_result(decision)`— synthesize tool results when block
+### `toolguard_synthetic_result(decision)` — block 时合成 tool 结果
 
 ```python
 def toolguard_synthetic_result(decision):
@@ -184,23 +184,23 @@ def toolguard_synthetic_result(decision):
     }, ensure_ascii=False)
 ```
 
-Replaces real tool calls, keeping the agent's tool result history intact.[1]
+代替真实工具调用，让 agent 的 tool result 历史保持完整。[1]
 
-### `append_toolguard_guidance(result, decision)`— Attach runtime guidance when warning/halt
+### `append_toolguard_guidance(result, decision)` — warn/halt 时附加运行时指引
 
 ```
 [Tool loop warning: repeated_exact_failure_warning; count=3; <message>]
 ```
 
-or
+或
 
 ```
 [Tool loop hard stop: same_tool_failure_halt; count=8; <message>]
 ```
 
-Attach it to the end of the original result so that the agent can see the self-reflection prompt in the next step of reasoning.[1]
+附在原 result 末尾，让 agent 在下一步 reasoning 时看到 self-reflection 提示。[1]
 
-## Configuration
+## 配置
 
 ```yaml
 # config.yaml
@@ -217,29 +217,29 @@ tool_loop_guardrails:
     idempotent_no_progress: 5
 ```
 
-`ToolCallGuardrailConfig.from_mapping`（`tool_guardrails.py:82-123`) supports two-way compatibility between new nested keys and old flat keys.`_positive_int`Don't worry, illegal values ​​fall back to default.[1]
+`ToolCallGuardrailConfig.from_mapping`（`tool_guardrails.py:82-123`）支持新的嵌套 key 和老的扁平 key 双向兼容。`_positive_int` 兜底，非法值回退到默认。[1]
 
-## design philosophy
+## 设计哲学
 
 > **warnings_enabled: true, hard_stop_enabled: false**
 >
-> Warnings are on by default, and hard stops are off by default, allowing interactive CLI/TUI sessions to receive gentle prompts unless the user explicitly turns on the circuit-breaker behavior in config.yaml.
+> 警告默认开，硬停默认关，让交互式 CLI/TUI session 收到温和提示，除非用户在 config.yaml 明确开启 circuit-breaker 行为。
 
 ——`tool_guardrails.py:71-72`
 
-Reason: **hard stop will destroy the agent's exploration ability**. Loop detection may give false positives, and warning allows the model to decide whether to adjust the strategy on its own; only upgrade to hard stop in scenarios such as batch/cron/long tasks where no one is watching.[1]
+理由：**hard stop 会破坏 agent 的探索能力**。loop 检测可能误报，warning 让模型自行判断是否调整策略；只在 batch / cron / 长任务这类没有人盯着的场景下才升级到 hard stop。[1]
 
-## Verify PR
+## 验证 PR
 
 - `58b8996` `fix(agent): add tool-call loop guardrails`
 - `0704589` `fix(agent): make tool loop guardrails warning-first`
 - `8fa44b1` `fix(guardrails): preserve display _detect_tool_failure semantics`
 
-## Related concepts
+## 相关概念
 
-- [Tool Registry Architecture](tool-registry-architecture.md) — Central tool registry, guardrails intercepts at dispatch boundary
-- [Interrupt And Fault Tolerance](interrupt-and-fault-tolerance.md) — Division of labor between error_classifier vs tool_guardrails: classifier handles **single error classification**, guardrails handles **multiple repeat patterns**
-- [Parallel Tool Execution](parallel-tool-execution.md) — Parallel execution does not affect guardrails, per-turn controller is single-threaded aggregation
+- [Tool Registry Architecture](concepts/tool-registry-architecture.md) — 中央 tool 注册，guardrails 在 dispatch 边界拦截
+- [Interrupt And Fault Tolerance](concepts/interrupt-and-fault-tolerance.md) — error_classifier vs tool_guardrails 的分工：classifier 处理**单次错误分类**，guardrails 处理**多次重复模式**
+- [Parallel Tool Execution](concepts/parallel-tool-execution.md) — 并行执行不影响 guardrails，per-turn controller 是单线程聚合
 
 ## Related Pages
 

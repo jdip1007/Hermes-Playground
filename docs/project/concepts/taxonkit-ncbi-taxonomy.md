@@ -74,7 +74,7 @@ brew install brewsci/bio/taxonkit
 ```
 
 ### Cross-References
-[Bioinformatics](bioinformatics.md) — Core toolkit for taxonomy operations  
-[Metagenomics](metagenomics.md) — Essential for standardized profiling reports  
-[Nanopore Applications Virus Research](nanopore-applications-virus-research.md) — Taxonomic classification in sequencing workflows  
-[Rna Synthesis Genomic Research](rna-synthesis-genomic-research.md) — Related bioinformatics tools
+[Bioinformatics](concepts/bioinformatics.md) — Core toolkit for taxonomy operations  
+[Metagenomics](concepts/metagenomics.md) — Essential for standardized profiling reports  
+[Nanopore Applications Virus Research](concepts/nanopore-applications-virus-research.md) — Taxonomic classification in sequencing workflows  
+[Rna Synthesis Genomic Research](concepts/rna-synthesis-genomic-research.md) — Related bioinformatics tools

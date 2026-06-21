@@ -66,7 +66,7 @@ The Self-Regulatory Executive Function model defines rumination as "repetitive t
 
 ## Related Concepts
 
-[Default Mode Network Depression](default-mode-network-depression.md) — DMN hyperactivity correlates with rumination severity
-[Metacognitive Therapy Wells](metacognitive-therapy-wells.md) — Wells' S-REF model and treatment approach
-[Private Self Consciousness](private-self-consciousness.md) — Personality trait predisposing to rumination
-[Anhedonia And Depression](anhedonia-and-depression.md) — Rumination's role in depression symptomatology
+[Default Mode Network Depression](concepts/default-mode-network-depression.md) — DMN hyperactivity correlates with rumination severity
+[Metacognitive Therapy Wells](concepts/metacognitive-therapy-wells.md) — Wells' S-REF model and treatment approach
+[Private Self Consciousness](concepts/private-self-consciousness.md) — Personality trait predisposing to rumination
+[Anhedonia And Depression](concepts/anhedonia-and-depression.md) — Rumination's role in depression symptomatology

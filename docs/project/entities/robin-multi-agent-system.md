@@ -17,7 +17,7 @@ contested: false
 
 ## Overview
 
-Robin is the first multi-agent system capable of fully automating both hypothesis generation and data analysis for experimental biology [1]. Developed by FutureHouse in collaboration with University of Oxford and Fordham University, it represents a paradigm shift in AI-driven scientific discovery [Automated Scientific Discovery](../concepts/automated-scientific-discovery.md).
+Robin is the first multi-agent system capable of fully automating both hypothesis generation and data analysis for experimental biology [1]. Developed by FutureHouse in collaboration with University of Oxford and Fordham University, it represents a paradigm shift in AI-driven scientific discovery [Automated Scientific Discovery](concepts/automated-scientific-discovery.md).
 
 **Key achievement:** Identified novel therapeutic candidates for dry age-related macular degeneration (dAMD) through an iterative lab-in-the-loop framework — proposing ripasudil (a clinically-approved ROCK inhibitor never previously suggested for dAMD) and KL001 as enhancers of RPE phagocytosis [1].
 
@@ -26,7 +26,7 @@ Robin is the first multi-agent system capable of fully automating both hypothesi
 Robin integrates three specialized language agents in a structured workflow [1]:
 
 ### Crow
-- **Role:** Concise literature search agent based on PaperQA2 [Paperqa](paperqa.md)
+- **Role:** Concise literature search agent based on PaperQA2 [Paperqa](entities/paperqa.md)
 - **Function:** Conducts rapid literature summaries, identifies disease mechanisms, proposes in vitro models [1]
 - **Performance:** Expert-level information retrieval across scientific literature, clinical trial reports, and Open Targets Platform [1]
 
@@ -36,7 +36,7 @@ Robin integrates three specialized language agents in a structured workflow [1]:
 - **Quality control:** Masks hallucinated references from Crow's initial searches — ablation studies showed 44.5% of o4-mini references were hallucinated vs. zero for Falcon [1]
 
 ### Finch
-- **Role:** Scientific data analysis agent [Finch Agent](finch-agent.md)
+- **Role:** Scientific data analysis agent [Finch Agent](entities/finch-agent.md)
 - **Function:** Analyzes experimental data (RNA-seq, flow cytometry) via Jupyter notebooks [1]
 - **Consensus mechanism:** Launches 8 independent analysis trajectories, then synthesizes consensus-driven conclusions to handle biological data ambiguity [1]
 

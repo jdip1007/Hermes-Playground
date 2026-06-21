@@ -7,7 +7,7 @@ tags: [finance]
 sources:
   - type: transcript
     url: "https://www.youtube.com/watch?v=kUZuIY7FB6o"
-title: "7 Real Estate Wealth Rules (7 Real Estate Wealth Rules)" by Alison (Australian Teacher Alison)
+    title: "7個房地產致富法則 (7 Real Estate Wealth Rules)" by Alison (澳洲Alison老師)
     date: 2026-06-07
 confidence: medium
 contested: false
@@ -17,7 +17,7 @@ contested: false
 
 ## Overview
 
-A framework of seven data-backed principles for long-term property investment in Australia, presented by [Alison Australia Realestate](../entities/alison-australia-realestate.md) [1]. The core thesis: successful property investing is not about market timing or intelligence but about following counter-intuitive discipline over decades. **Note:** Speaker cites RBA, IMF, OECD, ASIC, ABS, CoreLogic, and Domain research but does not provide specific report links — institutional name-drops rather than independently verifiable citations. Treat as opinion content grounded in general economic principles [1].
+A framework of seven data-backed principles for long-term property investment in Australia, presented by [Alison Australia Realestate](entities/alison-australia-realestate.md) [1]. The core thesis: successful property investing is not about market timing or intelligence but about following counter-intuitive discipline over decades. **Note:** Speaker cites RBA, IMF, OECD, ASIC, ABS, CoreLogic, and Domain research but does not provide specific report links — institutional name-drops rather than independently verifiable citations. Treat as opinion content grounded in general economic principles [1].
 
 ## Rule 1: Fear Is Not Risk — Misinterpreting Fear Is
 
@@ -111,5 +111,5 @@ The framework synthesizes behavioral finance, inflation economics, and long-term
 
 ## Related Concepts
 
-- [Elastic Markets Hypothesis](elastic-markets-hypothesis.md) — Inelastic markets hypothesis on price impact of capital flows
-- [Portfolio Jonathan Aus](../entities/portfolio-jonathan-aus.md) — Australian investment portfolio context
+- [Elastic Markets Hypothesis](concepts/elastic-markets-hypothesis.md) — Inelastic markets hypothesis on price impact of capital flows
+- [Portfolio Jonathan Aus](entities/portfolio-jonathan-aus.md) — Australian investment portfolio context

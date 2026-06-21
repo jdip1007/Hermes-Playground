@@ -67,7 +67,7 @@ Extracted or fragmented gDNA can be stored at −20°C for later use.[1] Library
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Next Generation Sequencing](next-generation-sequencing.md)
-[Megaruptor 3 Extraction Method](megaruptor-3-extraction-method.md)
-[Blood Culture Broth Dna Extraction](blood-culture-broth-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md)
+[Megaruptor 3 Extraction Method](concepts/megaruptor-3-extraction-method.md)
+[Blood Culture Broth Dna Extraction](concepts/blood-culture-broth-dna-extraction.md)

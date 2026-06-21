@@ -67,4 +67,4 @@ Metagenomics is the study of genetic material recovered directly from environmen
 
 ## Related
 
-[Next Generation Sequencing](next-generation-sequencing.md), [Antimicrobial Resistance](antimicrobial-resistance.md), [Microbiome](microbiome.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md), [Antimicrobial Resistance](concepts/antimicrobial-resistance.md), [Microbiome](concepts/microbiome.md)

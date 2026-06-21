@@ -250,5 +250,5 @@ These common productivity tips actively harm ADHD brains:[2]
 
 ## Related Pages
 
-- [Adhd](adhd.md)
-- [Productivity General](productivity-general.md)
+- [Adhd](concepts/adhd.md)
+- [Productivity General](concepts/productivity-general.md)

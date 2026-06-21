@@ -18,7 +18,7 @@ LLMs optimize next-token probability; humans construct meaning through causal un
 
 **Transformer processing**: Multi-head attention over token embeddings. Statistical pattern completion without symbolic manipulation or grounded representation [1]
 
-**Human cognition**: Dual process theory (System 1 intuitive + System 2 analytical). Embodied knowledge integration with metacognitive awareness [Critical Thinking](critical-thinking.md) [1]
+**Human cognition**: Dual process theory (System 1 intuitive + System 2 analytical). Embodied knowledge integration with metacognitive awareness [Critical Thinking](concepts/critical-thinking.md) [1]
 
 ## Reasoning Capability Gaps
 
@@ -82,5 +82,5 @@ Deploy LLMs as pattern recognition engines within training distributions. Avoid 
 
 ## Related Pages
 - [[human-vs-llm-writing]] — Linguistic feature comparison, detection methodologies
-- [Critical Thinking](critical-thinking.md) — Human frameworks (Paul-Elder, Bloom's), dual process theory connection
-- [Agent Architecture Patterns](agent-architecture-patterns.md) — Cross-cutting agent patterns including reasoning limitations awareness
+- [Critical Thinking](concepts/critical-thinking.md) — Human frameworks (Paul-Elder, Bloom's), dual process theory connection
+- [Agent Architecture Patterns](concepts/agent-architecture-patterns.md) — Cross-cutting agent patterns including reasoning limitations awareness

@@ -82,10 +82,10 @@ This is the **first comprehensive head-to-head benchmark** comparing Illumina, O
 
 ## Cross-References
 
-- [Next Generation Sequencing](next-generation-sequencing.md) — broader NGS technology comparison
-- [Metagenomics](metagenomics.md) — general metagenomic approaches and workflows
-- [Nanopore Sequencing Minion](nanopore-sequencing-minion.md) — MinION platform overview
-- [Clinical Metagenomics Viral Detection](clinical-metagenomics-viral-detection.md) — clinical viromics applications
+- [Next Generation Sequencing](concepts/next-generation-sequencing.md) — broader NGS technology comparison
+- [Metagenomics](concepts/metagenomics.md) — general metagenomic approaches and workflows
+- [Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md) — MinION platform overview
+- [Clinical Metagenomics Viral Detection](concepts/clinical-metagenomics-viral-detection.md) — clinical viromics applications
 
 ## Confidence Assessment
 

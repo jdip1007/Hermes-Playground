@@ -98,7 +98,7 @@ All identified spa types were reported for the first time in Iraq. Many not prev
 
 ## Cross-References
 
-[Antimicrobial Resistance](antimicrobial-resistance.md) — MRSA prevalence and mecA-mediated resistance mechanisms
-[Crispr Amr Diagnostics](crispr-amr-diagnostics.md) — CRISPR-based diagnostics could improve rapid MRSA detection in resource-limited settings
-[Ridom Spa Sequencing Protocol](ridom-spa-sequencing-protocol.md) — The Ridom protocol used for spa sequence analysis in this study
-[Genome Based Salmonella Serotyping](genome-based-salmonella-serotyping.md) — Similar molecular typing approach applied to different pathogen
+[Antimicrobial Resistance](concepts/antimicrobial-resistance.md) — MRSA prevalence and mecA-mediated resistance mechanisms
+[Crispr Amr Diagnostics](concepts/crispr-amr-diagnostics.md) — CRISPR-based diagnostics could improve rapid MRSA detection in resource-limited settings
+[Ridom Spa Sequencing Protocol](concepts/ridom-spa-sequencing-protocol.md) — The Ridom protocol used for spa sequence analysis in this study
+[Genome Based Salmonella Serotyping](concepts/genome-based-salmonella-serotyping.md) — Similar molecular typing approach applied to different pathogen

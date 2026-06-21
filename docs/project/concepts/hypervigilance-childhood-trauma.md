@@ -74,6 +74,6 @@ The video's origin story maps onto established developmental psychopathology:
 
 ## Related Concepts
 
-[Rumination Psychology](rumination-psychology.md) — Rumination as one manifestation of hypervigilant cognitive style
-[Default Mode Network Depression](default-mode-network-depression.md) — DMN hyperactivity may reflect hypervigilant self-monitoring
-[Metacognitive Therapy Wells](metacognitive-therapy-wells.md) — Treatment approaches for maladaptive metacognitive beliefs rooted in early experiences
+[Rumination Psychology](concepts/rumination-psychology.md) — Rumination as one manifestation of hypervigilant cognitive style
+[Default Mode Network Depression](concepts/default-mode-network-depression.md) — DMN hyperactivity may reflect hypervigilant self-monitoring
+[Metacognitive Therapy Wells](concepts/metacognitive-therapy-wells.md) — Treatment approaches for maladaptive metacognitive beliefs rooted in early experiences

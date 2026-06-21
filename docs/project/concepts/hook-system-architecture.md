@@ -27,13 +27,13 @@ contested: false
 >
 > **`register_platform`** API 在 `hermes_cli/plugins.py:476` —— 插件注册新消息平台的入口。
 > **`register_auxiliary_task`** API 在 `hermes_cli/plugins.py:825`（2026-05-24，`e752c94`）—— 插件声明独立 auxiliary LLM task slot；config→env 桥与 picker 自动收录。
-> **`register_tts_provider`** 在 `hermes_cli/plugins.py:685`（2026-05-25）/ **`register_transcription_provider`** 在 `:723`（2026-05-25）—— TTS 与 STT provider 插件化（见 [Voice Mode Architecture](voice-mode-architecture.md)）。
+> **`register_tts_provider`** 在 `hermes_cli/plugins.py:685`（2026-05-25）/ **`register_transcription_provider`** 在 `:723`（2026-05-25）—— TTS 与 STT provider 插件化（见 [Voice Mode Architecture](concepts/voice-mode-architecture.md)）。
 >
 > **2026-05-27 新增钩子**：
 >
 > | 钩子 | 源码 | 用途 |
 > |------|------|------|
-> | **`register_dashboard_auth_provider`** | `hermes_cli/plugins.py:558` | 注册 dashboard OAuth provider；当 dashboard 绑定非 loopback 主机且无 `--insecure` 时启用（见 [Dashboard Auth Oauth Gate](dashboard-auth-oauth-gate.md)） |
+> | **`register_dashboard_auth_provider`** | `hermes_cli/plugins.py:558` | 注册 dashboard OAuth provider；当 dashboard 绑定非 loopback 主机且无 `--insecure` 时启用（见 [Dashboard Auth Oauth Gate](concepts/dashboard-auth-oauth-gate.md)） |
 > | **`standalone_sender_fn`**（`93e25ce`） | 平台插件注册时 | 让 plugin 实现 no-deps sender callable，cron scheduler 不启 gateway 也能投递消息 |
 >
 > Provider 注册全表（PluginContext 上 8 个 register_*）：image_gen `:540` / dashboard_auth `:558` / video_gen `:598` / web_search `:625` / browser `:653` / tts `:685` / transcription `:723` / auxiliary_task `:825`。
@@ -500,7 +500,7 @@ def register(ctx):
 
 - **`ctx.llm`** — `PluginContext` 的 `llm` 属性惰性构建 `agent/plugin_llm.py`（1046 行）的门面，提供 `complete` / `complete_structured` 及 async 版本，可在插件内直接发起 LLM 调用；provider/model 覆盖受信任门控。
 - **工具覆盖**：`register_tool(..., override=True)` 可替换内置工具（closes #11049）。
-- **Provider 注册门面**：`ctx.register_web_search_provider()`（详见 [Web Tools Architecture](web-tools-architecture.md)）、`ctx.register_video_gen_provider()`、`ctx.register_platform()`（详见 [Messaging Gateway Architecture](messaging-gateway-architecture.md)）。model-provider 也以插件形式存在（`kind: model-provider`，详见 [Smart Model Routing](smart-model-routing.md)）。
+- **Provider 注册门面**：`ctx.register_web_search_provider()`（详见 [Web Tools Architecture](concepts/web-tools-architecture.md)）、`ctx.register_video_gen_provider()`、`ctx.register_platform()`（详见 [Messaging Gateway Architecture](concepts/messaging-gateway-architecture.md)）。model-provider 也以插件形式存在（`kind: model-provider`，详见 [Smart Model Routing](concepts/smart-model-routing.md)）。
 - **Bundled observability 插件**：`plugins/observability/langfuse/` 通过 `pre/post_api_request`、`pre/post_llm_call`、`pre/post_tool_call` 钩子上报 trace。
 
 ### `ctx.register_auxiliary_task()`（2026-05-24，`e752c94`） [1]
@@ -533,10 +533,10 @@ Memory / context 类插件想加 hindsight pre-retain dedup 或 retrieval re-ran
 
 ## 与其他系统的关系
 
-- [Tool Registry Architecture](tool-registry-architecture.md) — 插件通过 registry.register() 注册工具
-- [Mcp And Plugins](mcp-and-plugins.md) — MCP 是另一种工具发现机制，与插件系统互补
-- [Messaging Gateway Architecture](messaging-gateway-architecture.md) — Gateway Hooks 在网关生命周期中触发
-- [Model Tools Dispatch](model-tools-dispatch.md) — pre/post_tool_call 钩子在 handle_function_call 中调用
+- [Tool Registry Architecture](concepts/tool-registry-architecture.md) — 插件通过 registry.register() 注册工具
+- [Mcp And Plugins](concepts/mcp-and-plugins.md) — MCP 是另一种工具发现机制，与插件系统互补
+- [Messaging Gateway Architecture](concepts/messaging-gateway-architecture.md) — Gateway Hooks 在网关生命周期中触发
+- [Model Tools Dispatch](concepts/model-tools-dispatch.md) — pre/post_tool_call 钩子在 handle_function_call 中调用
 
 ## Related Pages
 

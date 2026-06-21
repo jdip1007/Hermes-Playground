@@ -64,4 +64,4 @@ This methods chapter details a standardized real-time PCR platform for detecting
 
 ## Cross-References
 
-See also: [Avian Chlamydia Abortus Netherlands](avian-chlamydia-abortus-netherlands.md), [Cap Ngs Clinical Test Standards](CAP-NGS-clinical-test-standards.md), [Clinical Metagenomics Viral Detection](clinical-metagenomics-viral-detection.md)
+See also: [Avian Chlamydia Abortus Netherlands](concepts/avian-chlamydia-abortus-netherlands.md), [Cap Ngs Clinical Test Standards](concepts/CAP-NGS-clinical-test-standards.md), [Clinical Metagenomics Viral Detection](concepts/clinical-metagenomics-viral-detection.md)

@@ -132,10 +132,10 @@ The genus *Enterobacter* comprises facultative anaerobic Gram-negative bacilli b
 
 ## Cross-References
 
-- [Antimicrobial Resistance](antimicrobial-resistance.md) — broader AMR mechanisms and priority pathogens  
-- [Ctx M Esbls](ctx-m-esbls.md) — CTX-M-type ESBLs detailed review (Rossolini et al. 2008)  
-- [Esbl Community Carriage Norway](esbl-community-carriage-norway.md) — community carriage epidemiology of ESBL-producing E. coli/Kp  
-- [Crispr Amr Diagnostics](crispr-amr-diagnostics.md) — CRISPR-based detection platforms for AMR genes  
+- [Antimicrobial Resistance](concepts/antimicrobial-resistance.md) — broader AMR mechanisms and priority pathogens  
+- [Ctx M Esbls](concepts/ctx-m-esbls.md) — CTX-M-type ESBLs detailed review (Rossolini et al. 2008)  
+- [Esbl Community Carriage Norway](concepts/esbl-community-carriage-norway.md) — community carriage epidemiology of ESBL-producing E. coli/Kp  
+- [Crispr Amr Diagnostics](concepts/crispr-amr-diagnostics.md) — CRISPR-based detection platforms for AMR genes  
 
 ## Confidence Assessment
 

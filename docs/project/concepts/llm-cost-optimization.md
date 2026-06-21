@@ -100,6 +100,6 @@ Train smaller models to replicate expensive model outputs for repeated tasks [1]
 Key insight: LLM cost optimization is fundamentally a systems design problem. The biggest savings come from combining multiple techniques rather than relying on any single one [1].
 
 ## Cross-references
-- [Agent Architecture Patterns](agent-architecture-patterns.md) — Related to efficient agent design
-- [Mixture Of Experts Moe](mixture-of-experts-moe.md) — Model routing relates to MoE architecture principle
-- [Context Compaction Strategies](context-compaction-strategies.md) — Prompt compression overlaps with context compaction
+- [Agent Architecture Patterns](concepts/agent-architecture-patterns.md) — Related to efficient agent design
+- [Mixture Of Experts Moe](concepts/mixture-of-experts-moe.md) — Model routing relates to MoE architecture principle
+- [Context Compaction Strategies](concepts/context-compaction-strategies.md) — Prompt compression overlaps with context compaction

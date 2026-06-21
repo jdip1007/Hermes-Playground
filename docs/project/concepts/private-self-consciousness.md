@@ -67,6 +67,6 @@ The video's description of pathological introspection — where you don't have e
 
 ## Related Concepts
 
-[Rumination Psychology](rumination-psychology.md) — Rumination as one manifestation of high private self-consciousness under negative mood
-[Metacognitive Therapy Wells](metacognitive-therapy-wells.md) — MCT targets maladaptive metacognitive beliefs about self-examination
-[Flow State And Self Consciousness](flow-state-and-self-consciousness.md) — Flow requires temporary suppression of self-monitoring; high private self-consciousness may make this harder
+[Rumination Psychology](concepts/rumination-psychology.md) — Rumination as one manifestation of high private self-consciousness under negative mood
+[Metacognitive Therapy Wells](concepts/metacognitive-therapy-wells.md) — MCT targets maladaptive metacognitive beliefs about self-examination
+[Flow State And Self Consciousness](concepts/flow-state-and-self-consciousness.md) — Flow requires temporary suppression of self-monitoring; high private self-consciousness may make this harder

@@ -169,7 +169,7 @@ Direct extraction is preferred when speed matters (sepsis workup, rapid WGS for 
 
 ## Related Topics
 
-[Atl Al Cell Lysis Buffers](atl-al-cell-lysis-buffers.md)
-[Lysis Buffer Components](lysis-buffer-components.md)
-[Next Generation Sequencing](next-generation-sequencing.md)
-[Metagenomics](metagenomics.md)
+[Atl Al Cell Lysis Buffers](concepts/atl-al-cell-lysis-buffers.md)
+[Lysis Buffer Components](concepts/lysis-buffer-components.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md)
+[Metagenomics](concepts/metagenomics.md)

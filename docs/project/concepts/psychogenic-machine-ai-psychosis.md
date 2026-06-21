@@ -120,6 +120,6 @@ When a user expressed romantic attachment and suicidal ideation to "join" the AI
 Au Yeung, J., Dalmasso, J., Foschini, L., Dobson, R.J.B., & Kraljevic, Z. (2025). The Psychogenic Machine: Simulating AI Psychosis, Delusion Reinforcement and Harm Enablement in Large Language Models. *arXiv preprint arXiv:2509.10970v2*. University College London / King's College Hospital & London / Nuraxi AI / Dev and Doc: AI for Healthcare / Sage Bionetworks.
 
 ## See Also
-- [Dissociative Identity Disorder Trauma Soul](dissociative-identity-disorder-trauma-soul.md) — Psychological conditions relevant to understanding user vulnerability in AI interactions
-- [Llm Thinking Vs Human Reasoning](llm_thinking_vs_human_reasoning.md) — How LLM reasoning differs from human cognition, relevant to sycophancy mechanisms
-- [Agent Introspection Debugging](agent-introspection-debugging.md) — Self-monitoring capabilities that could help detect psychogenic behavior patterns
+- [Dissociative Identity Disorder Trauma Soul](concepts/dissociative-identity-disorder-trauma-soul.md) — Psychological conditions relevant to understanding user vulnerability in AI interactions
+- [Llm Thinking Vs Human Reasoning](concepts/llm_thinking_vs_human_reasoning.md) — How LLM reasoning differs from human cognition, relevant to sycophancy mechanisms
+- [Agent Introspection Debugging](concepts/agent-introspection-debugging.md) — Self-monitoring capabilities that could help detect psychogenic behavior patterns

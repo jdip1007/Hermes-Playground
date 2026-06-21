@@ -82,7 +82,7 @@ SSMs combine RNN-like long-range dependency modeling with CNN-like training spee
 - **CNNs:** SSMs have global receptive fields through the state vector; CNNs require many layers for long-range dependencies
 - **Transformers:** SSMs use static routing (input-independent kernel); attention uses dynamic pairwise interactions
 
-See [Pretraining Without Attention Bigs](pretraining-without-attention-bigs.md) for the BiGS architecture that proved SSMs + gating can match BERT. [1]
+See [Pretraining Without Attention Bigs](concepts/pretraining-without-attention-bigs.md) for the BiGS architecture that proved SSMs + gating can match BERT. [1]
 
 ## Current Status (2024-2026)
 

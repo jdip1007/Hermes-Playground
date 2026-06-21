@@ -28,6 +28,6 @@ Method for DNA extraction from soil samples using QIAGEN DNeasy PowerMax Soil Ki
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Environmental Water Edna Extraction](environmental-water-edna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Environmental Water Edna Extraction](concepts/environmental-water-edna-extraction.md)
 

@@ -276,11 +276,11 @@ Prompt caching 在 `run_agent.py` 构建 API 请求时被调用：
 
 ## 与其他系统的关系
 
-- [Prompt Builder Architecture](prompt-builder-architecture.md) — 必须保证系统消息 `content[0]` 字节稳定，否则 1h 前缀缓存命中率会大幅下降
-- [Provider Transport Architecture](provider-transport-architecture.md) — `AnthropicTransport` / `ChatCompletionsTransport` 在 build_kwargs 阶段透传 marker
-- [Auxiliary Client Architecture](auxiliary-client-architecture.md) — 辅助模型不使用 prompt caching（避免污染主会话 prefix cache，且辅助任务通常一次性）
-- [Context Compressor Architecture](context-compressor-architecture.md) — 压缩会冻结快照保留 prefix cache，详见 prefix-cache 友好的 OpenClaw 对比段
-- [Smart Model Routing](smart-model-routing.md) — 缓存价格信息来自 models.dev
+- [Prompt Builder Architecture](concepts/prompt-builder-architecture.md) — 必须保证系统消息 `content[0]` 字节稳定，否则 1h 前缀缓存命中率会大幅下降
+- [Provider Transport Architecture](concepts/provider-transport-architecture.md) — `AnthropicTransport` / `ChatCompletionsTransport` 在 build_kwargs 阶段透传 marker
+- [Auxiliary Client Architecture](concepts/auxiliary-client-architecture.md) — 辅助模型不使用 prompt caching（避免污染主会话 prefix cache，且辅助任务通常一次性）
+- [Context Compressor Architecture](concepts/context-compressor-architecture.md) — 压缩会冻结快照保留 prefix cache，详见 prefix-cache 友好的 OpenClaw 对比段
+- [Smart Model Routing](concepts/smart-model-routing.md) — 缓存价格信息来自 models.dev
 
 ## Related Pages
 

@@ -17,7 +17,7 @@ contested: false
 
 ## Definition
 
-The use of AI systems — particularly multi-agent architectures based on large language models — to automate the complete scientific method: hypothesis generation, experimental design, data analysis, and iterative refinement. Represents a shift from AI-as-tool to AI-as-co-scientist [Robin Multi Agent System](../entities/robin-multi-agent-system.md) [1].
+The use of AI systems — particularly multi-agent architectures based on large language models — to automate the complete scientific method: hypothesis generation, experimental design, data analysis, and iterative refinement. Represents a shift from AI-as-tool to AI-as-co-scientist [Robin Multi Agent System](entities/robin-multi-agent-system.md) [1].
 
 ## Core Components
 
@@ -44,7 +44,7 @@ The use of AI systems — particularly multi-agent architectures based on large 
 
 | System | Year | Capabilities | Limitations |
 |--------|------|--------------|-------------|
-|| [Robin Multi Agent System](../entities/robin-multi-agent-system.md) (Robin) | 2026 | Full hypothesis generation + data analysis, lab-in-the-loop | Requires human for wet-lab execution, prompt engineering needed [1] ||
+|| [Robin Multi Agent System](entities/robin-multi-agent-system.md) (Robin) | 2026 | Full hypothesis generation + data analysis, lab-in-the-loop | Requires human for wet-lab execution, prompt engineering needed [1] ||
 | Boiko et al. autonomous chemistry | 2023 | Autonomous chemical research | Chemistry-only domain |
 | TxGemma | 2025 | Therapeutics-focused LLMs | Not fully autonomous discovery pipeline |
 | Gottweis AI co-scientist | 2025 | Multi-agent scientific reasoning | Pre-clinical stage |
@@ -65,7 +65,7 @@ The use of AI systems — particularly multi-agent architectures based on large 
 - Robin identified ROCK inhibitors (ripasudil, Y-27632) and circadian modulator (KL001) as phagocytosis enhancers [1]
 
 ### Potential Extensions
-- Materials science discovery [Robin Multi Agent System](../entities/robin-multi-agent-system.md) [1]
+- Materials science discovery [Robin Multi Agent System](entities/robin-multi-agent-system.md) [1]
 - Any domain where literature synthesis drives hypothesis generation [1]
 
 ## Performance Benchmarks
@@ -107,8 +107,8 @@ The use of AI systems — particularly multi-agent architectures based on large 
 
 ## Related Concepts
 
-- [Robin Multi Agent System](../entities/robin-multi-agent-system.md) — First system to implement full automated discovery pipeline
-- [Paperqa](../entities/paperqa.md) — Literature search technology powering Crow and Falcon agents
-- [Finch Agent](../entities/finch-agent.md) — Data analysis agent executing bioinformatics pipelines
+- [Robin Multi Agent System](entities/robin-multi-agent-system.md) — First system to implement full automated discovery pipeline
+- [Paperqa](entities/paperqa.md) — Literature search technology powering Crow and Falcon agents
+- [Finch Agent](entities/finch-agent.md) — Data analysis agent executing bioinformatics pipelines
 - Drug repurposing via AI literature synthesis
 - Lab-in-the-loop frameworks

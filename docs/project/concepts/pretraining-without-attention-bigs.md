@@ -123,4 +123,4 @@ Theoretical advantage grows nonlinearly with sequence length. Paper honestly not
 
 BiGS proved the fundamental question: *"Is attention necessary for pretraining?"* Answer: No, but you need gating to compensate for what static routing loses. This opened architectural space beyond transformers and directly influenced the Mamba/Jamba lineage of selective SSM architectures.
 
-See [State Space Models Ssm](state-space-models-ssm.md) for SSM background and technical details. [1]
+See [State Space Models Ssm](concepts/state-space-models-ssm.md) for SSM background and technical details. [1]

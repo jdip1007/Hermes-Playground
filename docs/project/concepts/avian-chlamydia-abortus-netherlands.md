@@ -87,4 +87,4 @@ This study reports a family cluster of four patients with respiratory illness ca
 
 ## Cross-References
 
-See also: [Realtime Pcr Chlamydia Diagnosis](realtime-pcr-chlamydia-diagnosis.md), [Cap Ngs Clinical Test Standards](CAP-NGS-clinical-test-standards.md), [Clinical Metagenomics Viral Detection](clinical-metagenomics-viral-detection.md)
+See also: [Realtime Pcr Chlamydia Diagnosis](concepts/realtime-pcr-chlamydia-diagnosis.md), [Cap Ngs Clinical Test Standards](concepts/CAP-NGS-clinical-test-standards.md), [Clinical Metagenomics Viral Detection](concepts/clinical-metagenomics-viral-detection.md)

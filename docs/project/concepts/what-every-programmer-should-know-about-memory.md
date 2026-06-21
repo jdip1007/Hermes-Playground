@@ -101,7 +101,7 @@ Memory optimization is critical for:
 
 ## Cross-References
 
-[Bioinformatics](bioinformatics.md) — Memory optimization directly impacts bioinformatics pipeline performance
-[Agent Architecture Patterns](agent-architecture-patterns.md) — Agent memory management patterns benefit from understanding hardware memory hierarchy
-[Compressed Sparse Attention Csa](compressed-sparse-attention-csa.md) — Attention mechanism optimizations rely on the same memory access pattern principles (locality, prefetching)
-[Benchmarking Viromics Illumina Nanopore Pacbio](benchmarking-viromics-illumina-nanopore-pacbio.md) — Sequencing data processing pipelines are memory-bound
+[Bioinformatics](concepts/bioinformatics.md) — Memory optimization directly impacts bioinformatics pipeline performance
+[Agent Architecture Patterns](concepts/agent-architecture-patterns.md) — Agent memory management patterns benefit from understanding hardware memory hierarchy
+[Compressed Sparse Attention Csa](concepts/compressed-sparse-attention-csa.md) — Attention mechanism optimizations rely on the same memory access pattern principles (locality, prefetching)
+[Benchmarking Viromics Illumina Nanopore Pacbio](concepts/benchmarking-viromics-illumina-nanopore-pacbio.md) — Sequencing data processing pipelines are memory-bound

@@ -27,8 +27,8 @@ Protocol for shearing up to 192 samples of DNA using the FastPrep-96 High Throug
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Covaris G Tube Shearing](covaris-g-tube-shearing.md)
-[Megaruptor 3 Extraction Method](megaruptor-3-extraction-method.md)
-[Promethion 24Hr Genome Workflow](promethion-24hr-genome-workflow.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Covaris G Tube Shearing](concepts/covaris-g-tube-shearing.md)
+[Megaruptor 3 Extraction Method](concepts/megaruptor-3-extraction-method.md)
+[Promethion 24Hr Genome Workflow](concepts/promethion-24hr-genome-workflow.md)
 

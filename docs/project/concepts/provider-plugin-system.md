@@ -19,7 +19,7 @@ contested: false
 
 Hermes 之前把每个 provider 的"怪癖"散落在 `run_agent.py`、`agent/auxiliary_client.py` 和 `agent/model_metadata.py` 的 if/elif 分支里。v0.13.0 用 `ProviderProfile` ABC + `plugins/model-providers/` 插件目录把它**收敛到声明式数据类**[1]。
 
-这是 [Provider Transport Architecture](provider-transport-architecture.md) 的姐妹页 ——
+这是 [Provider Transport Architecture](concepts/provider-transport-architecture.md) 的姐妹页 ——
 
 - **Transport**：负责数据路径（convert_messages → convert_tools → build_kwargs → normalize_response），少而稳，4 个内置[1]。
 - **ProviderProfile**：声明性描述某个 provider 的差异点，多且常增减，**纯数据**[1]。
@@ -227,7 +227,7 @@ transport = get_transport(profile.api_mode)     # ChatCompletionsTransport()
 
 ## 6. 与 `agent/model_metadata.py` 的关系
 
-`agent/model_metadata.py` 的 10 级上下文长度解析链（[Smart Model Routing](smart-model-routing.md)）现在**第一步**就是 `get_provider_profile`[1]：
+`agent/model_metadata.py` 的 10 级上下文长度解析链（[Smart Model Routing](concepts/smart-model-routing.md)）现在**第一步**就是 `get_provider_profile`[1]：
 
 - profile.hostname → URL 反查[1]
 - profile.fetch_models() → 真实可用模型列表（命中 models.dev / OpenRouter manifest / Nous Portal manifest 之前作为 short-circuit）[1]

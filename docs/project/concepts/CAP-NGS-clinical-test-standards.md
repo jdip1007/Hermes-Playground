@@ -76,8 +76,8 @@ The College of American Pathologists (CAP) developed the **first regulatory fram
 
 ## Cross-References
 
-- [Next Generation Sequencing](next-generation-sequencing.md) — broader NGS technology overview
-- [Clinical Metagenomics Viral Detection](clinical-metagenomics-viral-detection.md) — clinical metagenomics applications (regulatory context)
+- [Next Generation Sequencing](concepts/next-generation-sequencing.md) — broader NGS technology overview
+- [Clinical Metagenomics Viral Detection](concepts/clinical-metagenomics-viral-detection.md) — clinical metagenomics applications (regulatory context)
 - [[nanopore-TB-identification-genotyping-drug-resistance]] — WHO-approved tNGS test (complementary regulatory framework)
 
 ## Confidence Assessment

@@ -23,7 +23,7 @@ contested: false
 
 ### Inelastic Markets Hypothesis (2021)
 
-Co-authored with [Ralph Koijen](ralph-koijen.md), developed the "inelastic markets hypothesis" — a framework explaining stock market volatility through capital flows in low-elasticity demand environments [1].
+Co-authored with [Ralph Koijen](entities/ralph-koijen.md), developed the "inelastic markets hypothesis" — a framework explaining stock market volatility through capital flows in low-elasticity demand environments [1].
 
 **Core finding:** Investing $1 in equities increases aggregate market value by ~$5 (estimates: $3–$8), implying price elasticity of demand ≈ 0.2 — roughly 100× less elastic than standard models predict [1].
 

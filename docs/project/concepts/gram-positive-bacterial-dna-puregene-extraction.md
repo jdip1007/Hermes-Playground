@@ -81,7 +81,7 @@ Fragment size assessed via Femto Pulse after SPRI size selection.[1] Libraries p
 
 ## Related Topics
 
-[Human Cell Line Dna Puregene Extraction](human-cell-line-dna-puregene-extraction.md) — Same kit used for human cell lines (no Lytic Enzyme needed)
-[Blood Culture Broth Dna Extraction](blood-culture-broth-dna-extraction.md) — Bacterial DNA extraction from blood culture broth
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Next Generation Sequencing](next-generation-sequencing.md)
+[Human Cell Line Dna Puregene Extraction](concepts/human-cell-line-dna-puregene-extraction.md) — Same kit used for human cell lines (no Lytic Enzyme needed)
+[Blood Culture Broth Dna Extraction](concepts/blood-culture-broth-dna-extraction.md) — Bacterial DNA extraction from blood culture broth
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md)

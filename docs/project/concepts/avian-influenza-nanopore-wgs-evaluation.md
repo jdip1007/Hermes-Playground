@@ -87,10 +87,10 @@ This study from the USGS National Wildlife Health Center and USDA National Veter
 
 ## Cross-References
 
-- [Ont R10 Avian Influenza Surveillance](ONT-R10-avian-influenza-surveillance.md) — R10 chemistry improvements for influenza sequencing (complementary study)
-- [Nanopore Sequencing Minion](nanopore-sequencing-minion.md) — MinION platform overview
-- [Pandemic Influenza Emergence](pandemic-influenza-emergence.md) — influenza pandemic preparedness context
-- [Next Generation Sequencing](next-generation-sequencing.md) — broader NGS technology comparison
+- [Ont R10 Avian Influenza Surveillance](concepts/ONT-R10-avian-influenza-surveillance.md) — R10 chemistry improvements for influenza sequencing (complementary study)
+- [Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md) — MinION platform overview
+- [Pandemic Influenza Emergence](concepts/pandemic-influenza-emergence.md) — influenza pandemic preparedness context
+- [Next Generation Sequencing](concepts/next-generation-sequencing.md) — broader NGS technology comparison
 
 ## Confidence Assessment
 

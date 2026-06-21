@@ -255,5 +255,5 @@ ADHD is associated with several cognitive strengths:[6]
 
 ## Related Pages
 
-- [Adhd Productivity Strategies](adhd-productivity-strategies.md)
-- [Productivity General](productivity-general.md)
+- [Adhd Productivity Strategies](concepts/adhd-productivity-strategies.md)
+- [Productivity General](concepts/productivity-general.md)

@@ -103,6 +103,6 @@ Adaptive sampling is computationally intensive — MinKNOW must basecall, align,
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Promethion 24Hr Genome Workflow](promethion-24hr-genome-workflow.md)
-[Next Generation Sequencing](next-generation-sequencing.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Promethion 24Hr Genome Workflow](concepts/promethion-24hr-genome-workflow.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md)

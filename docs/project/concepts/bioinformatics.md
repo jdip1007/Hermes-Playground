@@ -59,4 +59,4 @@ Bioinformatics is the application of computational tools to manage, analyze, and
 
 ## Related
 
-[Next Generation Sequencing](next-generation-sequencing.md), [Metagenomics](metagenomics.md), [Single Cell Sequencing](single-cell-sequencing.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md), [Metagenomics](concepts/metagenomics.md), [Single Cell Sequencing](concepts/single-cell-sequencing.md)

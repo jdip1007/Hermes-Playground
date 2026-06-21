@@ -27,7 +27,7 @@ Method for obtaining increased long-read sequence data from human blood with min
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Buffy Coat Dna Extraction](buffy-coat-dna-extraction.md)
-[Dry Blood Spots Dna Extraction](dry-blood-spots-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Buffy Coat Dna Extraction](concepts/buffy-coat-dna-extraction.md)
+[Dry Blood Spots Dna Extraction](concepts/dry-blood-spots-dna-extraction.md)
 

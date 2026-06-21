@@ -15,7 +15,7 @@ contested: false
 
 # Agent Memory Taxonomy
 
-A 4-type classification system for agent memory management, derived from [Claude Code](../entities/claude-code.md) architecture [1]. All stored information uses one of four types to ensure semantic organization and prevent duplication [1].
+A 4-type classification system for agent memory management, derived from [Claude Code](entities/claude-code.md) architecture [1]. All stored information uses one of four types to ensure semantic organization and prevent duplication [1].
 
 ## The Four Types
 
@@ -55,6 +55,6 @@ Pointers to external systems and resources. Where to find up-to-date information
 
 ## Related Pages
 
-- [Claude Code](../entities/claude-code.md)
-- [Forked Agent Pattern](forked-agent-pattern.md)
-- [Context Compaction Strategies](context-compaction-strategies.md)
+- [Claude Code](entities/claude-code.md)
+- [Forked Agent Pattern](concepts/forked-agent-pattern.md)
+- [Context Compaction Strategies](concepts/context-compaction-strategies.md)

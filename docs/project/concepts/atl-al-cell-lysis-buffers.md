@@ -114,7 +114,7 @@ Proteinase K (a broad-spectrum serine protease from *Engyodontium album*) requir
 
 ## Practical Considerations
 
-**For blood culture broth samples:** The extraction chemistry (ATL/AL + Proteinase K) is identical to whole blood DNA extraction — the only difference is that **SPS/benzyl alcohol must be removed first** via centrifugation (20,000g × 10min) and optionally an ethanol pellet wash.[13] Once SPS is cleared, proceed with standard ATL/AL protocol. See [Blood Culture Broth Dna Extraction](blood-culture-broth-dna-extraction.md) for the full workflow.
+**For blood culture broth samples:** The extraction chemistry (ATL/AL + Proteinase K) is identical to whole blood DNA extraction — the only difference is that **SPS/benzyl alcohol must be removed first** via centrifugation (20,000g × 10min) and optionally an ethanol pellet wash.[13] Once SPS is cleared, proceed with standard ATL/AL protocol. See [Blood Culture Broth Dna Extraction](concepts/blood-culture-broth-dna-extraction.md) for the full workflow.
 
 **Alternative chaotropic salt approach:** Villumsen et al. demonstrated that using 5 M guanidine HCl in Tris-HCl (pH 8.0) + Proteinase K as a lysis buffer, followed by benzyl alcohol SPS removal and Qiagen column purification, outperformed the standard DNeasy kit protocol for blood culture broth — achieving 9× higher DNA recovery than organic extraction alone.[14] This suggests that increasing chaotropic salt concentration beyond ATL's ~4 M guanidine HCl may improve lysis efficiency for fastidious organisms in complex media.
 
@@ -124,5 +124,5 @@ Proteinase K (a broad-spectrum serine protease from *Engyodontium album*) requir
 
 ## Related Topics
 
-[Blood Culture Broth Dna Extraction](blood-culture-broth-dna-extraction.md)
-[Lysis Buffer Components](lysis-buffer-components.md)
+[Blood Culture Broth Dna Extraction](concepts/blood-culture-broth-dna-extraction.md)
+[Lysis Buffer Components](concepts/lysis-buffer-components.md)

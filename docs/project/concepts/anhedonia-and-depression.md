@@ -62,6 +62,6 @@ The video's claim that "depression doesn't always look like sadness. Clinically,
 
 ## Related Concepts
 
-[Rumination Psychology](rumination-psychology.md) — Rumination contributes to anhedonia by replacing experience with analysis
-[Default Mode Network Depression](default-mode-network-depression.md) — DMN hyperactivity may contribute to reward processing deficits
-[Flow State And Self Consciousness](flow-state-and-self-consciousness.md) — Anhedonia and flow state loss share mechanisms of diminished self-awareness during rewarding experiences
+[Rumination Psychology](concepts/rumination-psychology.md) — Rumination contributes to anhedonia by replacing experience with analysis
+[Default Mode Network Depression](concepts/default-mode-network-depression.md) — DMN hyperactivity may contribute to reward processing deficits
+[Flow State And Self Consciousness](concepts/flow-state-and-self-consciousness.md) — Anhedonia and flow state loss share mechanisms of diminished self-awareness during rewarding experiences

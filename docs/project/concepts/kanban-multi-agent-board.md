@@ -56,7 +56,7 @@ contested: false
 > - `tools/kanban_tools.py` `kanban_create` 工具加 `goal_mode` / `goal_max_turns` 参数（orchestrator fan-out 时可单卡选 mode）
 > - Kanban CLI：`hermes kanban create --goal` / `--goal-max-turns N`
 >
-> 与 [Goal And Ralph Loop](goal-and-ralph-loop.md) 共享判定逻辑（同一 judge schema）。
+> 与 [Goal And Ralph Loop](concepts/goal-and-ralph-loop.md) 共享判定逻辑（同一 judge schema）。
 >
 > ### 可靠性三连
 >
@@ -89,7 +89,7 @@ contested: false
 
 ## 概述 [1]
 
-Kanban 是 Hermes 在 v0.13 (v2026.5.7) 引入的**可持久化多 Agent 协作看板**[1]。和 [Multi Agent Architecture](multi-agent-architecture.md) 中的 4 种 in-process 机制（delegate_task / MoA / Background Review / send_message）不同，Kanban 是**跨 Session、跨 Profile、跨进程**的协调原语：
+Kanban 是 Hermes 在 v0.13 (v2026.5.7) 引入的**可持久化多 Agent 协作看板**[1]。和 [Multi Agent Architecture](concepts/multi-agent-architecture.md) 中的 4 种 in-process 机制（delegate_task / MoA / Background Review / send_message）不同，Kanban 是**跨 Session、跨 Profile、跨进程**的协调原语：
 
 - 任务存在 SQLite，重启不丢 [1]
 - 多个 Hermes worker 并发跑，靠 WAL + CAS 原子认领 [1]
@@ -438,7 +438,7 @@ dashboard:
 
 ---
 
-## 与 [Multi Agent Architecture](multi-agent-architecture.md) 的关系
+## 与 [Multi Agent Architecture](concepts/multi-agent-architecture.md) 的关系
 
 Kanban 是 Hermes 多 Agent 体系的**第 5 种机制**，区别于 in-process 的 delegate_task / MoA / Background Review / send_message：
 

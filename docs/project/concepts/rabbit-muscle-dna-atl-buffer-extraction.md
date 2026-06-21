@@ -97,8 +97,8 @@ The G2 buffer protocol yields approximately 2-3× more DNA from the same tissue 
 
 ## Related Topics
 
-[Rabbit Muscle Dna Genomic Tip Extraction](rabbit-muscle-dna-genomic-tip-extraction.md) — Same sample type using G2 buffer instead of ATL buffer
-[Human Cell Line Dna Genomic Tip Extraction](human-cell-line-dna-genomic-tip-extraction.md) — Similar Genomic-tip approach for human cell lines
-[Gram Positive Bacterial Dna Midi Kit Extraction](gram-positive-bacterial-dna-midi-kit-extraction.md) — Same kit used for gram-positive bacteria (large-scale)
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Next Generation Sequencing](next-generation-sequencing.md)
+[Rabbit Muscle Dna Genomic Tip Extraction](concepts/rabbit-muscle-dna-genomic-tip-extraction.md) — Same sample type using G2 buffer instead of ATL buffer
+[Human Cell Line Dna Genomic Tip Extraction](concepts/human-cell-line-dna-genomic-tip-extraction.md) — Similar Genomic-tip approach for human cell lines
+[Gram Positive Bacterial Dna Midi Kit Extraction](concepts/gram-positive-bacterial-dna-midi-kit-extraction.md) — Same kit used for gram-positive bacteria (large-scale)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md)

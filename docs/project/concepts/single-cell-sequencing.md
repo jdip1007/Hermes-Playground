@@ -57,4 +57,4 @@ Single-cell sequencing technologies enable genomic, transcriptomic, and epigenom
 
 ## Related
 
-[Next Generation Sequencing](next-generation-sequencing.md), [Metagenomics](metagenomics.md), [Bioinformatics](bioinformatics.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md), [Metagenomics](concepts/metagenomics.md), [Bioinformatics](concepts/bioinformatics.md)

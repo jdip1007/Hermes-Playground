@@ -25,8 +25,8 @@ Method for size-selecting already purified DNA to enrich for fragments above 1.5
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Covaris G Tube Shearing](covaris-g-tube-shearing.md)
-[Fastprep 96 High Throughput Shearing](fastprep-96-high-throughput-shearing.md)
-[Megaruptor 3 Extraction Method](megaruptor-3-extraction-method.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Covaris G Tube Shearing](concepts/covaris-g-tube-shearing.md)
+[Fastprep 96 High Throughput Shearing](concepts/fastprep-96-high-throughput-shearing.md)
+[Megaruptor 3 Extraction Method](concepts/megaruptor-3-extraction-method.md)
 

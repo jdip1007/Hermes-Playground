@@ -132,10 +132,10 @@ Example: CTX-M-3 vs CTX-M-15 (Asp240→Gly) — ceftazidime MIC increases from 3
 
 ## Cross-References
 
-- [Antimicrobial Resistance](antimicrobial-resistance.md) — broader AMR mechanisms and priority pathogens  
-- [Enterobacter Spp Taxonomy Clinical Amr](enterobacter-spp-taxonomy-clinical-amr.md) — Enterobacter spp. resistance including ESBL production (Davin-Regli et al. 2019)  
-- [Esbl Community Carriage Norway](esbl-community-carriage-norway.md) — community carriage epidemiology of ESBL-producing E. coli/Kp (Raffelsberger et al. 2023)  
-- [Crispr Amr Diagnostics](crispr-amr-diagnostics.md) — CRISPR-based detection platforms for AMR genes  
+- [Antimicrobial Resistance](concepts/antimicrobial-resistance.md) — broader AMR mechanisms and priority pathogens  
+- [Enterobacter Spp Taxonomy Clinical Amr](concepts/enterobacter-spp-taxonomy-clinical-amr.md) — Enterobacter spp. resistance including ESBL production (Davin-Regli et al. 2019)  
+- [Esbl Community Carriage Norway](concepts/esbl-community-carriage-norway.md) — community carriage epidemiology of ESBL-producing E. coli/Kp (Raffelsberger et al. 2023)  
+- [Crispr Amr Diagnostics](concepts/crispr-amr-diagnostics.md) — CRISPR-based detection platforms for AMR genes  
 
 ## Confidence Assessment
 

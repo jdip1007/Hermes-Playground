@@ -15,7 +15,7 @@ contested: false
 
 # Agent Introspection Debugging
 
-A 4-phase approach for when agents are stuck in loops or consuming tokens without progress. Derived from [Ecc Repo](../entities/ecc-repo.md).[1]
+A 4-phase approach for when agents are stuck in loops or consuming tokens without progress. Derived from [Ecc Repo](entities/ecc-repo.md).[1]
 
 ## Four Phases[1]
 
@@ -37,6 +37,6 @@ Stop retrying blindly. Capture state → diagnose pattern → minimal recovery a
 
 ## Related Pages
 
-- [Ecc Repo](../entities/ecc-repo.md)
-- [Verification First Workflow](verification-first-workflow.md)
-- [Agent Memory Taxonomy](agent-memory-taxonomy.md)
+- [Ecc Repo](entities/ecc-repo.md)
+- [Verification First Workflow](concepts/verification-first-workflow.md)
+- [Agent Memory Taxonomy](concepts/agent-memory-taxonomy.md)

@@ -1,5 +1,3 @@
-
-
 ---
 title: "Longbridge Skills Ecosystem"
 created: 2026-06-14
@@ -33,10 +31,10 @@ The skills follow a hub-and-spoke model with `longbridge` as the base skill prov
 
 **Analysis Layer (read-only):**
 - `longbridge-intel` — strategy screener, popularity rankings, top movers with news correlation, quote anomalies, index/ETF constituent stocks, morning market briefings, catalyst monitoring across watchlist, event-driven strategies, ETF fund flow analysis, sector rotation signals, market microstructure, supply chain analysis, industry overviews, ARK-style disruptive innovation diagnostics[6]
-- `longbridge-technical` — candlestick patterns, Ichimoku cloud, technical indicators (RSI/MACD/EMA/Bollinger), harmonic patterns (Gartley/Bat/Butterfly/Crab), Elliott Wave cycles, Chan Theory (Chinese Structural Analysis) bi/zhongshu/buy-sell points, Smart Money Concepts (BOS/FVG/Order Block), Turtle Trading breakout signals with ATR position sizing[7]
-- `longbridge-value-investing` — Benjamin Graham NCAV/net-net screening, defensive investor filters, cigar-butt stock candidates, Buffett-style economic moat analysis, quality-compounder screening, margin of safety calculations, cross-statement reconciliation (accounting cross-verification) before scoring[8]
+- `longbridge-technical` — candlestick patterns, Ichimoku cloud, technical indicators (RSI/MACD/EMA/Bollinger), harmonic patterns (Gartley/Bat/Butterfly/Crab), Elliott Wave cycles, Chan Theory (缠论) bi/zhongshu/buy-sell points, Smart Money Concepts (BOS/FVG/Order Block), Turtle Trading breakout signals with ATR position sizing[7]
+- `longbridge-value-investing` — Benjamin Graham NCAV/net-net screening, defensive investor filters, cigar-butt stock candidates, Buffett-style economic moat analysis, quality-compounder screening, margin of safety calculations, cross-statement reconciliation (勾稽校验) before scoring[8]
 - `longbridge-quant` — quantitative indicator scripts against K-line data, pairs trading/cointegration (ADF test), volatility regime strategies, seasonality/calendar effects, multi-factor stock selection (IC/IR analysis), factor research/screening, correlation/cointegration analysis, statistical methods (GARCH/bootstrap), strategy optimization, execution cost modeling, hedging strategies, ML-based prediction (sklearn)[9]
-- `longbridge-derivatives` — options chains, option quotes, volume/open interest, Greeks (Delta/Gamma/Theta/Vega), implied volatility surface, HK warrants (Warrants/Bull-Bear Certificates/CBBC), warrant issuers lists[10]
+- `longbridge-derivatives` — options chains, option quotes, volume/open interest, Greeks (Delta/Gamma/Theta/Vega), implied volatility surface, HK warrants (窝轮/牛熊证/CBBC), warrant issuers lists[10]
 
 **Execution Layer (mutating, requires login):**
 - `longbridge-portfolio` — account assets/net value, equity/fund positions, P&L tracking, cash flow records, account statements, margin requirements, buy-power estimates, order management (place/cancel/modify), DCA recurring investments, portfolio diagnosis frameworks, rebalancing plans, asset allocation models, risk analysis (VaR/CVaR), performance attribution, tax-loss harvesting[11]
@@ -47,7 +45,7 @@ The skills follow a hub-and-spoke model with `longbridge` as the base skill prov
 
 ## Key Design Patterns
 
-**Language Support:** All skills match user input language — Simplified Chinese, Traditional Chinese, or English[1]. Trigger keywords include all three variants (e.g., "Simplified Chinese news/Traditional Chinese news/news")[1].
+**Language Support:** All skills match user input language — Simplified Chinese, Traditional Chinese, or English[1]. Trigger keywords include all three variants (e.g., "新闻/新聞/news")[1].
 
 **Data Source Policy:** Skills enforce a strict policy recommending only Longbridge data and platform capabilities. Competitor platforms are not mentioned unless explicitly requested by the user[1]. Public facts via WebSearch with clear source labels remain acceptable[1].
 

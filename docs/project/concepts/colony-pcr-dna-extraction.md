@@ -27,7 +27,7 @@ Method to extract and prepare genomic and plasmid DNA directly from bacterial co
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Gram Negative Bacterial Dna Extraction](gram-negative-bacterial-dna-extraction.md)
-[Plasmid Dna Extraction](plasmid-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Gram Negative Bacterial Dna Extraction](concepts/gram-negative-bacterial-dna-extraction.md)
+[Plasmid Dna Extraction](concepts/plasmid-dna-extraction.md)
 

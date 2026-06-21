@@ -53,6 +53,6 @@ Practical guide to interpreting three commonly reported measures in clinical stu
 Essential reading for anyone interpreting clinical trial results or epidemiological studies. The paper uses a concrete lung cancer example to show how the same data produces three different numerical summaries depending on which measure is chosen. Understanding these distinctions prevents misinterpretation of treatment effect sizes in medical literature.
 
 ### Cross-References
-[Sleep Regularity Mortality](sleep-regularity-mortality.md) — Uses hazard ratios for mortality prediction  
-[Esbl Community Carriage Norway](esbl-community-carriage-norway.md) — Epidemiological study design  
-[Enterobacter Spp Taxonomy Clinical Amr](enterobacter-spp-taxonomy-clinical-amr.md) — Clinical microbiology statistics
+[Sleep Regularity Mortality](concepts/sleep-regularity-mortality.md) — Uses hazard ratios for mortality prediction  
+[Esbl Community Carriage Norway](concepts/esbl-community-carriage-norway.md) — Epidemiological study design  
+[Enterobacter Spp Taxonomy Clinical Amr](concepts/enterobacter-spp-taxonomy-clinical-amr.md) — Clinical microbiology statistics

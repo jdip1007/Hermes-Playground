@@ -27,6 +27,6 @@ Method to extract and sequence HMW genomic DNA from Atlantic salmon (*Salmo sala
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Salmon Tissue Dna Extraction](salmon-tissue-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Salmon Tissue Dna Extraction](concepts/salmon-tissue-dna-extraction.md)
 

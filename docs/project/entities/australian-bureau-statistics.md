@@ -122,6 +122,6 @@ The head of ABS is the Australian Statistician (previously Commonwealth Statisti
 
 ## Related Topics
 
-[Metagenomics](../concepts/metagenomics.md) - ABS health survey data used in microbiome research
-[Bioinformatics](../concepts/bioinformatics.md) - Statistical methods applied to biological data analysis
+[Metagenomics](concepts/metagenomics.md) - ABS health survey data used in microbiome research
+[Bioinformatics](concepts/bioinformatics.md) - Statistical methods applied to biological data analysis
 [[finance]] - Economic indicators inform market analysis

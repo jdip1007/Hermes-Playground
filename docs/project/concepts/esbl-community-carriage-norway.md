@@ -124,10 +124,10 @@ This large population-based study characterizes the **prevalence, risk factors, 
 
 ## Cross-References
 
-- [Antimicrobial Resistance](antimicrobial-resistance.md) — broader AMR mechanisms and priority pathogens  
-- [Ctx M Esbls](ctx-m-esbls.md) — CTX-M-type ESBL molecular biology and global epidemiology (Rossolini et al. 2008)  
-- [Enterobacter Spp Taxonomy Clinical Amr](enterobacter-spp-taxonomy-clinical-amr.md) — Enterobacter spp. taxonomy, clinical aspects, and resistance mechanisms (Davin-Regli et al. 2019)  
-- [Esbl Overview Chinese Review](esbl-overview-chinese-review.md) — ESBL classification, detection methods, Asia-Pacific epidemiology  
+- [Antimicrobial Resistance](concepts/antimicrobial-resistance.md) — broader AMR mechanisms and priority pathogens  
+- [Ctx M Esbls](concepts/ctx-m-esbls.md) — CTX-M-type ESBL molecular biology and global epidemiology (Rossolini et al. 2008)  
+- [Enterobacter Spp Taxonomy Clinical Amr](concepts/enterobacter-spp-taxonomy-clinical-amr.md) — Enterobacter spp. taxonomy, clinical aspects, and resistance mechanisms (Davin-Regli et al. 2019)  
+- [Esbl Overview Chinese Review](concepts/esbl-overview-chinese-review.md) — ESBL classification, detection methods, Asia-Pacific epidemiology  
 
 ## Confidence Assessment
 

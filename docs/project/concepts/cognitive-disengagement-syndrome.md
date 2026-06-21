@@ -314,4 +314,4 @@ Based on clinical descriptions and research findings, key distinguishing feature
 
 ## Related Concepts
 
-[Adhd](adhd.md) [[attention-deficit-disorder]] [[executive-function]] [[internalizing-disorders]] [[anxiety-and-depression]] [[atomoxetine-strattera]] [[methylphenidate-ritalin]]
+[Adhd](concepts/adhd.md) [[attention-deficit-disorder]] [[executive-function]] [[internalizing-disorders]] [[anxiety-and-depression]] [[atomoxetine-strattera]] [[methylphenidate-ritalin]]

@@ -25,7 +25,7 @@ Smith et al. (2009, PNAS) demonstrated the power of BEAST relaxed molecular cloc
 - Seasonal and classic swine H1N1 co-circulated with BM/1918 during the pandemic, rather than deriving from it
 - H2N2/H3N2 introduced genes entered humans 2–7 years before pandemic recognition
 
-See [Pandemic Influenza Emergence](pandemic-influenza-emergence.md) for full analysis. [1]
+See [Pandemic Influenza Emergence](concepts/pandemic-influenza-emergence.md) for full analysis. [1]
 
 ## Tools
 BEAST2, RAxML/ExaML, IQ-TREE, Nextstrain, FigTree/iTOL, phylodyn (R)

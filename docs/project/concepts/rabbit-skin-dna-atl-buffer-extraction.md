@@ -97,9 +97,9 @@ The G2 buffer protocol yields approximately 2-3× more DNA from the same tissue 
 
 ## Related Topics
 
-[Rabbit Skin Dna Genomic Tip Extraction](rabbit-skin-dna-genomic-tip-extraction.md) — Same sample type using G2 buffer instead of ATL buffer
-[Rabbit Muscle Dna Atl Buffer Extraction](rabbit-muscle-dna-atl-buffer-extraction.md) — Rabbit muscle extraction using ATL buffer with two-stage digestion
-[Rabbit Lung Dna Atl Buffer Extraction](rabbit-lung-dna-atl-buffer-extraction.md) — Rabbit lung extraction using ATL buffer with two-stage digestion
-[Human Cell Line Dna Genomic Tip Extraction](human-cell-line-dna-genomic-tip-extraction.md) — Similar Genomic-tip approach for human cell lines
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Next Generation Sequencing](next-generation-sequencing.md)
+[Rabbit Skin Dna Genomic Tip Extraction](concepts/rabbit-skin-dna-genomic-tip-extraction.md) — Same sample type using G2 buffer instead of ATL buffer
+[Rabbit Muscle Dna Atl Buffer Extraction](concepts/rabbit-muscle-dna-atl-buffer-extraction.md) — Rabbit muscle extraction using ATL buffer with two-stage digestion
+[Rabbit Lung Dna Atl Buffer Extraction](concepts/rabbit-lung-dna-atl-buffer-extraction.md) — Rabbit lung extraction using ATL buffer with two-stage digestion
+[Human Cell Line Dna Genomic Tip Extraction](concepts/human-cell-line-dna-genomic-tip-extraction.md) — Similar Genomic-tip approach for human cell lines
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md)

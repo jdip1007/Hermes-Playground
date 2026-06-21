@@ -1,5 +1,5 @@
 ---
-title: "Alison (Australian Alison Teacher) — Australian Real Estate Expert"
+title: "Alison (澳洲Alison老師) — Australian Real Estate Expert"
 created: 2026-06-07
 updated: 2026-06-07
 type: entity
@@ -7,13 +7,13 @@ tags: [person, finance]
 sources:
   - type: transcript
     url: "https://www.youtube.com/watch?v=kUZuIY7FB6o"
-title: "7 Real Estate Wealth Rules (7 Real Estate Wealth Rules)"
+    title: "7個房地產致富法則 (7 Real Estate Wealth Rules)"
     date: 2026-06-07
 confidence: medium
 contested: false
 ---
 
-# Alison (Australian Alison Teacher)
+# Alison (澳洲Alison老師)
 
 ## Overview
 
@@ -24,7 +24,7 @@ Australian real estate agent who holds dual professional qualifications as both 
 - Real estate agent (Australia)
 - Certified accountant
 - Lawyer
-- Author: 《Australian Property Buying for Financial Freedom》(Australian Property Buying for Financial Freedom), 2026 revised edition
+- Author: 《澳洲買樓打造財務自由》(Australian Property Buying for Financial Freedom), 2026 revised edition
 
 ## Content Focus
 
@@ -37,13 +37,13 @@ Cantonese-language content targeting Chinese-speaking audiences interested in Au
 
 ## Key Frameworks
 
-Teaches a 7-rule framework for property investing centered on behavioral discipline rather than market timing [1]. Full details in [Australian Property Investment Principles](../concepts/australian-property-investment-principles.md).
+Teaches a 7-rule framework for property investing centered on behavioral discipline rather than market timing [1]. Full details in [Australian Property Investment Principles](concepts/australian-property-investment-principles.md).
 
 ## Online Presence [1]
 
 - YouTube: Cantonese channel (primary), Mandarin channel (secondary)
 - Website: investwithalison.com
-- Book: 《Australian Property Buying for Financial Freedom》(HK$139 retail, offered free + postage)
+- Book: 《澳洲買樓打造財務自由》(HK$139 retail, offered free + postage)
 
 ## Assessment
 

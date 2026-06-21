@@ -125,10 +125,10 @@ ESBL-producing bacteria reported in: Klebsiella spp., Escherichia coli, Salmonel
 
 ## Cross-References
 
-- [Antimicrobial Resistance](antimicrobial-resistance.md) — broader AMR mechanisms and priority pathogens  
-- [Ctx M Esbls](ctx-m-esbls.md) — detailed CTX-M review with molecular biology (Rossolini et al. 2008)  
-- [Enterobacter Spp Taxonomy Clinical Amr](enterobacter-spp-taxonomy-clinical-amr.md) — Enterobacter spp. resistance including ESBL production  
-- [Esbl Community Carriage Norway](esbl-community-carriage-norway.md) — community carriage epidemiology of ESBL-producing E. coli/Kp  
+- [Antimicrobial Resistance](concepts/antimicrobial-resistance.md) — broader AMR mechanisms and priority pathogens  
+- [Ctx M Esbls](concepts/ctx-m-esbls.md) — detailed CTX-M review with molecular biology (Rossolini et al. 2008)  
+- [Enterobacter Spp Taxonomy Clinical Amr](concepts/enterobacter-spp-taxonomy-clinical-amr.md) — Enterobacter spp. resistance including ESBL production  
+- [Esbl Community Carriage Norway](concepts/esbl-community-carriage-norway.md) — community carriage epidemiology of ESBL-producing E. coli/Kp  
 
 ## Confidence Assessment
 

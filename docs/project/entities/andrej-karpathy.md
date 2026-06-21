@@ -27,9 +27,9 @@ AI researcher and engineer. Former Director of AI at Tesla (autonomous driving).
 
 Karpathy's 2026 gist describes the core idea: instead of RAG (retrieving raw chunks on every query), have the LLM incrementally build and maintain a persistent wiki of interlinked markdown files. The knowledge compiles once and stays current, with cross-references pre-built and contradictions flagged [1].
 
-See [Llm Wiki Pattern](../concepts/llm-wiki-pattern.md) for full details.
+See [Llm Wiki Pattern](concepts/llm-wiki-pattern.md) for full details.
 
 ## Related Pages
 
-- [Llm Wiki Pattern](../concepts/llm-wiki-pattern.md)
-- [Agent Architecture Patterns](../concepts/agent-architecture-patterns.md)
+- [Llm Wiki Pattern](concepts/llm-wiki-pattern.md)
+- [Agent Architecture Patterns](concepts/agent-architecture-patterns.md)

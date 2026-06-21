@@ -28,7 +28,7 @@ Provider Transport 是 **v2026.4.17+** 引入的架构级重构，用统一的 A
 
 > **2026-05 二阶重构**：`providers/` 模块（`ProviderProfile` ABC）补全了"哪个 provider"那一半。Transport 管 `api_mode`（数据路径），Provider Profile 管 provider 身份/auth/endpoint/quirks/aux defaults，**两者正交**。33 个 provider profile 全部以 `plugins/model-providers/<name>/` 形式发布。详见下方"Provider Profile 插件系统"[1]。
 
-> **v0.13.0 起搭档新组件**：[Provider Plugin System](provider-plugin-system.md) —— `providers/base.py:39 ProviderProfile` ABC + `plugins/model-providers/` 29 个内置插件。**Transport 拿数据路径，Profile 拿 provider 元信息**：transport 少而稳（4 个），profile 多且常新[1]。
+> **v0.13.0 起搭档新组件**：[Provider Plugin System](concepts/provider-plugin-system.md) —— `providers/base.py:39 ProviderProfile` ABC + `plugins/model-providers/` 29 个内置插件。**Transport 拿数据路径，Profile 拿 provider 元信息**：transport 少而稳（4 个），profile 多且常新[1]。
 
 ## HEAD 期 transport 注册表
 
@@ -62,7 +62,7 @@ types.py                162   NormalizedResponse / ToolCall / Usage
 __init__.py              68   注册表 + 懒发现
 ```
 
-`api_mode` 字符串是与 [Provider Plugin System](provider-plugin-system.md) 的耦合点：[1]
+`api_mode` 字符串是与 [Provider Plugin System](concepts/provider-plugin-system.md) 的耦合点：[1]
 
 ```python
 profile = get_provider_profile("nvidia")         # ProviderProfile(api_mode="chat_completions", ...)
@@ -345,10 +345,10 @@ Provider 元数据（auth 方式、`hermes doctor` 检查项、模型发现 endp
 
 ## 与其他系统的关系
 
-- [Auxiliary Client Architecture](auxiliary-client-architecture.md) — auxiliary_client 已迁移到 Transport
-- [Smart Model Routing](smart-model-routing.md) — transport 基于 api_mode 派发，与模型路由配合；ProviderProfile 提供模型元数据
-- [Interrupt And Fault Tolerance](interrupt-and-fault-tolerance.md) — 中断、retry 仍在 AIAgent 层，不属于 transport 职责
-- [Prompt Caching Optimization](prompt-caching-optimization.md) — cache 统计通过 `extract_cache_stats` 钩子暴露
+- [Auxiliary Client Architecture](concepts/auxiliary-client-architecture.md) — auxiliary_client 已迁移到 Transport
+- [Smart Model Routing](concepts/smart-model-routing.md) — transport 基于 api_mode 派发，与模型路由配合；ProviderProfile 提供模型元数据
+- [Interrupt And Fault Tolerance](concepts/interrupt-and-fault-tolerance.md) — 中断、retry 仍在 AIAgent 层，不属于 transport 职责
+- [Prompt Caching Optimization](concepts/prompt-caching-optimization.md) — cache 统计通过 `extract_cache_stats` 钩子暴露
 
 ## 相关文件
 

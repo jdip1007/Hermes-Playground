@@ -93,7 +93,7 @@ def _should_parallelize_tool_batch(tool_calls) -> bool:
 - 此类服务器在 `tools/mcp_tool.py` 的 `_parallel_safe_servers` 集合中登记[1]。
 - 其余 MCP 工具仍按保守策略降级为串行[1]。
 
-详见 [Mcp And Plugins](mcp-and-plugins.md)。
+详见 [Mcp And Plugins](concepts/mcp-and-plugins.md)。
 
 ### 3. 路径冲突检测
 
@@ -206,9 +206,9 @@ _PATH_SCOPED_TOOLS = frozenset({
 ## 相关页面
 - [[Agent Loop And Prompt Assembly|agent-loop-and-prompt-assembly]]
 
-- [Model Tools Dispatch](model-tools-dispatch.md) — 工具编排与调度（并行执行的上层控制）
-- [Tool Registry Architecture](tool-registry-architecture.md) — 工具注册系统与元数据管理
-- [Large Tool Result Handling](large-tool-result-handling.md) — 并行工具产生大型结果时的处理
+- [Model Tools Dispatch](concepts/model-tools-dispatch.md) — 工具编排与调度（并行执行的上层控制）
+- [Tool Registry Architecture](concepts/tool-registry-architecture.md) — 工具注册系统与元数据管理
+- [Large Tool Result Handling](concepts/large-tool-result-handling.md) — 并行工具产生大型结果时的处理
 
 ## 相关文件
 

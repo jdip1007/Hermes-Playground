@@ -117,7 +117,7 @@ Variable depending on number of repeat units: typically ~1,150–1,500 bp (as no
 
 ## Cross-References
 
-[Spa Typing Staph Aureus Iraq](spa-typing-staph-aureus-iraq.md) — Application of this protocol in Iraqi clinical isolates (Mohammed et al. 2021)
-[Antimicrobial Resistance](antimicrobial-resistance.md) — spa typing as epidemiological tool for tracking MRSA clones
-[Genome Based Salmonella Serotyping](genome-based-salmonella-serotyping.md) — Similar molecular typing paradigm applied to Salmonella
-[Ont R10 Avian Influenza Surveillance](ONT-R10-avian-influenza-surveillance.md) — Nanopore sequencing as modern alternative to Sanger-based typing
+[Spa Typing Staph Aureus Iraq](concepts/spa-typing-staph-aureus-iraq.md) — Application of this protocol in Iraqi clinical isolates (Mohammed et al. 2021)
+[Antimicrobial Resistance](concepts/antimicrobial-resistance.md) — spa typing as epidemiological tool for tracking MRSA clones
+[Genome Based Salmonella Serotyping](concepts/genome-based-salmonella-serotyping.md) — Similar molecular typing paradigm applied to Salmonella
+[Ont R10 Avian Influenza Surveillance](concepts/ONT-R10-avian-influenza-surveillance.md) — Nanopore sequencing as modern alternative to Sanger-based typing

@@ -118,15 +118,15 @@ Productivity operates as a self-reinforcing loop: motivation → work → feelin
 6. Dr Andrew Huberman — "The #1 Habit for Productivity" [youtube.com/watch?v=qM6yqU7RGhU](https://www.youtube.com/watch?v=qM6yqU7RGhU)
 7. Dan Martell — "How to Be So Productive it Feels ILLEGAL" [youtube.com/watch?v=hSGt_rhu49U](https://www.youtube.com/watch?v=hSGt_rhu49U)
 8. Lucas Duquette — "How to focus for 8+ hours a day (step by step)" [youtube.com/watch?v=mshjMV539Jg](https://www.youtube.com/watch?v=mshjMV539Jg)
-Daily Reading Club — "I Ching: Three Crossroads of Destiny" (I Ching: Three Crossroads of Destiny) [youtube.com/watch?v=vcqY2ENxoXk](https://www.youtube.com/watch?v=vcqY2ENxoXk)
+9. 天天讀書會 — "易經之命運的3道坎" (I Ching: Three Crossroads of Destiny) [youtube.com/watch?v=vcqY2ENxoXk](https://www.youtube.com/watch?v=vcqY2ENxoXk)
 
 ## Related Concepts
 
 - [[zeigarnik-effect]] — psychological drive to complete started tasks
 - [[attention-residue]] — cognitive carryover from context-switching
 - [[deliberate-practice]] — focused, structured skill improvement over raw hours
-- [Adhd](adhd.md)
-- [Adhd Productivity Strategies](adhd-productivity-strategies.md)
-- [Sustained Focus Strategies](sustained-focus-strategies.md) — tactical 8-hour deep work framework (speed of stimulation, work sprints, sterilized environment, task difficulty matching)
-- [Iching Life Crossroads](iching-life-crossroads.md) — I Ching three life crossroads + Ming Yi darkness-to-rebirth framework (chronic stress surfacing parallels Gu hexagram)
+- [Adhd](concepts/adhd.md)
+- [Adhd Productivity Strategies](concepts/adhd-productivity-strategies.md)
+- [Sustained Focus Strategies](concepts/sustained-focus-strategies.md) — tactical 8-hour deep work framework (speed of stimulation, work sprints, sterilized environment, task difficulty matching)
+- [Iching Life Crossroads](concepts/iching-life-crossroads.md) — I Ching three life crossroads + Ming Yi darkness-to-rebirth framework (chronic stress surfacing parallels Gu hexagram)
 

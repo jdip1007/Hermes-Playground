@@ -15,7 +15,7 @@ contested: false
 
 # Pandemic Influenza Emergence Mechanisms
 
-**Related:** [Phylogenetics Phylodynamics](phylogenetics-phylodynamics.md), [Antimicrobial Resistance](antimicrobial-resistance.md), [Bioinformatics](bioinformatics.md)
+**Related:** [Phylogenetics Phylodynamics](concepts/phylogenetics-phylodynamics.md), [Antimicrobial Resistance](concepts/antimicrobial-resistance.md), [Bioinformatics](concepts/bioinformatics.md)
 
 ## Overview
 

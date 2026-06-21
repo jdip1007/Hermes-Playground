@@ -1,5 +1,5 @@
 ---
-title: Code Execution Sandbox (execute_code)
+title: 代码执行沙箱（execute_code）
 created: 2026-04-10
 updated: '2026-06-08'
 type: concept
@@ -16,98 +16,98 @@ sources:
 confidence: high
 contested: false
 ---
-# Code Execution Sandbox
+# 代码执行沙箱
 
-## Overview
+## 概述
 
-The `execute_code` tool allows the LLM to write a Python script that is executed in an isolated subprocess [1]. The script can call back into a limited set of Hermes tools via RPC, compressing multi-step tool chains into a single inference step, reducing token consumption and latency [1].
+`execute_code` 工具让 LLM 编写一段 Python 脚本，在隔离子进程中执行 [1]。脚本可以通过 RPC 回调有限的 Hermes 工具集，将多步工具链压缩为一次推理，减少 token 消耗和延迟 [1]。
 
-## Core Value
+## 核心价值
 
 ```text
-Traditional method: 10 rounds of tool calls = 10 LLM inferences + 10 context expansions
-execute_code: 1 LLM script write + 1 execution, intermediate results do not enter context
+传统方式：10 轮工具调用 = 10 次 LLM 推理 + 10 次 context 膨胀
+execute_code：1 次 LLM 写脚本 + 1 次执行，中间结果不进 context
 ```
 
-## Sandbox Restrictions
+## 沙箱限制
 
-### Allowed Tools (Only 7) [1]
+### 允许的工具（只有 7 个）[1]
 
 ```python
 SANDBOX_ALLOWED_TOOLS = [
-    "web_search",      # Search
-    "web_extract",     # Web extraction
-    "read_file",       # Read file
-    "write_file",      # Write file
-    "search_files",    # Search files
-    "patch",           # Patch/Modify file
-    "terminal",        # Terminal command
+    "web_search",      # 搜索
+    "web_extract",     # 网页提取
+    "read_file",       # 读文件
+    "write_file",      # 写文件
+    "search_files",    # 搜索文件
+    "patch",           # 修改文件
+    "terminal",        # 终端命令
 ]
 ```
 
-### Resource Limits [1]
+### 资源限制[1]
 
 ```python
-DEFAULT_TIMEOUT = 300         # 5 minute timeout
-DEFAULT_MAX_TOOL_CALLS = 50   # Max 50 tool calls
-MAX_STDOUT_BYTES = 50_000     # Output limit 50KB
-MAX_STDERR_BYTES = 10_000     # Error output limit 10KB
+DEFAULT_TIMEOUT = 300         # 5 分钟超时
+DEFAULT_MAX_TOOL_CALLS = 50   # 最多 50 次工具调用
+MAX_STDOUT_BYTES = 50_000     # 输出上限 50KB
+MAX_STDERR_BYTES = 10_000     # 错误输出上限 10KB
 ```
 
-Can be overridden via `code_execution.*` in config.yaml [1].
+可通过 config.yaml 的 `code_execution.*` 覆盖 [1]。
 
-## Two Communication Modes [1]
+## 两种通信模式[1]
 
-| Mode | Applicable Backend | Communication Method |
+| 模式 | 适用后端 | 通信方式 |
 |------|---------|---------|
-| **UDS (Unix Domain Socket)** | local | Parent process opens an RPC listener; child process calls tools via socket |
-| **File-based RPC** | Docker / SSH / Modal / Daytona | Child process writes request file → Parent polls → Writes response file |
+| **UDS（Unix Domain Socket）** | local | 父进程开 RPC listener，子进程通过 socket 调用工具 |
+| **File-based RPC** | Docker / SSH / Modal / Daytona | 子进程写请求文件 → 父进程轮询 → 写响应文件 |
 
-### Flow [1]
+### 流程[1]
 
 ```text
-1. Parent process generates hermes_tools.py stub (contains RPC functions)
-2. Parent process starts RPC listener (UDS socket or file polling thread)
-3. Child process executes script written by LLM
-4. Script calls hermes_tools.web_search(...) etc.
-   → Sent back to parent process via RPC → Parent process calls actual tools → Returns results
-5. Only final stdout is returned to LLM, intermediate results do not enter context
+1. 父进程生成 hermes_tools.py stub（包含 RPC 函数）
+2. 父进程开启 RPC 监听（UDS socket 或文件轮询线程）
+3. 子进程执行 LLM 写的脚本
+4. 脚本中调用 hermes_tools.web_search(...) 等
+   → 通过 RPC 发回父进程 → 父进程调真正的工具 → 返回结果
+5. 只有最终 stdout 返回给 LLM，中间结果不进 context
 ```
 
-## Relationship with Terminal Backends [1]
+## 与 Terminal Backend 的关系[1]
 
-Scripts from `execute_code` **run within the current terminal backend**. If the backend is Docker, the script runs inside Docker and callbacks to local tools via file-based RPC [1].
+execute_code 的脚本**在当前 terminal backend 中执行**。如果 backend 是 Docker，脚本就跑在 Docker 里，通过 file-based RPC 回调本机的工具 [1]。
 
-## Post-Write Validation Chain: Delta Lint → LSP Diagnostics → File-Mutation Footer [1]
+## Post-Write 校验链 —— Delta Lint → LSP 诊断 → File-Mutation Footer[1]
 
-Hermes strengthened the "agent immediately knows if a file write failed" workflow in three steps from v0.13.0 to v0.14.0 [1]:
+Hermes 在 v0.13.0 → v0.14.0 三步加固了"agent 写完文件就立即知道有没有翻车"[1]：
 
-### 1. Delta Lint (v0.13.0+) [1]
+### 1. Delta Lint（v0.13.0+）[1]
 
-`tools/file_tools.py:1045,1061,1171`: Automatically runs Python / JSON / YAML / TOML syntax checks after `write_file` + `patch`. **Only reports newly introduced errors** to the agent (existing errors are ignored) [1].
+`tools/file_tools.py:1045,1061,1171`：`write_file` + `patch` 写完后自动跑 Python / JSON / YAML / TOML 语法检查，**只回报新增的错误**给 agent（旧错误不打扰）[1]。
 
-### 2. LSP Semantic Diagnostics (v0.14.0+) [1]
+### 2. LSP 语义诊断（v0.14.0+）[1]
 
-`agent/lsp/` (11 modules, ~4400 lines: `cli.py / protocol.py / client.py:930 / manager.py:644 / eventlog.py / install.py / servers.py:1040 / range_shift.py / workspace.py / reporter.py`) [1]:
+`agent/lsp/`（11 modules，~4400 行：`cli.py / protocol.py / client.py:930 / manager.py:644 / eventlog.py / install.py / servers.py:1040 / range_shift.py / workspace.py / reporter.py`）[1]：
 
-Runs a **real language server** for **semantic analysis** after writing—type errors, undefined symbols, missing imports, unreachable code—and immediately surfaces them to the agent [1]. LSP servers are installed on-demand by `agent/lsp/install.py`, and `agent/lsp/servers.py` maintains a registry of servers for Python/TypeScript/Go/Rust, etc. [1].
+写完后跑**真正的 language server**做**语义分析**——类型错误、未定义符号、缺 import、不可达代码——立即 surface 给 agent [1]。LSP server 由 `agent/lsp/install.py` 按需安装，`agent/lsp/servers.py` 维护 Python/TypeScript/Go/Rust 等 server 清单 [1]。
 
-A significant upgrade over basic syntax checking [1].
+比单纯 syntax check 升级一大截 [1]。
 
-### 3. File-Mutation Verifier Footer (v0.14.0+) [1]
+### 3. File-Mutation Verifier Footer（v0.14.0+）[1]
 
-`tools/file_state.py` + `agent/file_safety.py`: If files are written or modified in a turn, **appends a footer to the agent** summarizing exactly what changed on disk (paths, line counts, deltas) [1]. The agent immediately detects failures like "I thought it was saved but it wasn't," preventing false success reports [1].
+`tools/file_state.py` + `agent/file_safety.py`：每轮如果写/改了文件，**给 agent 一段 footer**总结磁盘上具体变了什么（路径、行数、delta）[1]。Agent 立刻发现"我以为写进去了但实际没保存"的失败，不再自信地报 success [1]。
 
-## Related Pages
+## 相关页面
 - [[Tool Registry Architecture|tool-registry-architecture]]
 - [[Security Defense System|security-defense-system]]
 
-- [Terminal Backends](terminal-backends.md) — Which backend executes the script
-- [Large Tool Result Handling](large-tool-result-handling.md) — Overflow protection for tool results
+- [Terminal Backends](concepts/terminal-backends.md) — 脚本在哪个后端执行
+- [Large Tool Result Handling](concepts/large-tool-result-handling.md) — 工具结果的溢出防护
 
-## Key Source Code [1]
+## 关键源码[1]
 
-- `tools/code_execution_tool.py` (1347 lines) — Complete sandbox implementation
-- `tools/file_tools.py:1045,1061,1171` — Delta lint (v0.13.0+)
-- `agent/lsp/` — LSP semantic diagnostics (v0.14.0+, 11 modules)
-- `tools/file_state.py` + `agent/file_safety.py` — File-mutation footer (v0.14.0+)
+- `tools/code_execution_tool.py`（1347 行）— 沙箱完整实现
+- `tools/file_tools.py:1045,1061,1171` — Delta lint（v0.13.0+）
+- `agent/lsp/` — LSP 语义诊断（v0.14.0+，11 modules）
+- `tools/file_state.py` + `agent/file_safety.py` — File-mutation footer（v0.14.0+）

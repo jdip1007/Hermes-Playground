@@ -22,7 +22,7 @@ Auxiliary Client 位于 `agent/auxiliary_client.py`（约 225KB / 5286 行），
 
 核心理念：**所有辅助任务共享同一个提供商解析链，避免每个消费者重复实现 fallback 逻辑** [1]。
 
-> **v0.12.0（2026-05-05）变更**：辅助模型 lookup 现在**优先读 `ProviderProfile.default_aux_model`**（`agent/auxiliary_client.py:228`），仅在 profile 缺失或字段为空时才退回到 legacy 硬编码字典 `_API_KEY_PROVIDER_AUX_MODELS_FALLBACK`。新 provider 一律应通过 `plugins/model-providers/<name>/__init__.py` 设 profile.default_aux_model，不要再加进 fallback 字典。详见 [Provider Transport Architecture](provider-transport-architecture.md) 与 changelog `2026-05-05-update`。
+> **v0.12.0（2026-05-05）变更**：辅助模型 lookup 现在**优先读 `ProviderProfile.default_aux_model`**（`agent/auxiliary_client.py:228`），仅在 profile 缺失或字段为空时才退回到 legacy 硬编码字典 `_API_KEY_PROVIDER_AUX_MODELS_FALLBACK`。新 provider 一律应通过 `plugins/model-providers/<name>/__init__.py` 设 profile.default_aux_model，不要再加进 fallback 字典。详见 [Provider Transport Architecture](concepts/provider-transport-architecture.md) 与 changelog `2026-05-05-update`。
 
 ## 架构原理
 
@@ -301,11 +301,11 @@ auxiliary:
 
 ### Curator 统一归在 `auxiliary.curator`（v0.12.0+）
 
-`agent/curator.py:1606-1614`、`hermes_cli/config.py:3895`：Curator 不再是独立配置 namespace，而是和 compression/vision/web_extract 平级的 auxiliary 任务。从 `hermes model` 里挑 Curator 用的模型、从 dashboard 里管。详见 [Skills System Architecture](skills-system-architecture.md)。
+`agent/curator.py:1606-1614`、`hermes_cli/config.py:3895`：Curator 不再是独立配置 namespace，而是和 compression/vision/web_extract 平级的 auxiliary 任务。从 `hermes model` 里挑 Curator 用的模型、从 dashboard 里管。详见 [Skills System Architecture](concepts/skills-system-architecture.md)。
 
 ### prompt_caching 也归在 auxiliary 之下（v0.12.0+）
 
-`auxiliary.prompt_caching.cache_ttl` 默认 `"5m"`，可选 `"1h"`（`agent/prompt_caching.py:51`、`agent/agent_init.py:475-485`）。详见 [Prompt Caching Optimization](prompt-caching-optimization.md)。
+`auxiliary.prompt_caching.cache_ttl` 默认 `"5m"`，可选 `"1h"`（`agent/prompt_caching.py:51`、`agent/agent_init.py:475-485`）。详见 [Prompt Caching Optimization](concepts/prompt-caching-optimization.md)。
 
 ### 环境变量覆盖
 
@@ -319,7 +319,7 @@ export AUXILIARY_WEB_EXTRACT_API_KEY=sk-xxx
 
 ### Plugin 注册新 auxiliary task slot（2026-05-24，`e752c94`）
 
-`hermes_cli/plugins.py:825 PluginContext.register_auxiliary_task(key, ...)` 让插件声明自有 auxiliary task slot 而不动核心。详见 [Hook System Architecture](hook-system-architecture.md) "v2026.5.x 插件增强 → `ctx.register_auxiliary_task()`"。
+`hermes_cli/plugins.py:825 PluginContext.register_auxiliary_task(key, ...)` 让插件声明自有 auxiliary task slot 而不动核心。详见 [Hook System Architecture](concepts/hook-system-architecture.md) "v2026.5.x 插件增强 → `ctx.register_auxiliary_task()`"。
 
 gateway 启动时：
 
@@ -383,7 +383,7 @@ print(get_available_vision_backends())
 
 ### Auxiliary 统一 main-model fallback（2026-05-25 wave，已在上次同步）
 
-`auxiliary_client.py` 在 vision / web_extract / compression 各 task 上都接 main-model fallback —— 详见 [2026 05 25 Update](../changelogs/2026-05-25-update.md)。
+`auxiliary_client.py` 在 vision / web_extract / compression 各 task 上都接 main-model fallback —— 详见 [2026 05 25 Update](changelogs/2026-05-25-update.md)。
 
 ## v0.15.1 维护窗口增量（2026-05-31，hermes `eb3cf9750`）
 
@@ -411,7 +411,7 @@ print(get_available_vision_backends())
 - 当 orphan-strip（剥离没有 `tool_result` 配对的 `tool_use` 块）改写了**最新 turn** 后，原签名因校验 hash 变化而失效。
 - 修：检测 orphan-strip mutate 了最新 turn 后，把 thinking 块从 "signed thinking" 降级为**普通文本块**（保留内容，去签名字段）。不再因签名校验失败拒整轮。
 
-[Provider Transport Architecture](provider-transport-architecture.md) 的 Anthropic transport 会经此规范化层。
+[Provider Transport Architecture](concepts/provider-transport-architecture.md) 的 Anthropic transport 会经此规范化层。
 
 ### 3. 辅助 LLM 默认不再 cap max_tokens（`2062a8400`，#34530/#34845）
 
@@ -431,18 +431,18 @@ print(get_available_vision_backends())
 
 ### 5. Agent outer-loop 异常分类（`59b0ea98c` + `fb0ab2764`）
 
-Turn-completion explainer —— 详见 [Agent Loop And Prompt Assembly](agent-loop-and-prompt-assembly.md) §2026-05-31 增量。
+Turn-completion explainer —— 详见 [Agent Loop And Prompt Assembly](concepts/agent-loop-and-prompt-assembly.md) §2026-05-31 增量。
 
 ---
 
 ## 与其他系统的关系
 
-- [Provider Transport Architecture](provider-transport-architecture.md) — auxiliary_client 复用 `get_transport()` 与 `ProviderProfile`（`default_aux_model`）
-- [Context Compressor Architecture](context-compressor-architecture.md) — 使用 `get_text_auxiliary_client("compression")`
-- [Tool Registry Architecture](tool-registry-architecture.md) — web_tools 和 browser_tool 通过 registry 注册
-- [Credential Pool And Isolation](credential-pool-and-isolation.md) — 使用 `load_pool()` 获取凭证
-- [Prompt Builder Architecture](prompt-builder-architecture.md) — 辅助客户端不参与主对话提示构建
-- [Model Tools Dispatch](model-tools-dispatch.md) — model_tools.py 通过 auxiliary_client 处理侧边任务
+- [Provider Transport Architecture](concepts/provider-transport-architecture.md) — auxiliary_client 复用 `get_transport()` 与 `ProviderProfile`（`default_aux_model`）
+- [Context Compressor Architecture](concepts/context-compressor-architecture.md) — 使用 `get_text_auxiliary_client("compression")`
+- [Tool Registry Architecture](concepts/tool-registry-architecture.md) — web_tools 和 browser_tool 通过 registry 注册
+- [Credential Pool And Isolation](concepts/credential-pool-and-isolation.md) — 使用 `load_pool()` 获取凭证
+- [Prompt Builder Architecture](concepts/prompt-builder-architecture.md) — 辅助客户端不参与主对话提示构建
+- [Model Tools Dispatch](concepts/model-tools-dispatch.md) — model_tools.py 通过 auxiliary_client 处理侧边任务
 
 ## Related Pages
 

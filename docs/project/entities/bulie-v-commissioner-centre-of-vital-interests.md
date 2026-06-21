@@ -122,6 +122,6 @@ The decision reinforces that tie-breaker analysis requires weighing ALL factors 
 
 ## Related Topics
 
-[Ato Tax Residency](../concepts/ato-tax-residency.md)
-[Ato Tax Residency Tests](../concepts/ato-tax-residency-tests.md)
-[Vagueness Ato Tax Residency Tests](../concepts/vagueness-ato-tax-residency-tests.md)
+[Ato Tax Residency](concepts/ato-tax-residency.md)
+[Ato Tax Residency Tests](concepts/ato-tax-residency-tests.md)
+[Vagueness Ato Tax Residency Tests](concepts/vagueness-ato-tax-residency-tests.md)

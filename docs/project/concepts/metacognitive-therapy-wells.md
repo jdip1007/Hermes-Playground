@@ -59,6 +59,6 @@ This distinction matters because many individuals with chronic rumination have a
 
 ## Related Concepts
 
-[Rumination Psychology](rumination-psychology.md) — Rumination as the behavioral manifestation of metacognitive beliefs
-[Private Self Consciousness](private-self-consciousness.md) — Personality trait that predisposes to metacognitive engagement
-[Default Mode Network Depression](default-mode-network-depression.md) — Neurobiological substrate of self-referential processing targeted by MCT
+[Rumination Psychology](concepts/rumination-psychology.md) — Rumination as the behavioral manifestation of metacognitive beliefs
+[Private Self Consciousness](concepts/private-self-consciousness.md) — Personality trait that predisposes to metacognitive engagement
+[Default Mode Network Depression](concepts/default-mode-network-depression.md) — Neurobiological substrate of self-referential processing targeted by MCT

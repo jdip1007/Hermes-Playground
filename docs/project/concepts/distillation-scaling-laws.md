@@ -70,9 +70,9 @@ Systematic evaluation of teacher-student pairs with varying:[1]
 4. **Benchmark dependency**: Performance measured on standard language modeling benchmarks may not reflect real-world deployment performance.[1]
 
 ### Relationship to Other Work[1]
-- Connects to [Llm Cost Optimization](llm-cost-optimization.md) by providing a principled framework for choosing between distillation and direct training based on compute constraints.
+- Connects to [Llm Cost Optimization](concepts/llm-cost-optimization.md) by providing a principled framework for choosing between distillation and direct training based on compute constraints.
 - Complements the broader literature on LLM scaling laws (Kaplan et al., 2020; Hoffmann et al., 2022) by extending them to the distillation regime.[1]
-- Relevant to [Compressed Sparse Attention Csa](compressed-sparse-attention-csa.md) and other efficiency-focused architectures that aim to reduce compute requirements.
+- Relevant to [Compressed Sparse Attention Csa](concepts/compressed-sparse-attention-csa.md) and other efficiency-focused architectures that aim to reduce compute requirements.
 
 ## Practical Implications[1]
 
@@ -90,6 +90,6 @@ Systematic evaluation of teacher-student pairs with varying:[1]
 Busbridge, D., Shidani, A., Weers, F., Ramapuram, J., Littwin, E., & Webb, R. (2025). Distillation Scaling Laws. *arXiv preprint arXiv:2502.08606v1*. Apple / University of Oxford.
 
 ## See Also
-- [Llm Cost Optimization](llm-cost-optimization.md) — Practical techniques for reducing LLM API and training costs
-- [Compressed Sparse Attention Csa](compressed-sparse-attention-csa.md) — Efficient attention mechanisms that reduce compute requirements
-- [Agent Architecture Patterns](agent-architecture-patterns.md) — Architectural patterns relevant to model deployment efficiency
+- [Llm Cost Optimization](concepts/llm-cost-optimization.md) — Practical techniques for reducing LLM API and training costs
+- [Compressed Sparse Attention Csa](concepts/compressed-sparse-attention-csa.md) — Efficient attention mechanisms that reduce compute requirements
+- [Agent Architecture Patterns](concepts/agent-architecture-patterns.md) — Architectural patterns relevant to model deployment efficiency

@@ -63,4 +63,4 @@ As of 2024, CRISPR-based therapies have received regulatory approval for sickle 
 
 ## Related
 
-[Next Generation Sequencing](next-generation-sequencing.md), [Single Cell Sequencing](single-cell-sequencing.md), [Bioinformatics](bioinformatics.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md), [Single Cell Sequencing](concepts/single-cell-sequencing.md), [Bioinformatics](concepts/bioinformatics.md)

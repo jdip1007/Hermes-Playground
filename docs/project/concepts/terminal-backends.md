@@ -224,9 +224,9 @@ terminal:
 - [[Gateway Session Management|gateway-session-management]]
 - [[Configuration And Profiles|configuration-and-profiles]]
 
-- [Credential Pool And Isolation](credential-pool-and-isolation.md) — 凭证池与环境隔离（终端后端环境）
-- [Multi Agent Architecture](multi-agent-architecture.md) — 子代理使用独立终端后端执行
-- [Tool Registry Architecture](tool-registry-architecture.md) — 终端工具通过 registry 注册
+- [Credential Pool And Isolation](concepts/credential-pool-and-isolation.md) — 凭证池与环境隔离（终端后端环境）
+- [Multi Agent Architecture](concepts/multi-agent-architecture.md) — 子代理使用独立终端后端执行
+- [Tool Registry Architecture](concepts/tool-registry-architecture.md) — 终端工具通过 registry 注册
 
 ## 2026-05-31 增量 — cwd 持久化 + spawn_via_env 防双包裹 [1]
 

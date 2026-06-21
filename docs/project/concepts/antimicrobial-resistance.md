@@ -64,4 +64,4 @@ AMR occurs when microorganisms evolve mechanisms to survive exposure to antimicr
 
 ## Related
 
-[Metagenomics](metagenomics.md), [Microbiome](microbiome.md), [Crispr Cas9](crispr-cas9.md)
+[Metagenomics](concepts/metagenomics.md), [Microbiome](concepts/microbiome.md), [Crispr Cas9](concepts/crispr-cas9.md)

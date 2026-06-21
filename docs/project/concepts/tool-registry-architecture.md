@@ -275,13 +275,13 @@ typescript-language-server、clangd、bash-language-server 等）已接入。
 
 ## 与其他系统的关系
 
-- [Toolsets System](toolsets-system.md) — Registry 按 toolset 组织工具
-- [Model Tools Dispatch](model-tools-dispatch.md) — model_tools.py 通过 Registry 发现工具
-- [Mcp And Plugins](mcp-and-plugins.md) — MCP 使用 deregister/register 实现动态工具发现
-- [Large Tool Result Handling](large-tool-result-handling.md) — 调度结果经过统一错误格式处理
-- [Fuzzy Matching Engine](fuzzy-matching-engine.md) — patch 工具使用的 8 层模糊匹配引擎
-- [Code Execution Sandbox](code-execution-sandbox.md) — execute_code 沙箱工具
-- [Agent Loop And Prompt Assembly](agent-loop-and-prompt-assembly.md) — 每轮文件变更校验页脚（write_file/patch 失败检测）
+- [Toolsets System](concepts/toolsets-system.md) — Registry 按 toolset 组织工具
+- [Model Tools Dispatch](concepts/model-tools-dispatch.md) — model_tools.py 通过 Registry 发现工具
+- [Mcp And Plugins](concepts/mcp-and-plugins.md) — MCP 使用 deregister/register 实现动态工具发现
+- [Large Tool Result Handling](concepts/large-tool-result-handling.md) — 调度结果经过统一错误格式处理
+- [Fuzzy Matching Engine](concepts/fuzzy-matching-engine.md) — patch 工具使用的 8 层模糊匹配引擎
+- [Code Execution Sandbox](concepts/code-execution-sandbox.md) — execute_code 沙箱工具
+- [Agent Loop And Prompt Assembly](concepts/agent-loop-and-prompt-assembly.md) — 每轮文件变更校验页脚（write_file/patch 失败检测）
 
 ## 相关文件
 

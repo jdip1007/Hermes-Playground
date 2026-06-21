@@ -46,7 +46,7 @@ web:
   crawl:    firecrawl   # 只做爬取
 ```
 
-`agent/web_search_provider.py` 是 ABC，`agent/web_search_registry.py` 是注册表，`plugins/web/<provider>/` 是 plugin 布局，**与 [Provider Plugin System](provider-plugin-system.md) 完全同构** [1]。
+`agent/web_search_provider.py` 是 ABC，`agent/web_search_registry.py` 是注册表，`plugins/web/<provider>/` 是 plugin 布局，**与 [Provider Plugin System](concepts/provider-plugin-system.md) 完全同构** [1]。
 
 ## 架构原理
 
@@ -324,10 +324,10 @@ web:
 
 ## 与其他系统的关系
 
-- [Auxiliary Client Architecture](auxiliary-client-architecture.md) — LLM 内容处理通过辅助客户端调用摘要模型
-- [Tool Registry Architecture](tool-registry-architecture.md) — web_search/web_extract/web_crawl 通过 registry 注册
-- [Browser Tool Architecture](browser-tool-architecture.md) — 文档建议简单信息获取优先用 web_tools
-- [Context Compressor Architecture](context-compressor-architecture.md) — 类似的 LLM 压缩理念应用于不同场景
+- [Auxiliary Client Architecture](concepts/auxiliary-client-architecture.md) — LLM 内容处理通过辅助客户端调用摘要模型
+- [Tool Registry Architecture](concepts/tool-registry-architecture.md) — web_search/web_extract/web_crawl 通过 registry 注册
+- [Browser Tool Architecture](concepts/browser-tool-architecture.md) — 文档建议简单信息获取优先用 web_tools
+- [Context Compressor Architecture](concepts/context-compressor-architecture.md) — 类似的 LLM 压缩理念应用于不同场景
 
 ## Related Pages
 

@@ -182,7 +182,7 @@ Ming Yi is not a pessimistic hexagram — it is the I Ching's gentlest reminder 
 Low periods are destiny giving you metamorphosis opportunities [1]. When you finally have the courage to bid farewell to your old self — that eagle has already begun flying again. And the re-flying you will discover: the sky is bigger than you remembered, the wind steadier than you imagined, because this time your wings are new.
 
 ## Cross-references
-- [Productivity General](productivity-general.md) — Life stage transitions affect productivity patterns
-- [Adhd Productivity Strategies](adhd-productivity-strategies.md) — Identity reconstruction relevant to ADHD self-concept
-- [Sustained Focus Strategies](sustained-focus-strategies.md) — Inner work parallels deep focus practices
+- [Productivity General](concepts/productivity-general.md) — Life stage transitions affect productivity patterns
+- [Adhd Productivity Strategies](concepts/adhd-productivity-strategies.md) — Identity reconstruction relevant to ADHD self-concept
+- [Sustained Focus Strategies](concepts/sustained-focus-strategies.md) — Inner work parallels deep focus practices
 - [[zeigarnik-effect]] — Unresolved chronic stress relates to unfinished task tension

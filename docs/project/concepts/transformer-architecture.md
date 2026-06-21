@@ -141,8 +141,8 @@ Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Ka
 
 ## See Also
 
-- [Attention Mechanisms Nn](attention-mechanisms-nn.md) — Comprehensive mathematical treatment of attention mechanisms
-- [Compressed Sparse Attention Csa](compressed-sparse-attention-csa.md) — Sparse attention patterns reducing O(n²) complexity
-- [Mixture Of Experts Moe](mixture-of-experts-moe.md) — MoE architecture for scaling models efficiently
-- [State Space Models Ssm](state-space-models-ssm.md) — SSMs as an alternative to attention (Mamba, etc.)
-- [Pretraining Without Attention Bigs](pretraining-without-attention-bigs.md) — BiGS: pretraining without attention
+- [Attention Mechanisms Nn](concepts/attention-mechanisms-nn.md) — Comprehensive mathematical treatment of attention mechanisms
+- [Compressed Sparse Attention Csa](concepts/compressed-sparse-attention-csa.md) — Sparse attention patterns reducing O(n²) complexity
+- [Mixture Of Experts Moe](concepts/mixture-of-experts-moe.md) — MoE architecture for scaling models efficiently
+- [State Space Models Ssm](concepts/state-space-models-ssm.md) — SSMs as an alternative to attention (Mamba, etc.)
+- [Pretraining Without Attention Bigs](concepts/pretraining-without-attention-bigs.md) — BiGS: pretraining without attention

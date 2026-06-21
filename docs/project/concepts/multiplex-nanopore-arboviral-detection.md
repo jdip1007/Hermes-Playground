@@ -78,10 +78,10 @@ The **Ampli-FlaCk** protocol is a multiplex RT-PCR + Oxford Nanopore sequencing 
 
 ## Cross-References
 
-- [Nanopore Sequencing Minion](nanopore-sequencing-minion.md) — MinION platform overview and field deployment history
-- [Clinical Metagenomics Viral Detection](clinical-metagenomics-viral-detection.md) — broader clinical metagenomics context for viral diagnostics
-- [Next Generation Sequencing](next-generation-sequencing.md) — sequencing technology comparison
-- [Pandemic Influenza Emergence](pandemic-influenza-emergence.md) — arboviral emergence parallels influenza pandemic preparedness
+- [Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md) — MinION platform overview and field deployment history
+- [Clinical Metagenomics Viral Detection](concepts/clinical-metagenomics-viral-detection.md) — broader clinical metagenomics context for viral diagnostics
+- [Next Generation Sequencing](concepts/next-generation-sequencing.md) — sequencing technology comparison
+- [Pandemic Influenza Emergence](concepts/pandemic-influenza-emergence.md) — arboviral emergence parallels influenza pandemic preparedness
 
 ## Confidence Assessment
 

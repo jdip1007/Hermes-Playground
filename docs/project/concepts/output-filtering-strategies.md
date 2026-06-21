@@ -15,7 +15,7 @@ contested: false
 
 # Output Filtering Strategies
 
-Techniques for reducing tool output before pasting into context. Applied before injecting terminal/command results into the agent's context window. Derived from [Rtk Repo](../entities/rtk-repo.md) [1].
+Techniques for reducing tool output before pasting into context. Applied before injecting terminal/command results into the agent's context window. Derived from [Rtk Repo](entities/rtk-repo.md) [1].
 
 ## Six Strategies
 
@@ -46,6 +46,6 @@ Save full terminal output to temp files before summarizing. Never discard raw da
 
 ## Related Pages
 
-- [Rtk Repo](../entities/rtk-repo.md)
-- [Context Compaction Strategies](context-compaction-strategies.md)
-- [Agent Architecture Patterns](agent-architecture-patterns.md)
+- [Rtk Repo](entities/rtk-repo.md)
+- [Context Compaction Strategies](concepts/context-compaction-strategies.md)
+- [Agent Architecture Patterns](concepts/agent-architecture-patterns.md)

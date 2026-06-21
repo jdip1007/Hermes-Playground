@@ -19,7 +19,7 @@ contested: false
 
 Oxford Nanopore Technologies' MinION is a pocket-sized DNA/RNA sequencer (~10 × 4 × 2 cm, 75 g) that senses individual nucleic acid molecules based on modulation of ion currents across nanopores as molecules pass through. Nucleotide sequence determination depends on the physical properties of each base [1].
 
-Unlike conventional [Next Generation Sequencing](next-generation-sequencing.md) platforms (Illumina MiSeq: ~40–100 kg), MinION requires no special setup or calibration and becomes operational immediately upon arrival at a site — making it uniquely suited for field deployment in resource-limited settings.
+Unlike conventional [Next Generation Sequencing](concepts/next-generation-sequencing.md) platforms (Illumina MiSeq: ~40–100 kg), MinION requires no special setup or calibration and becomes operational immediately upon arrival at a site — making it uniquely suited for field deployment in resource-limited settings.
 
 ## How It Works
 
@@ -94,10 +94,10 @@ Read depth compensates for individual miscalls — piling up reads covering the 
 
 ## Related Technologies and Concepts
 
-- [Next Generation Sequencing](next-generation-sequencing.md) — broader category of high-throughput sequencing
-- [Metagenomics](metagenomics.md) — nanopore enables real-time metagenomic pathogen identification in clinical samples [7]
-- [Crispr Amr Diagnostics](crispr-amr-diagnostics.md) — complementary rapid diagnostic approach for antimicrobial resistance detection
-- [Phylogenetics Phylodynamics](phylogenetics-phylodynamics.md) — phylogenetic analysis of outbreak sequences (BEAST2, Bayesian coalescent)
+- [Next Generation Sequencing](concepts/next-generation-sequencing.md) — broader category of high-throughput sequencing
+- [Metagenomics](concepts/metagenomics.md) — nanopore enables real-time metagenomic pathogen identification in clinical samples [7]
+- [Crispr Amr Diagnostics](concepts/crispr-amr-diagnostics.md) — complementary rapid diagnostic approach for antimicrobial resistance detection
+- [Phylogenetics Phylodynamics](concepts/phylogenetics-phylodynamics.md) — phylogenetic analysis of outbreak sequences (BEAST2, Bayesian coalescent)
 
 ## References
 

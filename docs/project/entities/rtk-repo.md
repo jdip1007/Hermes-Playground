@@ -15,7 +15,7 @@ contested: false
 
 # RTK (rtk-ai/rtk)
 
-Open-source agent framework analyzed for cross-framework pattern extraction [1]. Contributed output filtering strategies and token budgeting patterns to the [Agent Architecture Patterns](../concepts/agent-architecture-patterns.md) knowledge base.
+Open-source agent framework analyzed for cross-framework pattern extraction [1]. Contributed output filtering strategies and token budgeting patterns to the [Agent Architecture Patterns](concepts/agent-architecture-patterns.md) knowledge base.
 
 ## Key Contributions
 
@@ -36,6 +36,6 @@ Track tokens per session/task with alerts at 70%/90% thresholds [1]. Set per-tas
 
 ## Related Pages
 
-- [Output Filtering Strategies](../concepts/output-filtering-strategies.md)
-- [Agent Architecture Patterns](../concepts/agent-architecture-patterns.md)
-- [Claude Code](claude-code.md)
+- [Output Filtering Strategies](concepts/output-filtering-strategies.md)
+- [Agent Architecture Patterns](concepts/agent-architecture-patterns.md)
+- [Claude Code](entities/claude-code.md)

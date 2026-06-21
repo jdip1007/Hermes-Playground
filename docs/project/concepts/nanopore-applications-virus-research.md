@@ -75,10 +75,10 @@ Nanopore's unique capability for **direct RNA/DNA sequencing** enables detection
 
 ## Cross-References
 
-- [Nanopore Sequencing Minion](nanopore-sequencing-minion.md) — MinION platform overview and field deployment
-- [Clinical Metagenomics Viral Detection](clinical-metagenomics-viral-detection.md) — clinical metagenomics context
-- [Next Generation Sequencing](next-generation-sequencing.md) — sequencing technology comparison
-- [Pandemic Influenza Emergence](pandemic-influenza-emergence.md) — influenza surveillance applications
+- [Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md) — MinION platform overview and field deployment
+- [Clinical Metagenomics Viral Detection](concepts/clinical-metagenomics-viral-detection.md) — clinical metagenomics context
+- [Next Generation Sequencing](concepts/next-generation-sequencing.md) — sequencing technology comparison
+- [Pandemic Influenza Emergence](concepts/pandemic-influenza-emergence.md) — influenza surveillance applications
 
 ## Confidence Assessment
 

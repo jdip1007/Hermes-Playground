@@ -279,9 +279,9 @@ def _strip_budget_warnings_from_history(messages: list) -> None:
 - [[Tool Registry Architecture|tool-registry-architecture]]
 - [[Agent Loop And Prompt Assembly|agent-loop-and-prompt-assembly]]
 
-- [Context Compressor Architecture](context-compressor-architecture.md) — 上下文压缩与预飞行压缩机制
-- [Parallel Tool Execution](parallel-tool-execution.md) — 并行工具执行产生大型结果的场景
-- [Model Tools Dispatch](model-tools-dispatch.md) — 工具结果经过统一格式处理
+- [Context Compressor Architecture](concepts/context-compressor-architecture.md) — 上下文压缩与预飞行压缩机制
+- [Parallel Tool Execution](concepts/parallel-tool-execution.md) — 并行工具执行产生大型结果的场景
+- [Model Tools Dispatch](concepts/model-tools-dispatch.md) — 工具结果经过统一格式处理
 
 ## 相关文件
 

@@ -154,7 +154,7 @@ Clinical validation: 93-97% sensitivity, 97-99% specificity across published stu
 
 ## Related
 
-[Crispr Cas9](crispr-cas9.md), [Antimicrobial Resistance](antimicrobial-resistance.md), [Next Generation Sequencing](next-generation-sequencing.md), [Metagenomics](metagenomics.md)
+[Crispr Cas9](concepts/crispr-cas9.md), [Antimicrobial Resistance](concepts/antimicrobial-resistance.md), [Next Generation Sequencing](concepts/next-generation-sequencing.md), [Metagenomics](concepts/metagenomics.md)
 
 ---
 

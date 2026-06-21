@@ -17,7 +17,7 @@ contested: false
 
 ## Overview
 
-Finch is a scientific data analysis agent that performs autonomous analysis of experimental biology data, including RNA-seq and flow cytometry[1]. It executes analysis code in Jupyter notebooks and provides interpretable, reproducible summaries of findings [Robin Multi Agent System](robin-multi-agent-system.md)[1].
+Finch is a scientific data analysis agent that performs autonomous analysis of experimental biology data, including RNA-seq and flow cytometry[1]. It executes analysis code in Jupyter notebooks and provides interpretable, reproducible summaries of findings [Robin Multi Agent System](entities/robin-multi-agent-system.md)[1].
 
 ## Architecture
 
@@ -70,6 +70,6 @@ Expert-generated panel of 170 question-answer pairs spanning bioinformatics and 
 
 ## Related Systems
 
-- [Robin Multi Agent System](robin-multi-agent-system.md) — Robin's data analysis component
-- [Paperqa](paperqa.md) — Complementary literature search agents (Crow, Falcon) in Robin workflow
-- Automated scientific discovery pipeline [Automated Scientific Discovery](../concepts/automated-scientific-discovery.md)
+- [Robin Multi Agent System](entities/robin-multi-agent-system.md) — Robin's data analysis component
+- [Paperqa](entities/paperqa.md) — Complementary literature search agents (Crow, Falcon) in Robin workflow
+- Automated scientific discovery pipeline [Automated Scientific Discovery](concepts/automated-scientific-discovery.md)

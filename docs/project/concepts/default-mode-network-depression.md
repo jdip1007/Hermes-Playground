@@ -70,6 +70,6 @@ Popular psychology often presents the DMN as the "overthinking brain" that needs
 
 ## Related Concepts
 
-[Rumination Psychology](rumination-psychology.md) — Rumination as the behavioral manifestation of DMN hyperactivity
-[Metacognitive Therapy Wells](metacognitive-therapy-wells.md) — Treatment approaches targeting rumination loops
-[Flow State And Self Consciousness](flow-state-and-self-consciousness.md) — Flow states involve DMN deactivation and task-positive network engagement
+[Rumination Psychology](concepts/rumination-psychology.md) — Rumination as the behavioral manifestation of DMN hyperactivity
+[Metacognitive Therapy Wells](concepts/metacognitive-therapy-wells.md) — Treatment approaches targeting rumination loops
+[Flow State And Self Consciousness](concepts/flow-state-and-self-consciousness.md) — Flow states involve DMN deactivation and task-positive network engagement

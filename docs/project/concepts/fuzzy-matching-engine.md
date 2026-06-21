@@ -381,10 +381,10 @@ entire file if the targeted region is hard to anchor.
 ## 相关页面
 - [[Patch|patch]]
 
-- [Model Tools Dispatch](model-tools-dispatch.md) — 工具编排与调度（调用模糊匹配的上层）
-- [Tool Registry Architecture](tool-registry-architecture.md) — 工具注册系统（文件工具通过 registry 注册）
-- [Skills System Architecture](skills-system-architecture.md) — 技能管理工具中使用模糊匹配
-- [Tool Loop Guardrails](tool-loop-guardrails.md) — Tool loop guardrails 的"同工具失败"维度与 patch 失败升级互补
+- [Model Tools Dispatch](concepts/model-tools-dispatch.md) — 工具编排与调度（调用模糊匹配的上层）
+- [Tool Registry Architecture](concepts/tool-registry-architecture.md) — 工具注册系统（文件工具通过 registry 注册）
+- [Skills System Architecture](concepts/skills-system-architecture.md) — 技能管理工具中使用模糊匹配
+- [Tool Loop Guardrails](concepts/tool-loop-guardrails.md) — Tool loop guardrails 的"同工具失败"维度与 patch 失败升级互补
 
 ## 相关文件
 

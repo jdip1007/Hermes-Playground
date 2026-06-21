@@ -15,7 +15,7 @@ contested: false
 
 # ECC (affaan-m/ECC)
 
-Open-source agent framework analyzed for cross-framework pattern extraction [1]. Contributed verification-first workflow, context budgeting, parallel execution matrices, cost-aware routing, and the regex > LLM rule to the [Agent Architecture Patterns](../concepts/agent-architecture-patterns.md) knowledge base [1].
+Open-source agent framework analyzed for cross-framework pattern extraction [1]. Contributed verification-first workflow, context budgeting, parallel execution matrices, cost-aware routing, and the regex > LLM rule to the [Agent Architecture Patterns](concepts/agent-architecture-patterns.md) knowledge base [1].
 
 ## Key Contributions
 
@@ -72,8 +72,8 @@ Cache expensive operations by SHA-256 content hash, not file path: survives file
 
 ## Related Pages
 
-- [Verification First Workflow](../concepts/verification-first-workflow.md)
-- [Context Compaction Strategies](../concepts/context-compaction-strategies.md)
-- [Agent Introspection Debugging](../concepts/agent-introspection-debugging.md)
-- [Agent Architecture Patterns](../concepts/agent-architecture-patterns.md)
-- [Claude Code](claude-code.md)
+- [Verification First Workflow](concepts/verification-first-workflow.md)
+- [Context Compaction Strategies](concepts/context-compaction-strategies.md)
+- [Agent Introspection Debugging](concepts/agent-introspection-debugging.md)
+- [Agent Architecture Patterns](concepts/agent-architecture-patterns.md)
+- [Claude Code](entities/claude-code.md)

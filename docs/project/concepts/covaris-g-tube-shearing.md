@@ -26,9 +26,9 @@ Protocol for fragmenting HMW genomic DNA using Covaris g-TUBE centrifugal force 
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Megaruptor 3 Extraction Method](megaruptor-3-extraction-method.md)
-[Fastprep 96 High Throughput Shearing](fastprep-96-high-throughput-shearing.md)
-[Promethion 24Hr Genome Workflow](promethion-24hr-genome-workflow.md)
-[Adaptive Sampling Nanopore](adaptive-sampling-nanopore.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Megaruptor 3 Extraction Method](concepts/megaruptor-3-extraction-method.md)
+[Fastprep 96 High Throughput Shearing](concepts/fastprep-96-high-throughput-shearing.md)
+[Promethion 24Hr Genome Workflow](concepts/promethion-24hr-genome-workflow.md)
+[Adaptive Sampling Nanopore](concepts/adaptive-sampling-nanopore.md)
 

@@ -73,10 +73,10 @@ This study from Nazarbayev University (Kazakhstan) and University of Helsinki de
 
 ## Cross-References
 
-- [Nanopore Sequencing Minion](nanopore-sequencing-minion.md) — MinION platform overview
-- [Clinical Metagenomics Viral Detection](clinical-metagenomics-viral-detection.md) — broader clinical metagenomics context for SARS-CoV-2 surveillance
-- [Next Generation Sequencing](next-generation-sequencing.md) — sequencing technology comparison
-- [Pandemic Influenza Emergence](pandemic-influenza-emergence.md) — parallels in pandemic pathogen genomic surveillance
+- [Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md) — MinION platform overview
+- [Clinical Metagenomics Viral Detection](concepts/clinical-metagenomics-viral-detection.md) — broader clinical metagenomics context for SARS-CoV-2 surveillance
+- [Next Generation Sequencing](concepts/next-generation-sequencing.md) — sequencing technology comparison
+- [Pandemic Influenza Emergence](concepts/pandemic-influenza-emergence.md) — parallels in pandemic pathogen genomic surveillance
 
 ## Confidence Assessment
 

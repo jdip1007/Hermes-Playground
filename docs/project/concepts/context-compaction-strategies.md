@@ -15,7 +15,7 @@ contested: false
 
 # Context Compaction Strategies
 
-Techniques for managing context window as a scarce resource, derived from Claude Code's leaked source code analysis [1]. Derived from [Claude Code](../entities/claude-code.md) and [Ecc Repo](../entities/ecc-repo.md).
+Techniques for managing context window as a scarce resource, derived from Claude Code's leaked source code analysis [1]. Derived from [Claude Code](entities/claude-code.md) and [Ecc Repo](entities/ecc-repo.md).
 
 ## What to Keep vs Discard
 
@@ -58,7 +58,7 @@ Load skill/content only when triggered, not all at once. Saves context tokens si
 
 ## Related Pages
 
-- [Claude Code](../entities/claude-code.md)
-- [Ecc Repo](../entities/ecc-repo.md)
-- [Rtk Repo](../entities/rtk-repo.md)
-- [Output Filtering Strategies](output-filtering-strategies.md)
+- [Claude Code](entities/claude-code.md)
+- [Ecc Repo](entities/ecc-repo.md)
+- [Rtk Repo](entities/rtk-repo.md)
+- [Output Filtering Strategies](concepts/output-filtering-strategies.md)

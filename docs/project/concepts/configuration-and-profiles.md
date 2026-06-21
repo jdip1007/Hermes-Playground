@@ -274,16 +274,16 @@ hermes -p ops telegram &
 - 多 Profile 可以为每个角色**独立配置 backend**（coder 用 local，ops 用 docker）[1]
 - 代价是多 Profile 之间没有自动协作，需要用户手动切换 [1]
 
-详见 → [Multi Agent Architecture](multi-agent-architecture.md)
+详见 → [Multi Agent Architecture](concepts/multi-agent-architecture.md)
 
 ## 相关页面
 
-- [Multi Agent Architecture](multi-agent-architecture.md) — 会话内多 Agent（delegate_task / MoA / Background Review）
-- [Terminal Backends](terminal-backends.md) — 终端后端选择（Profile 可为每个角色配置不同后端）
-- [Memory System Architecture](memory-system-architecture.md) — 记忆系统（每个 Profile 独立的 MEMORY.md / USER.md）
-- [Skills System Architecture](skills-system-architecture.md) — 技能系统（每个 Profile 独立的技能集）
-- [Credential Pool And Isolation](credential-pool-and-isolation.md) — 凭证隔离
-- [Hook System Architecture](hook-system-architecture.md) — Hook 系统（Gateway Hooks 按 Profile 隔离）
+- [Multi Agent Architecture](concepts/multi-agent-architecture.md) — 会话内多 Agent（delegate_task / MoA / Background Review）
+- [Terminal Backends](concepts/terminal-backends.md) — 终端后端选择（Profile 可为每个角色配置不同后端）
+- [Memory System Architecture](concepts/memory-system-architecture.md) — 记忆系统（每个 Profile 独立的 MEMORY.md / USER.md）
+- [Skills System Architecture](concepts/skills-system-architecture.md) — 技能系统（每个 Profile 独立的技能集）
+- [Credential Pool And Isolation](concepts/credential-pool-and-isolation.md) — 凭证隔离
+- [Hook System Architecture](concepts/hook-system-architecture.md) — Hook 系统（Gateway Hooks 按 Profile 隔离）
 
 ## 关键源码
 

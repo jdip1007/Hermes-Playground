@@ -111,7 +111,7 @@ class MCPServerTask:
 
 ### 并行工具调用 opt-in
 
-每个 MCP 服务器可配置 `supports_parallel_tool_calls` 标志（`tools/mcp_tool.py:3219`）。当设为 `true` 时，该服务器的工具在批量工具调用中**可参与并行执行**；opt-in 的服务器登记在 `_parallel_safe_servers` 集合中，由 `is_mcp_tool_parallel_safe()` 在并行安全检测时查询。默认为 `false`（保守串行）。详见 [Parallel Tool Execution](parallel-tool-execution.md)。
+每个 MCP 服务器可配置 `supports_parallel_tool_calls` 标志（`tools/mcp_tool.py:3219`）。当设为 `true` 时，该服务器的工具在批量工具调用中**可参与并行执行**；opt-in 的服务器登记在 `_parallel_safe_servers` 集合中，由 `is_mcp_tool_parallel_safe()` 在并行安全检测时查询。默认为 `false`（保守串行）。详见 [Parallel Tool Execution](concepts/parallel-tool-execution.md)。
 
 ### MCP OAuth 支持
 
@@ -144,7 +144,7 @@ async def authenticate_mcp_server(server_config: dict) -> dict:
 | **Stale-pipe retry** | 长跑 stdio MCP server 的连接掉了能自动重连 |
 | **Image results → MEDIA tag** | MCP 工具返回 image 现在以 `<MEDIA>` 形式进 conversation（之前 silent drop） |
 | **Keepalive on long-lived lifecycle waits** | 长 init / shutdown 不会被 idle timeout 杀掉 |
-| **TOCTOU 修复** | `mcp_oauth.py` 关闭 check-then-use 窗口（v0.13.0 安全 wave，详见 [Security Defense System](security-defense-system.md)） |
+| **TOCTOU 修复** | `mcp_oauth.py` 关闭 check-then-use 窗口（v0.13.0 安全 wave，详见 [Security Defense System](concepts/security-defense-system.md)） |
 
 ### v0.14.0 MCP stdio SDK 缺失诊断（2026-05-23，`5acaeba`，#31450）
 
@@ -457,11 +457,11 @@ Tests：19 个 catalog 测试 + E2E install/uninstall round-trip。
 - [[Skills System Architecture|skills-system-architecture]]
 - [[Provider Plugin System|provider-plugin-system]]
 
-- [Tool Registry Architecture](tool-registry-architecture.md) — 插件通过 registry.register() 注册工具
-- [Hook System Architecture](hook-system-architecture.md) — 插件钩子系统与网关事件钩子互补，包含 v2026.4.30+ 新 hook（`pre_gateway_dispatch`、`pre_approval_request` / `post_approval_response`、`transform_tool_result` / `transform_terminal_output`）
-- [Model Tools Dispatch](model-tools-dispatch.md) — MCP 工具通过 discover 机制集成到编排层
-- [Messaging Gateway Architecture](messaging-gateway-architecture.md) — `platform` kind plugin（IRC、Teams）
-- [Security Defense System](security-defense-system.md) — MCP tool 结果走 `<untrusted_tool_result>` 包裹（`mcp_*` prefix 在 `_UNTRUSTED_TOOL_PREFIXES`）
+- [Tool Registry Architecture](concepts/tool-registry-architecture.md) — 插件通过 registry.register() 注册工具
+- [Hook System Architecture](concepts/hook-system-architecture.md) — 插件钩子系统与网关事件钩子互补，包含 v2026.4.30+ 新 hook（`pre_gateway_dispatch`、`pre_approval_request` / `post_approval_response`、`transform_tool_result` / `transform_terminal_output`）
+- [Model Tools Dispatch](concepts/model-tools-dispatch.md) — MCP 工具通过 discover 机制集成到编排层
+- [Messaging Gateway Architecture](concepts/messaging-gateway-architecture.md) — `platform` kind plugin（IRC、Teams）
+- [Security Defense System](concepts/security-defense-system.md) — MCP tool 结果走 `<untrusted_tool_result>` 包裹（`mcp_*` prefix 在 `_UNTRUSTED_TOOL_PREFIXES`）
 
 ## 相关文件
 

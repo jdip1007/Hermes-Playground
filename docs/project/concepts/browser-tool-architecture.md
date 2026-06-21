@@ -486,11 +486,11 @@ Lightpanda 'click' failed (timeout); retried with Chrome.
 
 ## 与其他系统的关系
 
-- [Auxiliary Client Architecture](auxiliary-client-architecture.md) — browser_vision 通过 call_llm(task="vision") 调用
-- [Tool Registry Architecture](tool-registry-architecture.md) — 10 个浏览器工具通过 registry.register() 注册
-- [Web Tools Architecture](web-tools-architecture.md) — 文档建议简单信息获取优先 web_search/web_extract
-- [Security Defense System](security-defense-system.md) — 浏览器工具的 SSRF 和注入防护是整体安全的一部分
-- [Mcp And Plugins](mcp-and-plugins.md) — 云端浏览器后端现作为 `plugins/browser/<vendor>/` 插件加载
+- [Auxiliary Client Architecture](concepts/auxiliary-client-architecture.md) — browser_vision 通过 call_llm(task="vision") 调用
+- [Tool Registry Architecture](concepts/tool-registry-architecture.md) — 10 个浏览器工具通过 registry.register() 注册
+- [Web Tools Architecture](concepts/web-tools-architecture.md) — 文档建议简单信息获取优先 web_search/web_extract
+- [Security Defense System](concepts/security-defense-system.md) — 浏览器工具的 SSRF 和注入防护是整体安全的一部分
+- [Mcp And Plugins](concepts/mcp-and-plugins.md) — 云端浏览器后端现作为 `plugins/browser/<vendor>/` 插件加载
 
 ## Related Pages
 

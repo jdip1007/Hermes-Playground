@@ -94,10 +94,10 @@ Clinical metagenomics enables **pathogen-agnostic detection** of viral infection
 
 ## Cross-References
 
-- [Metagenomics](metagenomics.md) — broader overview of metagenomic approaches
-- [Next Generation Sequencing](next-generation-sequencing.md) — sequencing technologies comparison  
-- [Pandemic Influenza Emergence](pandemic-influenza-emergence.md) — viral surveillance context
-- [Phylogenetics Phylodynamics](phylogenetics-phylodynamics.md) — pathogen evolution tracking
+- [Metagenomics](concepts/metagenomics.md) — broader overview of metagenomic approaches
+- [Next Generation Sequencing](concepts/next-generation-sequencing.md) — sequencing technologies comparison  
+- [Pandemic Influenza Emergence](concepts/pandemic-influenza-emergence.md) — viral surveillance context
+- [Phylogenetics Phylodynamics](concepts/phylogenetics-phylodynamics.md) — pathogen evolution tracking
 
 ## Confidence Assessment
 

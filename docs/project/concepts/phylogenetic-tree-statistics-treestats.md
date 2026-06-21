@@ -141,8 +141,8 @@ All simulated conditional on 300 extant tips and crown age of 10 My.
 ## Connections to Other Work
 
 - [[selection-signatures-viral-phylogeny-shape]] — Barzilai & Schrago (2023) apply 15 of these metrics to distinguish selection regimes in viral phylogenies; principal eigenvalue and cherries were most informative
-- [Rna Virus Macroevolution](rna-virus-macroevolution.md) — Kitchen et al. (2010) family-level phylogeny analysis could benefit from treestats balance metrics to quantify tree shape patterns
-- [Phylogenetics Phylodynamics](phylogenetics-phylodynamics.md) — Gamma statistic (Pybus & Harvey, 2000) included in treestats; used for detecting population growth/decline in pathogen phylogenies
+- [Rna Virus Macroevolution](concepts/rna-virus-macroevolution.md) — Kitchen et al. (2010) family-level phylogeny analysis could benefit from treestats balance metrics to quantify tree shape patterns
+- [Phylogenetics Phylodynamics](concepts/phylogenetics-phylodynamics.md) — Gamma statistic (Pybus & Harvey, 2000) included in treestats; used for detecting population growth/decline in pathogen phylogenies
 
 ## References
 

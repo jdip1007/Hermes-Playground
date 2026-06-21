@@ -27,7 +27,7 @@ Method to extract genomic DNA from rat stool pellets using QIAGEN DNeasy Blood &
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Environmental Water Edna Extraction](environmental-water-edna-extraction.md)
-[Soil Dna Extraction](soil-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Environmental Water Edna Extraction](concepts/environmental-water-edna-extraction.md)
+[Soil Dna Extraction](concepts/soil-dna-extraction.md)
 

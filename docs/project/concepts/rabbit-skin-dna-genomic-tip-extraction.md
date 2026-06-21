@@ -92,8 +92,8 @@ Purity ratios indicate generally suitable DNA for library preparation, though th
 
 ## Related Topics
 
-[Rabbit Muscle Dna Genomic Tip Extraction](rabbit-muscle-dna-genomic-tip-extraction.md) — Same approach for rabbit muscle tissue using G2 buffer
-[Rabbit Muscle Dna Atl Buffer Extraction](rabbit-muscle-dna-atl-buffer-extraction.md) — Rabbit muscle extraction using ATL buffer with two-stage digestion
-[Human Cell Line Dna Genomic Tip Extraction](human-cell-line-dna-genomic-tip-extraction.md) — Similar Genomic-tip approach for human cell lines
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Next Generation Sequencing](next-generation-sequencing.md)
+[Rabbit Muscle Dna Genomic Tip Extraction](concepts/rabbit-muscle-dna-genomic-tip-extraction.md) — Same approach for rabbit muscle tissue using G2 buffer
+[Rabbit Muscle Dna Atl Buffer Extraction](concepts/rabbit-muscle-dna-atl-buffer-extraction.md) — Rabbit muscle extraction using ATL buffer with two-stage digestion
+[Human Cell Line Dna Genomic Tip Extraction](concepts/human-cell-line-dna-genomic-tip-extraction.md) — Similar Genomic-tip approach for human cell lines
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md)

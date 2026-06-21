@@ -137,8 +137,8 @@ The monograph provides full derivations of all Transformer components [1]:
 3. **Limited empirical content**: Focuses on theoretical foundations rather than experimental results; readers seeking benchmark comparisons should consult primary papers (Vaswani et al., 2017; Devlin et al., 2019; Brown et al., 2020) [1].
 
 ### Relationship to Other Work
-- Builds directly on Vaswani et al. (2017) "Attention Is All You Need" — see [Transformer Architecture](transformer-architecture.md) for the foundational Transformer paper details [1]
-- Complements [Compressed Sparse Attention Csa](compressed-sparse-attention-csa.md) which addresses the O(n²) complexity limitation through sparse attention patterns [1]
+- Builds directly on Vaswani et al. (2017) "Attention Is All You Need" — see [Transformer Architecture](concepts/transformer-architecture.md) for the foundational Transformer paper details [1]
+- Complements [Compressed Sparse Attention Csa](concepts/compressed-sparse-attention-csa.md) which addresses the O(n²) complexity limitation through sparse attention patterns [1]
 - Relevant to understanding the architecture underlying all modern LLMs discussed throughout this wiki [1]
 
 ## Citation
@@ -146,7 +146,7 @@ The monograph provides full derivations of all Transformer components [1]:
 Hays, H. (2026). Attention Mechanisms in Neural Networks: A Comprehensive Mathematical Treatment From Theory to Implementation. *arXiv preprint arXiv:2601.03329v1*.
 
 ## See Also
-- [Compressed Sparse Attention Csa](compressed-sparse-attention-csa.md) — Sparse attention patterns that reduce O(n²) complexity
-- [Llm Cost Optimization](llm-cost-optimization.md) — Practical techniques for reducing LLM compute costs, including architectural efficiency
-- [Bioinformatics](bioinformatics.md) — Scientific applications of attention mechanisms in computational biology
-- [Agent Architecture Patterns](agent-architecture-patterns.md) — Architectural patterns building on Transformer foundations
+- [Compressed Sparse Attention Csa](concepts/compressed-sparse-attention-csa.md) — Sparse attention patterns that reduce O(n²) complexity
+- [Llm Cost Optimization](concepts/llm-cost-optimization.md) — Practical techniques for reducing LLM compute costs, including architectural efficiency
+- [Bioinformatics](concepts/bioinformatics.md) — Scientific applications of attention mechanisms in computational biology
+- [Agent Architecture Patterns](concepts/agent-architecture-patterns.md) — Architectural patterns building on Transformer foundations

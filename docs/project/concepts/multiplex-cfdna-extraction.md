@@ -27,6 +27,6 @@ Method to extract cell-free DNA from 12 human blood samples collected in EDTA Kâ
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Cfdna Info Repository](cfdna-info-repository.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Cfdna Info Repository](concepts/cfdna-info-repository.md)
 

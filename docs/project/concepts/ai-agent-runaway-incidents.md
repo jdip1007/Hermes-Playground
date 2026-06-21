@@ -154,11 +154,11 @@ When runaway agents consume all available resources, preventing human interventi
 
 ## Related Concepts
 
-- [Agent Architecture Patterns](agent-architecture-patterns.md) — Architectural patterns for AI agents
-- [Multi Agent Architecture](multi-agent-architecture.md) — Multi-agent system design in Hermes
-- [Cron Scheduling](cron-scheduling.md) — Cron scheduling and automation workflows
-- [Tool Loop Guardrails](tool-loop-guardrails.md) — Tool call loop guardrails
-- [Interrupt And Fault Tolerance](interrupt-and-fault-tolerance.md) — Interrupt propagation and fault tolerance
+- [Agent Architecture Patterns](concepts/agent-architecture-patterns.md) — Architectural patterns for AI agents
+- [Multi Agent Architecture](concepts/multi-agent-architecture.md) — Multi-agent system design in Hermes
+- [Cron Scheduling](concepts/cron-scheduling.md) — Cron scheduling and automation workflows
+- [Tool Loop Guardrails](concepts/tool-loop-guardrails.md) — Tool call loop guardrails
+- [Interrupt And Fault Tolerance](concepts/interrupt-and-fault-tolerance.md) — Interrupt propagation and fault tolerance
 
 ---
 

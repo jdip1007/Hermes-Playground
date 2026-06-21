@@ -107,6 +107,6 @@ The requirement to weigh all factors holistically is both a strength and a weakn
 
 ## Related Topics
 
-[Ato Tax Residency](ato-tax-residency.md)
-[Ato Tax Residency Tests](ato-tax-residency-tests.md)
-[Bulie V Commissioner Centre Of Vital Interests](../entities/bulie-v-commissioner-centre-of-vital-interests.md)
+[Ato Tax Residency](concepts/ato-tax-residency.md)
+[Ato Tax Residency Tests](concepts/ato-tax-residency-tests.md)
+[Bulie V Commissioner Centre Of Vital Interests](entities/bulie-v-commissioner-centre-of-vital-interests.md)

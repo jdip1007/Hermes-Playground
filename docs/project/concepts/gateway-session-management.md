@@ -67,7 +67,7 @@ X-Hermes-Session-Key: <opaque-string>    # 新：opt-in 长期记忆作用域
 
 效果：远程 API 用户也能用 hermes 的长期记忆作用域 —— 同一个 key 跨 session 的请求落到同一 memory bucket [1]。
 
-### 3. state.db 唯一权威 + JSONL 退役（详见 [Session Search And Sessiondb](session-search-and-sessiondb.md)）
+### 3. state.db 唯一权威 + JSONL 退役（详见 [Session Search And Sessiondb](concepts/session-search-and-sessiondb.md)）
 
 post-v0.14.0 一组重构砍掉了双存储路径，gateway 现在**只写 SQLite state.db** [1]。详细 commit 列表见 changelog。
 
@@ -443,8 +443,8 @@ routing 走 `_metadata_direct_messages_topic_id()` 和 `telegram_dm_topic_reply_
 
 ## 与其他系统的关系
 
-- [Messaging Gateway Architecture](messaging-gateway-architecture.md) — Session 是网关的核心组件
-- [Multi Agent Architecture](multi-agent-architecture.md) — 中断传播到子 agent（`_active_children`）
-- [Session Search And Sessiondb](session-search-and-sessiondb.md) — SQLite SessionDB 提供 FTS5 搜索
-- [Cron Scheduling](cron-scheduling.md) — 会话 origin 用于 cron 投递路由
-- [Memory System Architecture](memory-system-architecture.md) — 过期会话触发 memory flush
+- [Messaging Gateway Architecture](concepts/messaging-gateway-architecture.md) — Session 是网关的核心组件
+- [Multi Agent Architecture](concepts/multi-agent-architecture.md) — 中断传播到子 agent（`_active_children`）
+- [Session Search And Sessiondb](concepts/session-search-and-sessiondb.md) — SQLite SessionDB 提供 FTS5 搜索
+- [Cron Scheduling](concepts/cron-scheduling.md) — 会话 origin 用于 cron 投递路由
+- [Memory System Architecture](concepts/memory-system-architecture.md) — 过期会话触发 memory flush

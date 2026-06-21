@@ -318,15 +318,15 @@ hermes send --list
 |------|---------|------|
 | `hermes -z <prompt>` | v0.12.0 | One-shot 非交互模式，配 `--model` / `--provider` / `HERMES_INFERENCE_MODEL` |
 | `hermes update --check` | v0.12.0 | preflight 升级检查 + opt-in HERMES_HOME backup |
-| `hermes curator {archive, prune, list-archived, backup, rollback}` | v0.12/v0.13 | Curator 扩展子命令（详见 [Skills System Architecture](skills-system-architecture.md)） |
-| `hermes kanban {add, dispatch, claim, complete, reclaim, ...}` | v0.13.0 | 持久化 Kanban CLI（详见 [Multi Agent Architecture](multi-agent-architecture.md)） |
+| `hermes curator {archive, prune, list-archived, backup, rollback}` | v0.12/v0.13 | Curator 扩展子命令（详见 [Skills System Architecture](concepts/skills-system-architecture.md)） |
+| `hermes kanban {add, dispatch, claim, complete, reclaim, ...}` | v0.13.0 | 持久化 Kanban CLI（详见 [Multi Agent Architecture](concepts/multi-agent-architecture.md)） |
 | `hermes proxy {start, status, list-providers}` | v0.14.0 | OpenAI-compatible 本地代理：`hermes_cli/proxy/cli.py:30,78,102` |
 | `hermes acp --setup-browser` | v0.14.0 | Zed ACP registry 引导浏览器工具安装 |
 | `pip install hermes-agent && hermes` | v0.14.0 | PyPI 正式上架（`pyproject.toml:6` `name = "hermes-agent"`） |
 | `hermes setup --portal` | v0.14.0 (2026-05-23) | 一键 Nous Portal 起步：OAuth + provider=nous + Tool Gateway opt-in；幂等可重复跑（`hermes_cli/setup.py:3063-3173 _run_portal_one_shot`） |
 | `hermes portal {status, open, tools}` | v0.14.0 (2026-05-23) | 状态/订阅页/Tool Gateway 路由薄表面，缺省派发 `status`（`hermes_cli/portal_cli.py:175-220`，注册 `hermes_cli/main.py:11877-11880`） |
 | `hermes kanban promote <id> [reason ...] [--ids id...] [--force] [--dry-run] [--json]` | 2026-05-23 | 手动 todo→ready 恢复（auto-promote daemon 漏父任务 done 时使用），`--ids` 批量；`task_events kind="promoted_manual"`（区分 daemon 自动 promoted）。源码 `hermes_cli/kanban.py:553-584` |
-| `hermes skills audit [name] --deep` | 2026-05-23 | AST 深度诊断（`tools/skills_ast_audit.py:84 ast_scan_path`）—— 在 regex Skills Guard 之上覆盖动态 `importlib.import_module(computed)` / `getattr(obj, computed)` 等绕过模式。输出为 diagnostic hints，不影响 install gate（详见 [Skills System Architecture](skills-system-architecture.md)） |
+| `hermes skills audit [name] --deep` | 2026-05-23 | AST 深度诊断（`tools/skills_ast_audit.py:84 ast_scan_path`）—— 在 regex Skills Guard 之上覆盖动态 `importlib.import_module(computed)` / `getattr(obj, computed)` 等绕过模式。输出为 diagnostic hints，不影响 install gate（详见 [Skills System Architecture](concepts/skills-system-architecture.md)） |
 
 ### 新斜杠命令（v0.13.0+）
 
@@ -437,7 +437,7 @@ hermes migrate xai --no-backup  # 跳过 .bak 写出
 
 ### Dashboard OAuth 配置 surface
 
-详见 [Dashboard Auth Oauth Gate](dashboard-auth-oauth-gate.md)。CLI 暴露的 config keys：
+详见 [Dashboard Auth Oauth Gate](concepts/dashboard-auth-oauth-gate.md)。CLI 暴露的 config keys：
 
 ```yaml
 dashboard:
@@ -487,16 +487,16 @@ dashboard:
 ## 相关页面
 - [[Gateway Session Management|gateway-session-management]]
 
-- [Configuration And Profiles](configuration-and-profiles.md) — 配置管理与 Profile 系统
-- [Hook System Architecture](hook-system-architecture.md) — Hook 与插件扩展系统
-- [Session Search And Sessiondb](session-search-and-sessiondb.md) — 会话搜索与 SessionDB
-- [Voice Mode Architecture](voice-mode-architecture.md) — 语音模式（Push-to-talk → STT → TTS）
-- [Skin Engine](skin-engine.md) — 皮肤/主题自定义
-- [Context References](context-references.md) — @file/@diff/@url 引用系统
-- [Worktree Isolation](worktree-isolation.md) — Git Worktree 并行隔离
-- [Code Execution Sandbox](code-execution-sandbox.md) — 代码执行沙箱
-- [Multi Agent Architecture](multi-agent-architecture.md) — `/goal`、`/handoff`、`/steer`、`/queue`、Kanban CLI
-- [Smart Model Routing](smart-model-routing.md) — `hermes proxy` OpenAI-compatible 本地代理
+- [Configuration And Profiles](concepts/configuration-and-profiles.md) — 配置管理与 Profile 系统
+- [Hook System Architecture](concepts/hook-system-architecture.md) — Hook 与插件扩展系统
+- [Session Search And Sessiondb](concepts/session-search-and-sessiondb.md) — 会话搜索与 SessionDB
+- [Voice Mode Architecture](concepts/voice-mode-architecture.md) — 语音模式（Push-to-talk → STT → TTS）
+- [Skin Engine](concepts/skin-engine.md) — 皮肤/主题自定义
+- [Context References](concepts/context-references.md) — @file/@diff/@url 引用系统
+- [Worktree Isolation](concepts/worktree-isolation.md) — Git Worktree 并行隔离
+- [Code Execution Sandbox](concepts/code-execution-sandbox.md) — 代码执行沙箱
+- [Multi Agent Architecture](concepts/multi-agent-architecture.md) — `/goal`、`/handoff`、`/steer`、`/queue`、Kanban CLI
+- [Smart Model Routing](concepts/smart-model-routing.md) — `hermes proxy` OpenAI-compatible 本地代理
 
 ## v0.15.1 维护窗口增量（2026-05-31，hermes `eb3cf9750`）
 
@@ -530,7 +530,7 @@ setup 的 provider→model 子菜单及 3 个同类 picker 从 `simple_term_menu
 
 ### `/compress here [N]`（#35048，`bcc830100`）
 
-用户选择压缩边界。详见 [Context Compressor Architecture](context-compressor-architecture.md) 的 §2026-05-31 增量。`hermes_cli/partial_compress.py` 新模块 235 行。
+用户选择压缩边界。详见 [Context Compressor Architecture](concepts/context-compressor-architecture.md) 的 §2026-05-31 增量。`hermes_cli/partial_compress.py` 新模块 235 行。
 
 ### Tool Gateway 始终展示 + 选中即登录（#35792，`1fc7bdc5e`）
 
@@ -569,7 +569,7 @@ setup 的 provider→model 子菜单及 3 个同类 picker 从 `simple_term_menu
 
 ### MCP discovery 不阻塞 agent-capable startup（`0c6e133c0`）
 
-新文件 `hermes_cli/mcp_startup.py`（59 行）+ tests 166 行：MCP server discovery 改 background task，避免冷启动阻塞。详见 [Mcp And Plugins](mcp-and-plugins.md)。
+新文件 `hermes_cli/mcp_startup.py`（59 行）+ tests 166 行：MCP server discovery 改 background task，避免冷启动阻塞。详见 [Mcp And Plugins](concepts/mcp-and-plugins.md)。
 
 ### TUI 簇
 

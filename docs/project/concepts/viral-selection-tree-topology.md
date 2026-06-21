@@ -75,4 +75,4 @@ This study investigates whether tree topology shape metrics can distinguish betw
 
 ## Cross-References
 
-See also: [Phylogenetics Phylodynamics](phylogenetics-phylodynamics.md), [Phylogenetic Tree Statistics Treestats](phylogenetic-tree-statistics-treestats.md), [Emerging Rna Viruses Genomic Adaptation](emerging-rna-viruses-genomic-adaptation.md)
+See also: [Phylogenetics Phylodynamics](concepts/phylogenetics-phylodynamics.md), [Phylogenetic Tree Statistics Treestats](concepts/phylogenetic-tree-statistics-treestats.md), [Emerging Rna Viruses Genomic Adaptation](concepts/emerging-rna-viruses-genomic-adaptation.md)

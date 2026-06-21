@@ -92,4 +92,4 @@ The most significant finding: both tools struggle with monophasic variants.
 
 ## Cross-References
 
-See also: [Next Generation Sequencing](next-generation-sequencing.md), [Antimicrobial Resistance](antimicrobial-resistance.md), [Phylogenetics Phylodynamics](phylogenetics-phylodynamics.md)
+See also: [Next Generation Sequencing](concepts/next-generation-sequencing.md), [Antimicrobial Resistance](concepts/antimicrobial-resistance.md), [Phylogenetics Phylodynamics](concepts/phylogenetics-phylodynamics.md)

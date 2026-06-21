@@ -424,10 +424,10 @@ def _token_response_to_session(response, expired_error_cls):
 - [[Gateway Session Management|gateway-session-management]]
 - [[Credential Pool And Isolation|credential-pool-and-isolation]]
 
-- [Security Defense System](security-defense-system.md) — 多层防御整体框架，dashboard OAuth 是 v0.14-late 新增的 layer
-- [Hook System Architecture](hook-system-architecture.md) — PluginContext 8 个 register_* 钩子全表，`register_dashboard_auth_provider:558` 是其中之一
-- [Provider Plugin System](provider-plugin-system.md) — 同样的 ABC + Registry + Plugin discovery 模式
-- [Cli Architecture](cli-architecture.md) — `hermes dashboard` 子命令是闸门的入口
-- [2026 05 27 Update](../changelogs/2026-05-27-update.md) — 落地 changelog
-- [2026 06 01 Update](../changelogs/2026-06-01-update.md) — Dashboard 全管理面板（17 个新端点复用闸门）
-- [2026 06 02 Update](../changelogs/2026-06-02-update.md) — Channels 页 + Admin Panel v2 + Refresh-token 轮转
+- [Security Defense System](concepts/security-defense-system.md) — 多层防御整体框架，dashboard OAuth 是 v0.14-late 新增的 layer
+- [Hook System Architecture](concepts/hook-system-architecture.md) — PluginContext 8 个 register_* 钩子全表，`register_dashboard_auth_provider:558` 是其中之一
+- [Provider Plugin System](concepts/provider-plugin-system.md) — 同样的 ABC + Registry + Plugin discovery 模式
+- [Cli Architecture](concepts/cli-architecture.md) — `hermes dashboard` 子命令是闸门的入口
+- [2026 05 27 Update](changelogs/2026-05-27-update.md) — 落地 changelog
+- [2026 06 01 Update](changelogs/2026-06-01-update.md) — Dashboard 全管理面板（17 个新端点复用闸门）
+- [2026 06 02 Update](changelogs/2026-06-02-update.md) — Channels 页 + Admin Panel v2 + Refresh-token 轮转

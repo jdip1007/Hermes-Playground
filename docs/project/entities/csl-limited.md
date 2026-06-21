@@ -41,4 +41,4 @@ CSL Limited is an Australian multinational biotechnology company headquartered i
 
 ## Related
 
-[Portfolio Jonathan Aus](portfolio-jonathan-aus.md)
+[Portfolio Jonathan Aus](entities/portfolio-jonathan-aus.md)

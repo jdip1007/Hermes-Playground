@@ -128,6 +128,6 @@ For sgRNA synthesis in CRISPR applications:
 
 ## Cross-References
 
-[Crispr Cas9](crispr-cas9.md) — CRISPR-Cas9 sgRNA synthesis applications requiring long RNA oligonucleotides
-[Crispr Amr Diagnostics](crispr-amr-diagnostics.md) — CRISPR-based diagnostic platforms (SHERLOCK, DETECTR) require synthetic RNA components
-[Bioinformatics](bioinformatics.md) — Computational design of RNA sequences for therapeutic and research applications
+[Crispr Cas9](concepts/crispr-cas9.md) — CRISPR-Cas9 sgRNA synthesis applications requiring long RNA oligonucleotides
+[Crispr Amr Diagnostics](concepts/crispr-amr-diagnostics.md) — CRISPR-based diagnostic platforms (SHERLOCK, DETECTR) require synthetic RNA components
+[Bioinformatics](concepts/bioinformatics.md) — Computational design of RNA sequences for therapeutic and research applications

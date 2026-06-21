@@ -55,4 +55,4 @@ The human microbiome comprises all microorganisms (bacteria, archaea, fungi, vir
 
 ## Related
 
-[Metagenomics](metagenomics.md), [Antimicrobial Resistance](antimicrobial-resistance.md), [Next Generation Sequencing](next-generation-sequencing.md)
+[Metagenomics](concepts/metagenomics.md), [Antimicrobial Resistance](concepts/antimicrobial-resistance.md), [Next Generation Sequencing](concepts/next-generation-sequencing.md)

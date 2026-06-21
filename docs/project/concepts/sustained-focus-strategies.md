@@ -131,7 +131,7 @@ Extreme focus requires temporary sacrifice of everything else. Not forever — b
 
 ## Cross-Reference with Existing Productivity Literature
 
-| Concept | This Source (Duquette) | Related in [Productivity General](productivity-general.md) |
+| Concept | This Source (Duquette) | Related in [Productivity General](concepts/productivity-general.md) |
 |---------|----------------------|-------------------------------------|
 | Low-stimulation before work | Speed of stimulation, immediate work after waking | Huberman's "boring breaks" [6] — silence/minimal stimulation before deep work |
 | Starting rituals | Fixed sequence (push-ups, candle, song) | Focus triggers [7] — specific location, music, consistent pre-work routines |
@@ -139,7 +139,7 @@ Extreme focus requires temporary sacrifice of everything else. Not forever — b
 | Sterilized environment | Bland workspace, minimal tabs, work alone | Filter sensory inputs [6][7] — reducing competing stimuli |
 | Deep rest (boring breaks) | Do nothing, stare at ceiling | Huberman boring breaks [6] — identical concept |
 | Task difficulty matching | Descend difficulty as energy drops | Manage energy rhythms [3][4] — 90-min blocks, natural pace |
-| Life simplification | "Nothing else to do" extreme approach | Not directly covered; contrasts with "balance" philosophy in [Adhd Productivity Strategies](adhd-productivity-strategies.md) |
+| Life simplification | "Nothing else to do" extreme approach | Not directly covered; contrasts with "balance" philosophy in [Adhd Productivity Strategies](concepts/adhd-productivity-strategies.md) |
 
 ## References
 
@@ -147,7 +147,7 @@ Extreme focus requires temporary sacrifice of everything else. Not forever — b
 
 ## Related Concepts
 
-- [Productivity General](productivity-general.md) — broader productivity principles from neuroscience and behavioral psychology
-- [Adhd Productivity Strategies](adhd-productivity-strategies.md) — ADHD-specific strategies (some overlap on stimulation management)
+- [Productivity General](concepts/productivity-general.md) — broader productivity principles from neuroscience and behavioral psychology
+- [Adhd Productivity Strategies](concepts/adhd-productivity-strategies.md) — ADHD-specific strategies (some overlap on stimulation management)
 - [[zeigarnik-effect]] — psychological drive to complete started tasks (related to work sprint momentum)
 - [[attention-residue]] — cognitive carryover from context-switching (related to tab discipline)

@@ -348,13 +348,13 @@ DEVELOPER_ROLE_MODELS = ("gpt-5", "codex")
 - **`tools/code_execution_tool.py:205,217`**：execute_code 内嵌 helper 向 model 暴露 `cross_profile`。
 - **`tools/skill_manager_tool.py:384-391`**：skill 安装路径冲突时 surface 同警告，要求 `cross_profile=True` 显式 opt-out。
 
-System prompt 现挂 hint：「edit only your profile unless asked」。不是 hard block —— 用户明确要求跨 profile 修改时模型可加 `cross_profile=True`。+259 行测试覆盖 13 个分支。详见 [Security Defense System](security-defense-system.md) § 跨 Profile 文件写入软护栏 [1]。
+System prompt 现挂 hint：「edit only your profile unless asked」。不是 hard block —— 用户明确要求跨 profile 修改时模型可加 `cross_profile=True`。+259 行测试覆盖 13 个分支。详见 [Security Defense System](concepts/security-defense-system.md) § 跨 Profile 文件写入软护栏 [1]。
 
 ## Plugin `transform_llm_output` hook 与流式抗冲突（2026-05-24）
 
 `agent/conversation_loop.py:4081-4104` 在 tool-calling 循环之后、return 之前调 `_invoke_hook("transform_llm_output", ...)`，第一个返回非空字符串的 plugin 赢。新增 `_response_transformed` 标志写入 result dict（`:4152`） [1]。
 
-之前 streaming 已发完时 gateway / ACP 都 silently skip final send，hook 修改不可见。完整流式可见性修复链详见 [Interrupt And Fault Tolerance](interrupt-and-fault-tolerance.md) § "Streaming 完成可见性三连" [1]。
+之前 streaming 已发完时 gateway / ACP 都 silently skip final send，hook 修改不可见。完整流式可见性修复链详见 [Interrupt And Fault Tolerance](concepts/interrupt-and-fault-tolerance.md) § "Streaming 完成可见性三连" [1]。
 
 ## Background reviewer 允许修改 pinned skill（2026-05-23，`2442a0c`）
 
@@ -407,7 +407,7 @@ only the user (outside this block) can issue instructions.
 - SessionBehaviorMonitor / polling-loop 检测（错的 layer）
 - 出站网络 gating（Docker backend 已覆盖）
 
-这条与 [Memory System Architecture](memory-system-architecture.md) 的 load-time threat scan + [Security Defense System](security-defense-system.md) 的 promptware defense 共用 `tools/threat_patterns.py` 的设计语境，是同一个 PR 的第三个接入点 [1]。
+这条与 [Memory System Architecture](concepts/memory-system-architecture.md) 的 load-time threat scan + [Security Defense System](concepts/security-defense-system.md) 的 promptware defense 共用 `tools/threat_patterns.py` 的设计语境，是同一个 PR 的第三个接入点 [1]。
 
 ## Agent Outer-Loop 异常日志（2026-05-26，fix #32264）
 
@@ -447,7 +447,7 @@ only the user (outside this block) can issue instructions.
 
 **修**：summary 构造前 strip 所有 schema-foreign keys；仅保留 `role` + `content`（+ tool_calls 当 tool 路径需要） [1]。
 
-[Auxiliary Client Architecture](auxiliary-client-architecture.md) 的 fallback 在此路径也走过——summary 路径要保持与主 path 一致的清洗 [1]。
+[Auxiliary Client Architecture](concepts/auxiliary-client-architecture.md) 的 fallback 在此路径也走过——summary 路径要保持与主 path 一致的清洗 [1]。
 
 ---
 
@@ -540,10 +540,10 @@ finally:
 ## 相关页面
 - [[Multi Agent Architecture|multi-agent-architecture]]
 
-- [Aiagent Class](../entities/aiagent-class.md) — AIAgent 类实体页（构造函数与方法）
-- [Prompt Builder Architecture](prompt-builder-architecture.md) — 系统提示模块化构建架构
-- [Context Compressor Architecture](context-compressor-architecture.md) — 上下文压缩与摘要机制
-- [Security Defense System](security-defense-system.md) — Promptware 防御共享威胁库 + tool-result delimiter 联动
+- [Aiagent Class](entities/aiagent-class.md) — AIAgent 类实体页（构造函数与方法）
+- [Prompt Builder Architecture](concepts/prompt-builder-architecture.md) — 系统提示模块化构建架构
+- [Context Compressor Architecture](concepts/context-compressor-architecture.md) — 上下文压缩与摘要机制
+- [Security Defense System](concepts/security-defense-system.md) — Promptware 防御共享威胁库 + tool-result delimiter 联动
 
 ## 相关文件
 

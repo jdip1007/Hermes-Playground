@@ -71,7 +71,7 @@ Purity ratios indicate high-quality DNA suitable for library preparation.[1] Lib
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Blood Culture Broth Dna Extraction](blood-culture-broth-dna-extraction.md)
-[Lysis Buffer Components](lysis-buffer-components.md)
-[Next Generation Sequencing](next-generation-sequencing.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Blood Culture Broth Dna Extraction](concepts/blood-culture-broth-dna-extraction.md)
+[Lysis Buffer Components](concepts/lysis-buffer-components.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md)

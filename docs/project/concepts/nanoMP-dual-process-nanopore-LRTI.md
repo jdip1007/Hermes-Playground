@@ -123,9 +123,9 @@ NanoMP (Nanopore Meta-Panel process) is a **dual-process sequencing approach** c
 
 ## Cross-References
 
-- [Clinical Metagenomics Viral Detection](clinical-metagenomics-viral-detection.md) — broader clinical metagenomics context  
-- [Next Generation Sequencing](next-generation-sequencing.md) — sequencing technology comparison  
-- [Metagenomics](metagenomics.md) — general metagenomic approaches  
+- [Clinical Metagenomics Viral Detection](concepts/clinical-metagenomics-viral-detection.md) — broader clinical metagenomics context  
+- [Next Generation Sequencing](concepts/next-generation-sequencing.md) — sequencing technology comparison  
+- [Metagenomics](concepts/metagenomics.md) — general metagenomic approaches  
 
 ## Confidence Assessment
 

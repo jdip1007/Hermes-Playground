@@ -15,7 +15,7 @@ contested: false
 
 # LLM Wiki Lint Workflow (brtrx)
 
-A specific implementation of the lint operation for [Llm Wiki Pattern](llm-wiki-pattern.md), designed as a drop-in block for `CLAUDE.md`. Created by brtrx.
+A specific implementation of the lint operation for [Llm Wiki Pattern](concepts/llm-wiki-pattern.md), designed as a drop-in block for `CLAUDE.md`. Created by brtrx.
 
 ## Design Principle
 
@@ -51,7 +51,7 @@ Seven categories used as headings in `lint-scratch.md`:
 
 ## Key Differences from Standard Lint
 
-Compared to the general lint approach described in [Llm Wiki Pattern](llm-wiki-pattern.md), this implementation adds:
+Compared to the general lint approach described in [Llm Wiki Pattern](concepts/llm-wiki-pattern.md), this implementation adds:
 
 - **Batched processing** (5 sources/session) instead of full-wiki scans
 - **Randomised order** with persistent seed to avoid topic clustering bias
@@ -61,4 +61,4 @@ Compared to the general lint approach described in [Llm Wiki Pattern](llm-wiki-p
 
 ## Related Pages
 
-- [Llm Wiki Pattern](llm-wiki-pattern.md)
+- [Llm Wiki Pattern](concepts/llm-wiki-pattern.md)

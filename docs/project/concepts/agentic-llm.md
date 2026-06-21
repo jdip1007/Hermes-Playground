@@ -142,7 +142,7 @@ Krish Naik outlined a production-focused learning and implementation path:[2]
 
 ## Related Topics
 
-[Robin Multi Agent System](../entities/robin-multi-agent-system.md)
-[Agent Architecture Patterns](agent-architecture-patterns.md)
-[Agentic Search](agentic-search.md)
-[Ai Agent Runaway Incidents](ai-agent-runaway-incidents.md)
+[Robin Multi Agent System](entities/robin-multi-agent-system.md)
+[Agent Architecture Patterns](concepts/agent-architecture-patterns.md)
+[Agentic Search](concepts/agentic-search.md)
+[Ai Agent Runaway Incidents](concepts/ai-agent-runaway-incidents.md)

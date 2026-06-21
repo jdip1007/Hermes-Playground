@@ -27,7 +27,7 @@ Method to extract HMW genomic DNA from western clawed frog (*Xenopus tropicalis*
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Brain Tissue Dna Extraction](brain-tissue-dna-extraction.md)
-[Lizard Tissue Dna Extraction](lizard-tissue-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Brain Tissue Dna Extraction](concepts/brain-tissue-dna-extraction.md)
+[Lizard Tissue Dna Extraction](concepts/lizard-tissue-dna-extraction.md)
 

@@ -26,6 +26,6 @@ Method to extract genomic DNA from environmental water samples (pond water examp
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Soil Dna Extraction](soil-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Soil Dna Extraction](concepts/soil-dna-extraction.md)
 

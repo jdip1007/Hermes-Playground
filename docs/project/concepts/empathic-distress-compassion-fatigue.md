@@ -63,6 +63,6 @@ Figley (1995) and Stamm (2010) document compassion fatigue in healthcare workers
 
 ## Related Concepts
 
-[Rumination Psychology](rumination-psychology.md) — Rumination about others' problems as a form of empathic distress
-[Hypervigilance Childhood Trauma](hypervigilance-childhood-trauma.md) — Hypervigilant scanning for others' emotional states may predispose to empathic overload
-[Metacognitive Therapy Wells](metacognitive-therapy-wells.md) — MCT techniques for reducing maladaptive metacognitive beliefs about empathy obligations
+[Rumination Psychology](concepts/rumination-psychology.md) — Rumination about others' problems as a form of empathic distress
+[Hypervigilance Childhood Trauma](concepts/hypervigilance-childhood-trauma.md) — Hypervigilant scanning for others' emotional states may predispose to empathic overload
+[Metacognitive Therapy Wells](concepts/metacognitive-therapy-wells.md) — MCT techniques for reducing maladaptive metacognitive beliefs about empathy obligations

@@ -216,6 +216,6 @@ However, the thesis may be overly pessimistic by:
 The core lesson — that investors should understand what assumptions underlie their strategies rather than blindly following past performance — is valuable regardless of whether specific predictions come true. Passive index investing remains a rational strategy for most investors, but understanding its limitations and the conditions required for it to succeed is essential.
 
 ## Related Concepts
-- [Elastic Markets Hypothesis](elastic-markets-hypothesis.md) — Inelastic Markets Hypothesis on market structure
-- [Portfolio Jonathan Aus](../entities/portfolio-jonathan-aus.md) — Portfolio analysis context
-- [Sequencing Cost Economics](sequencing-cost-economics.md) — Economic trend analysis methodology
+- [Elastic Markets Hypothesis](concepts/elastic-markets-hypothesis.md) — Inelastic Markets Hypothesis on market structure
+- [Portfolio Jonathan Aus](entities/portfolio-jonathan-aus.md) — Portfolio analysis context
+- [Sequencing Cost Economics](concepts/sequencing-cost-economics.md) — Economic trend analysis methodology

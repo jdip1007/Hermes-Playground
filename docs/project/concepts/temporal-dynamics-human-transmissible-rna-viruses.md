@@ -89,4 +89,4 @@ Based on Woolhouse et al. 2013 framework:
 
 ## Cross-References
 
-See also: [Emerging Rna Viruses Genomic Adaptation](emerging-rna-viruses-genomic-adaptation.md), [Rna Virus Macroevolution](rna-virus-macroevolution.md), [Phylogenetics Phylodynamics](phylogenetics-phylodynamics.md), [Pandemic Influenza Emergence](pandemic-influenza-emergence.md)
+See also: [Emerging Rna Viruses Genomic Adaptation](concepts/emerging-rna-viruses-genomic-adaptation.md), [Rna Virus Macroevolution](concepts/rna-virus-macroevolution.md), [Phylogenetics Phylodynamics](concepts/phylogenetics-phylodynamics.md), [Pandemic Influenza Emergence](concepts/pandemic-influenza-emergence.md)

@@ -61,6 +61,6 @@ The video's analogy — athletes losing flow due to self-consciousness kicking i
 
 ## Related Concepts
 
-[Private Self Consciousness](private-self-consciousness.md) — Personality trait measuring tendency toward introspection
-[Rumination Psychology](rumination-psychology.md) — Rumination as a form of persistent self-focused attention incompatible with flow
-[Default Mode Network Depression](default-mode-network-depression.md) — DMN deactivation during flow states; task-positive network engagement
+[Private Self Consciousness](concepts/private-self-consciousness.md) — Personality trait measuring tendency toward introspection
+[Rumination Psychology](concepts/rumination-psychology.md) — Rumination as a form of persistent self-focused attention incompatible with flow
+[Default Mode Network Depression](concepts/default-mode-network-depression.md) — DMN deactivation during flow states; task-positive network engagement

@@ -272,9 +272,9 @@ run_agent.py, cli.py, batch_runner.py
 ## 相关页面
 - [[Agent Loop And Prompt Assembly|agent-loop-and-prompt-assembly]]
 
-- [Tool Registry Architecture](tool-registry-architecture.md) — 中央工具注册表（Registry 按 toolset 组织工具）
-- [Model Tools Dispatch](model-tools-dispatch.md) — 工具编排层通过 toolset 过滤工具定义
-- [Mcp And Plugins](mcp-and-plugins.md) — 插件动态注册扩展工具集
+- [Tool Registry Architecture](concepts/tool-registry-architecture.md) — 中央工具注册表（Registry 按 toolset 组织工具）
+- [Model Tools Dispatch](concepts/model-tools-dispatch.md) — 工具编排层通过 toolset 过滤工具定义
+- [Mcp And Plugins](concepts/mcp-and-plugins.md) — 插件动态注册扩展工具集
 
 ## 相关文件
 

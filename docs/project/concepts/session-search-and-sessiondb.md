@@ -314,9 +314,9 @@ class SessionDB:
 
 ## 相关页面
 
-- [Gateway Session Management](gateway-session-management.md) — 网关会话管理（SessionStore 使用 SessionDB）
-- [Cli Architecture](cli-architecture.md) — CLI 中的会话管理与搜索命令
-- [Skills And Memory Interaction](skills-and-memory-interaction.md) — Session Search 作为第三种持久化机制
+- [Gateway Session Management](concepts/gateway-session-management.md) — 网关会话管理（SessionStore 使用 SessionDB）
+- [Cli Architecture](concepts/cli-architecture.md) — CLI 中的会话管理与搜索命令
+- [Skills And Memory Interaction](concepts/skills-and-memory-interaction.md) — Session Search 作为第三种持久化机制
 
 ## 相关文件
 

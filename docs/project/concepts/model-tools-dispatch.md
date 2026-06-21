@@ -217,10 +217,10 @@ _LEGACY_TOOLSET_MAP = {
 
 ## 与其他系统的关系
 
-- [Tool Registry Architecture](tool-registry-architecture.md) — 所有数据来自 Registry
-- [Toolsets System](toolsets-system.md) — 工具集解析和验证通过 toolsets.py
-- [Large Tool Result Handling](large-tool-result-handling.md) — execute_code schema 动态调整
-- [Mcp And Plugins](mcp-and-plugins.md) — MCP 和插件工具通过 discover 机制集成
+- [Tool Registry Architecture](concepts/tool-registry-architecture.md) — 所有数据来自 Registry
+- [Toolsets System](concepts/toolsets-system.md) — 工具集解析和验证通过 toolsets.py
+- [Large Tool Result Handling](concepts/large-tool-result-handling.md) — execute_code schema 动态调整
+- [Mcp And Plugins](concepts/mcp-and-plugins.md) — MCP 和插件工具通过 discover 机制集成
 
 ## Related Pages
 

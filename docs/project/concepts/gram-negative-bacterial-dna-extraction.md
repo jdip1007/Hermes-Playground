@@ -27,7 +27,7 @@ Method for DNA extraction from *E. coli* as an example of Gram-negative bacteria
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Colony Pcr Dna Extraction](colony-pcr-dna-extraction.md)
-[Mycobacterium Tuberculosis Dna Extraction](mycobacterium-tuberculosis-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Colony Pcr Dna Extraction](concepts/colony-pcr-dna-extraction.md)
+[Mycobacterium Tuberculosis Dna Extraction](concepts/mycobacterium-tuberculosis-dna-extraction.md)
 

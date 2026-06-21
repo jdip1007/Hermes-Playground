@@ -1,5 +1,5 @@
 ---
-title: Skin Engine (Skin/Theme)
+title: 皮肤引擎（Skin/Theme）
 created: 2026-04-10
 updated: '2026-06-08'
 type: concept
@@ -14,30 +14,30 @@ sources:
 confidence: high
 contested: false
 ---
-# Skin Engine
+# 皮肤引擎
 
-## Overview
+## 概述
 
-The visual appearance of the Hermes CLI is entirely driven by YAML [1]. Users can customize colors, spinner animations, and branding copy without modifying code [1].
+Hermes CLI 的视觉外观完全由 YAML 驱动 [1]，用户可以自定义颜色、Spinner 动画、品牌文案，无需修改代码 [1]。
 
-## Skin File Structure
+## 皮肤文件结构
 
-Skin files are located in `~/.hermes/skins/*.yaml` [1]. All fields are optional; missing values inherit from the `default` skin [1].
+皮肤文件位于 `~/.hermes/skins/*.yaml` [1]，所有字段可选，缺失值从 `default` 皮肤继承 [1]。
 
 ```yaml
 name: mytheme
-description: Custom theme
+description: 自定义主题
 
 colors:
-  banner_border: "#CD7F32"     # Banner border
-  banner_title: "#FFD700"      # Banner title
-  banner_accent: "#FFBF00"     # Section title
-  ui_accent: "#FFBF00"         # UI accent color
-  ui_ok: "#4caf50"             # Success
-  ui_error: "#ef5350"          # Error
-  ui_warn: "#ffa726"           # Warning
-  prompt: "#FFF8DC"            # Input prompt
-  response_border: "#FFD700"   # Response box border
+  banner_border: "#CD7F32"     # Banner 边框
+  banner_title: "#FFD700"      # Banner 标题
+  banner_accent: "#FFBF00"     # 区域标题
+  ui_accent: "#FFBF00"         # UI 强调色
+  ui_ok: "#4caf50"             # 成功
+  ui_error: "#ef5350"          # 错误
+  ui_warn: "#ffa726"           # 警告
+  prompt: "#FFF8DC"            # 输入提示
+  response_border: "#FFD700"   # 回复框边框
 
 spinner:
   waiting_faces: ["(⚔)", "(⛨)"]
@@ -53,23 +53,23 @@ branding:
   prompt_symbol: "❯ "
 ```
 
-## Switching Skins
+## 切换皮肤
 
 ```bash
-/skin mytheme          # Switch within session [1]
-hermes config set display.skin mytheme  # Persist configuration [1]
+/skin mytheme          # 会话内切换 [1]
+hermes config set display.skin mytheme  # 持久化配置 [1]
 ```
 
-## Different Skins per Profile
+## 每个 Profile 可以有不同皮肤
 
-Skin files are located in the `skins/` directory of each Profile [1]. Different Profiles can use different visual themes [1].
+皮肤文件位于 Profile 的 `skins/` 目录下 [1]，不同 Profile 可以使用不同的视觉主题 [1]。
 
-## Related Pages
+## 相关页面
 - [[I18N And Locales|i18n-and-locales]]
 
-- [Configuration And Profiles](configuration-and-profiles.md) — Profile system (independent skins directory per Profile)
-- [Cli Architecture](cli-architecture.md) — CLI architecture
+- [Configuration And Profiles](concepts/configuration-and-profiles.md) — Profile 系统（每个 Profile 独立的 skins 目录）
+- [Cli Architecture](concepts/cli-architecture.md) — CLI 架构
 
-## Key Source Code
+## 关键源码
 
-- `hermes_cli/skin_engine.py` — Skin loading, inheritance, rendering [1]
+- `hermes_cli/skin_engine.py` — 皮肤加载、继承、渲染 [1]

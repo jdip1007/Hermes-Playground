@@ -60,9 +60,9 @@ Critical when using AI. Only mechanism creating durable knowledge = processing +
 
 ## Related Concepts
 
-[Adhd Productivity Strategies](adhd-productivity-strategies.md) — ADHD-specific learning and focus strategies
-[Productivity General](productivity-general.md) — General productivity principles from neuroscience and behavioral psychology
-[Critical Thinking](critical-thinking.md) — Dual process theory, cognitive frameworks connected to learning quality
-[Ancient Learning Rules Debunked](ancient-learning-rules-debunked.md) — 6 ancient learning myths (Ericsson 10K hours, Mueller-Oppenheimer handwriting study, Epstein's Range) + deep vs shallow processing framework
+[Adhd Productivity Strategies](concepts/adhd-productivity-strategies.md) — ADHD-specific learning and focus strategies
+[Productivity General](concepts/productivity-general.md) — General productivity principles from neuroscience and behavioral psychology
+[Critical Thinking](concepts/critical-thinking.md) — Dual process theory, cognitive frameworks connected to learning quality
+[Ancient Learning Rules Debunked](concepts/ancient-learning-rules-debunked.md) — 6 ancient learning myths (Ericsson 10K hours, Mueller-Oppenheimer handwriting study, Epstein's Range) + deep vs shallow processing framework
 
 [1]: raw/articles/youtube-learning-advice-ZLoBLGSX36c.txt — "5 Learning Advice You Should Stop Following" (YouTube transcript)

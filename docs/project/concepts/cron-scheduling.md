@@ -357,11 +357,11 @@ scanner = _scan_cron_skill_assembled if has_skills else _scan_cron_prompt
 - [[Multi Agent Architecture|multi-agent-architecture]]
 - [[Interrupt And Fault Tolerance|interrupt-and-fault-tolerance]]
 
-- [Messaging Gateway Architecture](messaging-gateway-architecture.md) — 网关驱动调度器 tick() 循环；deliver=all
-- [Hook System Architecture](hook-system-architecture.md) — `standalone_sender_fn` 跨进程投递（PR `93e25ceb1`）
-- [Gateway Session Management](gateway-session-management.md) — 会话 origin 用于 Cron 投递路由
+- [Messaging Gateway Architecture](concepts/messaging-gateway-architecture.md) — 网关驱动调度器 tick() 循环；deliver=all
+- [Hook System Architecture](concepts/hook-system-architecture.md) — `standalone_sender_fn` 跨进程投递（PR `93e25ceb1`）
+- [Gateway Session Management](concepts/gateway-session-management.md) — 会话 origin 用于 Cron 投递路由
 - [[kanban-multi-agent]] — Cron + Kanban 组合：定时投递 task 到 board
-- [Security Defense System](security-defense-system.md) — Cron prompt-injection 扫描
+- [Security Defense System](concepts/security-defense-system.md) — Cron prompt-injection 扫描
 
 ## 相关文件
 

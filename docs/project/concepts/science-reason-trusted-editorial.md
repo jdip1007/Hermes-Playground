@@ -75,6 +75,6 @@ The editorial explicitly argues the problem affects all scientific communities, 
 
 ## Cross-References
 
-[Critical Thinking](critical-thinking.md) — Cognitive biases in scientific reasoning; dual process theory application to peer review
-[Automated Scientific Discovery](automated-scientific-discovery.md) — AI-driven science could potentially reduce human bias in hypothesis generation
-[Agent Architecture Patterns](agent-architecture-patterns.md) — Agent systems should incorporate Hossenfelder's warnings about social dynamics and confirmation bias
+[Critical Thinking](concepts/critical-thinking.md) — Cognitive biases in scientific reasoning; dual process theory application to peer review
+[Automated Scientific Discovery](concepts/automated-scientific-discovery.md) — AI-driven science could potentially reduce human bias in hypothesis generation
+[Agent Architecture Patterns](concepts/agent-architecture-patterns.md) — Agent systems should incorporate Hossenfelder's warnings about social dynamics and confirmation bias

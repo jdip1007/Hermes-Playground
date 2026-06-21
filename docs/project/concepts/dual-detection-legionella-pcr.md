@@ -92,4 +92,4 @@ No false positives with: *Bordetella* spp., *Corynebacterium diphtheriae*, *Chla
 
 ## Cross-References
 
-See also: [Cap Ngs Clinical Test Standards](CAP-NGS-clinical-test-standards.md), [Clinical Metagenomics Viral Detection](clinical-metagenomics-viral-detection.md), [Antimicrobial Resistance](antimicrobial-resistance.md)
+See also: [Cap Ngs Clinical Test Standards](concepts/CAP-NGS-clinical-test-standards.md), [Clinical Metagenomics Viral Detection](concepts/clinical-metagenomics-viral-detection.md), [Antimicrobial Resistance](concepts/antimicrobial-resistance.md)

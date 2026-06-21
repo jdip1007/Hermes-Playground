@@ -27,6 +27,6 @@ Method to extract HMW genomic DNA from buffy coat isolated from rabbit blood as 
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Rabbit Liver Dna Extraction](rabbit-liver-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Rabbit Liver Dna Extraction](concepts/rabbit-liver-dna-extraction.md)
 

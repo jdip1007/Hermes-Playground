@@ -33,7 +33,7 @@ Australian tax residency determines whether an individual is liable to pay incom
 
 ## Residency Tests Framework
 
-The ATO applies four statutory tests in sequence to determine residency status (see [Ato Tax Residency Tests](ato-tax-residency-tests.md)):[1]
+The ATO applies four statutory tests in sequence to determine residency status (see [Ato Tax Residency Tests](concepts/ato-tax-residency-tests.md)):[1]
 
 - **Resides test** — the primary test; if satisfied, no further tests are needed
 - **Domicile test** — applies when domicile is in Australia but person lives overseas
@@ -68,6 +68,6 @@ A certificate of residency is a document showing, for a specific period, that th
 
 ## Related Topics
 
-[Ato Tax Residency Tests](ato-tax-residency-tests.md)
-[Bulie V Commissioner Centre Of Vital Interests](../entities/bulie-v-commissioner-centre-of-vital-interests.md)
-[Vagueness Ato Tax Residency Tests](vagueness-ato-tax-residency-tests.md)
+[Ato Tax Residency Tests](concepts/ato-tax-residency-tests.md)
+[Bulie V Commissioner Centre Of Vital Interests](entities/bulie-v-commissioner-centre-of-vital-interests.md)
+[Vagueness Ato Tax Residency Tests](concepts/vagueness-ato-tax-residency-tests.md)

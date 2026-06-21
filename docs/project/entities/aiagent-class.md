@@ -15,19 +15,19 @@ contested: false
 ---
 # AIAgent Class
 
-## Location
+## 位置
 
-`run_agent.py:326` (class definition)[1]
+`run_agent.py:326`（类定义）[1]
 
-## Overview
+## 概述
 
-The AIAgent is the core conversation loop class of Hermes Agent, responsible for managing LLM interactions, tool calls, and session state [1]. Starting from v0.14.0, `run_agent.py` underwent a major refactoring: the class **remains in `run_agent.py`**, but core implementations such as `__init__`, `run_conversation`, `_build_system_prompt`, tool execution, Codex runtime, etc., have been extracted to the `agent/` submodules. The class now only retains **thin forwarder methods**[1].
+AIAgent 是 Hermes Agent 的核心对话循环类，负责管理 LLM 交互、工具调用和会话状态 [1]。v0.14.0 起 `run_agent.py` 经历大规模重构：类**仍保留在 `run_agent.py`**，但 `__init__`、`run_conversation`、`_build_system_prompt`、工具执行、Codex 运行时等核心实现均已抽取到 `agent/` 子模块，类内只保留**薄转发器（forwarder）方法**[1]。
 
-After refactoring `run_agent.py`: approximately 12 helper modules were extracted into the `agent/` package. Many methods on AIAgent are now just thin forwarders, with the actual implementations residing in modules under `agent/`[1].
+`run_agent.py` 经过重构：约 12 个辅助模块被抽取到 `agent/` 包中，AIAgent 上的许多方法现在只是薄转发器（thin forwarder），真正的实现位于 `agent/` 下的模块里 [1]。
 
-## Constructor
+## 构造函数
 
-The `__init__` (`run_agent.py:349`) itself is a forwarder, passing all parameters as-is to `init_agent()` in `agent/agent_init.py`[1].
+`__init__`（`run_agent.py:349`）本身是转发器，把所有参数原样传给 `agent/agent_init.py` 的 `init_agent()`[1]。
 
 ```python
 class AIAgent:
@@ -35,8 +35,8 @@ class AIAgent:
         base_url: str = None,
         api_key: str = None,
         provider: str = None,
-        api_mode: str = None,           # e.g., "codex_app_server"
-        model: str = "",                # defaults to empty string, resolved at runtime to "anthropic/claude-opus-4.6"
+        api_mode: str = None,           # 例如 "codex_app_server"
+        model: str = "",                # 默认空字符串，运行时解析为 "anthropic/claude-opus-4.6"
         max_iterations: int = 90,
         tool_delay: float = 1.0,
         enabled_toolsets: list = None,
@@ -53,20 +53,20 @@ class AIAgent:
         credential_pool=None,
         checkpoints_enabled: bool = False,
         pass_session_id: bool = False,
-        # ... total of 60+ parameters: routing params, dozens of callbacks, etc.
+        # ... 共 60+ 参数：routing params、十余个 callbacks 等
     ):
         """Forwarder — see agent.agent_init.init_agent"""
         from agent.agent_init import init_agent
         init_agent(self, ...)
 ```
 
-## Core Methods
+## 核心方法
 
-Most methods within the class are forwarders, delegating implementation to submodules in `agent/`[1]:
+类内方法多为转发器，把实现委托给 `agent/` 子模块 [1]：
 
-| Method | Location | Forwarding Target |
-|--------|----------|-------------------|
-| `chat(message, stream_callback=None) -> str` | `run_agent.py:3880` | Internally calls `run_conversation`, returns `final_response` |
+| 方法 | 位置 | 转发目标 |
+|------|------|----------|
+| `chat(message, stream_callback=None) -> str` | `run_agent.py:3880` | 内部调用 `run_conversation`，返回 `final_response` |
 | `run_conversation(...)` | `run_agent.py:3867` | `agent/conversation_loop.py:187` `run_conversation()` |
 | `_build_system_prompt(...)` | `run_agent.py:2164` | `agent/system_prompt.py` `build_system_prompt()` |
 | `_build_system_prompt_parts(...)` | `run_agent.py:2159` | `agent/system_prompt.py` `build_system_prompt_parts()` |
@@ -76,30 +76,30 @@ Most methods within the class are forwarders, delegating implementation to submo
 
 ### `chat(self, message: str, stream_callback: Optional[callable] = None) -> str`
 
-Simple interface that returns the final response string [1].
+简单接口，返回最终响应字符串 [1]。
 
 ### `run_conversation(self, user_message: str, system_message: str = None, conversation_history: List[Dict] = None, task_id: str = None, stream_callback: Optional[callable] = None, persist_user_message: Optional[str] = None) -> Dict[str, Any]`
 
-Full interface that returns a `{final_response, messages}` dictionary [1]. The actual loop logic resides in `agent/conversation_loop.py`[1].
+完整接口，返回 `{final_response, messages}` 字典 [1]。实际循环逻辑在 `agent/conversation_loop.py`[1]。
 
-`AIAgent.run_conversation` itself is just a forwarder at `run_agent.py:3859`; the actual implementation is `run_conversation` at `agent/conversation_loop.py:187` (with a leading `agent` parameter)[1]. `_build_system_prompt` (`run_agent.py:2156`) is similarly a forwarder → `build_system_prompt` in `agent/system_prompt.py`[1].
+`AIAgent.run_conversation` 本身只是 `run_agent.py:3859` 的转发器，真正的实现是 `agent/conversation_loop.py:187` 的 `run_conversation`（带一个前导 `agent` 参数）[1]。`_build_system_prompt`（`run_agent.py:2156`）同样是转发器 → `agent/system_prompt.py` 的 `build_system_prompt`[1]。
 
-## Conversation Loop
+## 对话循环
 
-Implementation is located at `agent/conversation_loop.py:187`[1]:
+实现位于 `agent/conversation_loop.py:187`[1]：
 
 ```python
 agent.iteration_budget = IterationBudget(agent.max_iterations)
 api_call_count = 0
 
-# Optional codex_app_server runtime: delegates the entire turn to the codex app-server subprocess
+# 可选的 codex_app_server 运行时：整轮交给 codex app-server 子进程
 if agent.api_mode == "codex_app_server":
     return agent._run_codex_app_server_turn(...)
 
 while (api_call_count < agent.max_iterations
        and agent.iteration_budget.remaining > 0) or agent._budget_grace_call:
     api_call_count += 1
-    # ... initiates API call
+    # ... 发起 API 调用
     if assistant_message.tool_calls:
         agent._execute_tool_calls(assistant_message, messages,
                                   effective_task_id, api_call_count)  # → agent/tool_executor.py
@@ -107,33 +107,33 @@ while (api_call_count < agent.max_iterations
         return final_response
 ```
 
-## Key Features [1]
+## 关键特性 [1]
 
-- **Fully synchronous** — does not use asyncio
-- **Forwarder architecture** — lean class body, implementations distributed across `agent/` submodules
-- **Tool loop** — supports multi-turn tool calls with sequential/concurrent execution paths
-- **Iteration budget** — `IterationBudget` controls the maximum number of API calls
-- **Platform-aware** — injects different prompts based on the platform
-- **Memory integration** — automatically loads and injects memory
-- **Skill integration** — builds skill index (with two-level caching)
-- **Context compression** — automatically manages context length
-- **Codex runtime** — supports `codex_app_server` / `codex_responses` api_mode
-- **System prompt persistence** — system prompts are stored in SessionDB; the Gateway reads them back when creating a new AIAgent each turn to reuse prefix caching
+- **完全同步** — 不使用 asyncio
+- **转发器架构** — 类体精简，实现分散到 `agent/` 子模块
+- **工具循环** — 支持多轮工具调用，顺序/并发两条执行路径
+- **迭代预算** — `IterationBudget` 控制最大 API 调用次数
+- **平台感知** — 根据平台注入不同提示
+- **记忆集成** — 自动加载和注入记忆
+- **技能集成** — 构建技能索引（带两层缓存）
+- **上下文压缩** — 自动管理上下文长度
+- **Codex 运行时** — 支持 `codex_app_server` / `codex_responses` api_mode
+- **系统提示持久化** — system prompt 存入 SessionDB，Gateway 每轮新建 AIAgent 时回读以复用前缀缓存
 
-## Related Pages
+## 相关页面
 
-- [Agent Loop And Prompt Assembly](../concepts/agent-loop-and-prompt-assembly.md) — Core agent loop and system prompt assembly
-- [Multi Agent Architecture](../concepts/multi-agent-architecture.md) — Sub-agent delegation and iteration budget system
-- [Prompt Builder Architecture](../concepts/prompt-builder-architecture.md) — System prompt builder architecture
+- [Agent Loop And Prompt Assembly](concepts/agent-loop-and-prompt-assembly.md) — Agent 核心循环与系统提示组装
+- [Multi Agent Architecture](concepts/multi-agent-architecture.md) — 子代理委派与迭代预算系统
+- [Prompt Builder Architecture](concepts/prompt-builder-architecture.md) — 系统提示构建架构
 
-## Related Files [1]
+## 相关文件 [1]
 
-- `run_agent.py` — `AIAgent` class definition and forwarder methods (4123 lines)
-- `agent/agent_init.py` — `init_agent()`, constructor implementation (1504 lines)
-- `agent/conversation_loop.py` — `run_conversation()`, conversation loop (4099 lines)
-- `agent/system_prompt.py` — Three-layer system prompt assembly (346 lines)
-- `agent/tool_executor.py` — Tool call execution (910 lines)
-- `agent/codex_runtime.py` — Codex app-server / Responses runtime (448 lines)
-- `agent/agent_runtime_helpers.py` — Runtime helpers such as message sanitization (2158 lines)
-- `agent/prompt_builder.py` — System prompt text constants and context file loading (1465 lines)
-- `model_tools.py` — Tool orchestration
+- `run_agent.py` — `AIAgent` 类定义与转发器方法（4123 行）
+- `agent/agent_init.py` — `init_agent()`，构造函数实现（1504 行）
+- `agent/conversation_loop.py` — `run_conversation()`，对话循环（4099 行）
+- `agent/system_prompt.py` — 系统提示三层组装（346 行）
+- `agent/tool_executor.py` — 工具调用执行（910 行）
+- `agent/codex_runtime.py` — Codex app-server / Responses 运行时（448 行）
+- `agent/agent_runtime_helpers.py` — 消息清洗等运行时辅助（2158 行）
+- `agent/prompt_builder.py` — 系统提示文本常量与上下文文件加载（1465 行）
+- `model_tools.py` — 工具编排

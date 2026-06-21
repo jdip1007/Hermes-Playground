@@ -164,9 +164,9 @@ python batch_runner.py --dataset_file=your_tasks.jsonl --batch_size=10 --run_nam
 ## 相关页面
 - [[Session Search And Sessiondb|session-search-and-sessiondb]]
 
-- [Agent Loop And Prompt Assembly](agent-loop-and-prompt-assembly.md) — `save_trajectories` 参数和 `_convert_to_trajectory_format()` 方法
-- [Multi Agent Architecture](multi-agent-architecture.md) — Batch Runner 作为大规模批量处理引擎
-- [Context Compressor Architecture](context-compressor-architecture.md) — 压缩后的轨迹数据更紧凑
+- [Agent Loop And Prompt Assembly](concepts/agent-loop-and-prompt-assembly.md) — `save_trajectories` 参数和 `_convert_to_trajectory_format()` 方法
+- [Multi Agent Architecture](concepts/multi-agent-architecture.md) — Batch Runner 作为大规模批量处理引擎
+- [Context Compressor Architecture](concepts/context-compressor-architecture.md) — 压缩后的轨迹数据更紧凑
 
 ## 相关文件
 

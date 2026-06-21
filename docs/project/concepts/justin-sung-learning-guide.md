@@ -131,9 +131,9 @@ Brain processes visual information 20,000-40,000x faster than text. Nonlinear no
 
 ## Related Concepts
 
-[Learning Strategies Schema Building](learning-strategies-schema-building.md) — Complementary framework on schema building, 5 learning myths, Dunlosky's strategy ratings
-[Ancient Learning Rules Debunked](ancient-learning-rules-debunked.md) — Debunked ancient learning rules (Ericsson 10K hours, handwriting study) with deep vs shallow processing
-[Productivity General](productivity-general.md) — General productivity principles from neuroscience and behavioral psychology
-[Sustained Focus Strategies](sustained-focus-strategies.md) — Focus management as an enabler skill
+[Learning Strategies Schema Building](concepts/learning-strategies-schema-building.md) — Complementary framework on schema building, 5 learning myths, Dunlosky's strategy ratings
+[Ancient Learning Rules Debunked](concepts/ancient-learning-rules-debunked.md) — Debunked ancient learning rules (Ericsson 10K hours, handwriting study) with deep vs shallow processing
+[Productivity General](concepts/productivity-general.md) — General productivity principles from neuroscience and behavioral psychology
+[Sustained Focus Strategies](concepts/sustained-focus-strategies.md) — Focus management as an enabler skill
 
 [1]: raw/articles/youtube-4hr-learning-guide-waGRF_ZApfI.txt (Justin Sung, ~5-hour compilation)

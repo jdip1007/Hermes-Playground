@@ -28,6 +28,6 @@ Community-contributed method for extracting DNA from *M. tuberculosis* solid cul
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Gram Negative Bacterial Dna Extraction](gram-negative-bacterial-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Gram Negative Bacterial Dna Extraction](concepts/gram-negative-bacterial-dna-extraction.md)
 

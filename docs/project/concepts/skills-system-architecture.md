@@ -116,7 +116,7 @@ MCP 工具会进系统提示，所以重载会失效 cache [1]。CLI 弹一个 *
 - 扫描 `~/.hermes/skills/` 目录 [1]
 - 解析每个 SKILL.md 的 YAML frontmatter [1]
 - 构建技能索引清单注入到系统提示中 [1]
-- 使用 [Prompt Builder Architecture](prompt-builder-architecture.md) 缓存结果 [1]
+- 使用 [Prompt Builder Architecture](concepts/prompt-builder-architecture.md) 缓存结果 [1]
 
 ### 3. 技能目录结构
 
@@ -759,10 +759,10 @@ raise ValueError(
 ## 相关页面
 - [[Agent Loop And Prompt Assembly|agent-loop-and-prompt-assembly]]
 
-- [Prompt Builder Architecture](prompt-builder-architecture.md) — 技能索引构建与条件激活
-- [Skills And Memory Interaction](skills-and-memory-interaction.md) — 技能与记忆的交互设计
-- [Security Defense System](security-defense-system.md) — 技能安全扫描与信任级别策略
-- [Kanban Multi Agent Board](kanban-multi-agent-board.md) — 多 Agent 协作时配合 skills 分发
+- [Prompt Builder Architecture](concepts/prompt-builder-architecture.md) — 技能索引构建与条件激活
+- [Skills And Memory Interaction](concepts/skills-and-memory-interaction.md) — 技能与记忆的交互设计
+- [Security Defense System](concepts/security-defense-system.md) — 技能安全扫描与信任级别策略
+- [Kanban Multi Agent Board](concepts/kanban-multi-agent-board.md) — 多 Agent 协作时配合 skills 分发
 
 ## 相关文件
 

@@ -42,4 +42,4 @@ Australian-focused investment portfolio with diversified holdings across equitie
 
 ## Related
 
-[Csl Limited](csl-limited.md)
+[Csl Limited](entities/csl-limited.md)

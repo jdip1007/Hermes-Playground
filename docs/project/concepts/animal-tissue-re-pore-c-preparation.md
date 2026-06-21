@@ -27,7 +27,7 @@ Protocol describing cryo-grinding and DNA extraction from *Rattus norvegicus* (S
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Brain Tissue Dna Extraction](brain-tissue-dna-extraction.md)
-[Frog Muscle Dna Extraction](frog-muscle-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Brain Tissue Dna Extraction](concepts/brain-tissue-dna-extraction.md)
+[Frog Muscle Dna Extraction](concepts/frog-muscle-dna-extraction.md)
 

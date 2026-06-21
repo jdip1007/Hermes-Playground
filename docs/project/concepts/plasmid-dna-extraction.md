@@ -186,7 +186,7 @@ For plasmids >30 kb or bacterial artificial chromosomes (BACs):
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Next Generation Sequencing](next-generation-sequencing.md)
-[Agarose Plug Dna Extraction](agarose-plug-dna-extraction.md)
-[Colony Pcr Dna Extraction](colony-pcr-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md)
+[Agarose Plug Dna Extraction](concepts/agarose-plug-dna-extraction.md)
+[Colony Pcr Dna Extraction](concepts/colony-pcr-dna-extraction.md)

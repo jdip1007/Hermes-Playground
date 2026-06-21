@@ -57,7 +57,7 @@ The study employed standard comparative methods to test for phylogenetic conserv
 
 1. **Taxonomic resolution**: Family-level phylogenies may miss finer-scale patterns of within-host evolution that could contribute to diversification
 2. **Host data completeness**: Virus-host association data in 2010 was incomplete, particularly for wildlife reservoirs; subsequent discoveries (e.g., Lu et al., 2024) have expanded known nonhuman virus diversity substantially [2]
-3. **Temporal dynamics not modeled**: The study does not incorporate temporal sampling or molecular clock dating, which later work (see [Phylogenetics Phylodynamics](phylogenetics-phylodynamics.md)) has shown to be important for understanding viral emergence timing
+3. **Temporal dynamics not modeled**: The study does not incorporate temporal sampling or molecular clock dating, which later work (see [Phylogenetics Phylodynamics](concepts/phylogenetics-phylodynamics.md)) has shown to be important for understanding viral emergence timing
 4. **No explicit selection analysis**: Does not examine the selective pressures driving host-jumping events; see [[selection-signatures-viral-phylogeny-shape]] for methods to detect selection from tree topology
 
 ### Clinical and Research Relevance [1, 2]
@@ -68,9 +68,9 @@ The study employed standard comparative methods to test for phylogenetic conserv
 
 ## Connections to Other Work
 
-- [Phylogenetics Phylodynamics](phylogenetics-phylodynamics.md) — Molecular clock methods and Bayesian phylogenetic inference (BEAST2) provide temporal context for the macroevolutionary patterns described here
+- [Phylogenetics Phylodynamics](concepts/phylogenetics-phylodynamics.md) — Molecular clock methods and Bayesian phylogenetic inference (BEAST2) provide temporal context for the macroevolutionary patterns described here
 - [[temporal-dynamics-rna-virus-emergence]] — Lu et al. (2024) extend these findings with 1,408 genome sequences showing that human-transmissible viruses commonly emerge from nonhuman reservoirs
-- [Emerging Rna Viruses Genomic Adaptation](emerging-rna-viruses-genomic-adaptation.md) — Huang & Chu (2021) editorial on genomic mechanisms (mutation, recombination, reassortment) enabling host adaptation
+- [Emerging Rna Viruses Genomic Adaptation](concepts/emerging-rna-viruses-genomic-adaptation.md) — Huang & Chu (2021) editorial on genomic mechanisms (mutation, recombination, reassortment) enabling host adaptation
 - [[selection-signatures-viral-phylogeny-shape]] — Barzilai & Schrago (2023) demonstrate how tree topology metrics can distinguish selection regimes in viral phylogenies
 
 ## References

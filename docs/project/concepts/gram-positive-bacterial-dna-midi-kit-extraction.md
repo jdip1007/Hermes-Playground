@@ -74,8 +74,8 @@ The Midi Kit protocol yields ~60× more DNA from ~150× more input cells, making
 
 ## Related Topics
 
-[Gram Positive Bacterial Dna Puregene Extraction](gram-positive-bacterial-dna-puregene-extraction.md) — Same sample type using QIAGEN Puregene Cell Kit (smaller scale)
-[Human Cell Line Dna Genomic Tip Extraction](human-cell-line-dna-genomic-tip-extraction.md) — Similar large-scale approach for human cell lines
-[Blood Culture Broth Dna Extraction](blood-culture-broth-dna-extraction.md) — Bacterial DNA extraction from blood culture broth
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Next Generation Sequencing](next-generation-sequencing.md)
+[Gram Positive Bacterial Dna Puregene Extraction](concepts/gram-positive-bacterial-dna-puregene-extraction.md) — Same sample type using QIAGEN Puregene Cell Kit (smaller scale)
+[Human Cell Line Dna Genomic Tip Extraction](concepts/human-cell-line-dna-genomic-tip-extraction.md) — Similar large-scale approach for human cell lines
+[Blood Culture Broth Dna Extraction](concepts/blood-culture-broth-dna-extraction.md) — Bacterial DNA extraction from blood culture broth
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md)

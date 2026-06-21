@@ -66,6 +66,6 @@ Regular sleep-wake timing stabilizes these physiological systems, promoting bett
 
 ## Cross-References
 
-[Critical Thinking](critical-thinking.md) — Observational studies require careful interpretation; correlation ≠ causation
-[Antimicrobial Resistance](antimicrobial-resistance.md) — Sleep disruption may affect immune function relevant to infection outcomes
-[Microbiome](microbiome.md) — Circadian rhythm disruption affects gut microbiome composition and function
+[Critical Thinking](concepts/critical-thinking.md) — Observational studies require careful interpretation; correlation ≠ causation
+[Antimicrobial Resistance](concepts/antimicrobial-resistance.md) — Sleep disruption may affect immune function relevant to infection outcomes
+[Microbiome](concepts/microbiome.md) — Circadian rhythm disruption affects gut microbiome composition and function

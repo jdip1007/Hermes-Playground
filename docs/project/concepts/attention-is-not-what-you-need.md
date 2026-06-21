@@ -87,6 +87,6 @@ Directly challenges the foundational assumption of "Attention Is All You Need" (
 
 ## See Also
 
-- [Transformer Architecture](transformer-architecture.md) — Original "Attention Is All You Need" paper
-- [Pretraining Without Attention Bigs](pretraining-without-attention-bigs.md) — BiGS: SSM-based attention-free pretraining
-- [State Space Models Ssm](state-space-models-ssm.md) — SSM architectures (Mamba, etc.)
+- [Transformer Architecture](concepts/transformer-architecture.md) — Original "Attention Is All You Need" paper
+- [Pretraining Without Attention Bigs](concepts/pretraining-without-attention-bigs.md) — BiGS: SSM-based attention-free pretraining
+- [State Space Models Ssm](concepts/state-space-models-ssm.md) — SSM architectures (Mamba, etc.)

@@ -51,11 +51,11 @@ NGS in clinical settings requires rigorous bioinformatics pipelines for variant 
 
 ## Field Deployment (Portable Sequencing)
 
-The [Nanopore Sequencing Minion](nanopore-sequencing-minion.md) platform enables sequencing in resource-limited or remote outbreak settings [4]:
+The [Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md) platform enables sequencing in resource-limited or remote outbreak settings [4]:
 - Pocket-sized device (~75 g), no calibration required, operational immediately upon arrival [4]
 - Successfully deployed during 2014–2015 Ebola outbreak in Liberia (CDC/NIH field lab) — produced 4 full-length EBOV genomes/day with one operator and two devices [4]
 - Illumina MiSeq also deployed to West Africa (Feb 2015) but requires ~40–100 kg equipment, field engineer calibration, and more infrastructure [4]
 
 ## Related
 
-[Single Cell Sequencing](single-cell-sequencing.md), [Metagenomics](metagenomics.md), [Crispr Cas9](crispr-cas9.md), [Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
+[Single Cell Sequencing](concepts/single-cell-sequencing.md), [Metagenomics](concepts/metagenomics.md), [Crispr Cas9](concepts/crispr-cas9.md), [Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)

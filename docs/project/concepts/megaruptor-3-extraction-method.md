@@ -26,8 +26,8 @@ Protocol for fragmenting gDNA using Diagenode Megaruptor® 3 for subsequent Liga
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Promethion 24Hr Genome Workflow](promethion-24hr-genome-workflow.md)
-[Covaris G Tube Shearing](covaris-g-tube-shearing.md)
-[Fastprep 96 High Throughput Shearing](fastprep-96-high-throughput-shearing.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Promethion 24Hr Genome Workflow](concepts/promethion-24hr-genome-workflow.md)
+[Covaris G Tube Shearing](concepts/covaris-g-tube-shearing.md)
+[Fastprep 96 High Throughput Shearing](concepts/fastprep-96-high-throughput-shearing.md)
 

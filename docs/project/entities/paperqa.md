@@ -17,7 +17,7 @@ contested: false
 
 ## Overview
 
-PaperQA is a literature search and summarization system that achieves expert-level performance in scientific information retrieval[1]. Version 2 (PaperQA2) powers the Crow and Falcon agents within [Robin Multi Agent System](robin-multi-agent-system.md)[1].
+PaperQA is a literature search and summarization system that achieves expert-level performance in scientific information retrieval[1]. Version 2 (PaperQA2) powers the Crow and Falcon agents within [Robin Multi Agent System](entities/robin-multi-agent-system.md)[1].
 
 ## Capabilities
 
@@ -42,5 +42,5 @@ PaperQA is a literature search and summarization system that achieves expert-lev
 
 ## Related Systems
 
-- [Robin Multi Agent System](robin-multi-agent-system.md) — Multi-agent system using PaperQA2 as its literature search backbone
-- [Finch Agent](finch-agent.md) — Complementary data analysis agent in Robin workflow
+- [Robin Multi Agent System](entities/robin-multi-agent-system.md) — Multi-agent system using PaperQA2 as its literature search backbone
+- [Finch Agent](entities/finch-agent.md) — Complementary data analysis agent in Robin workflow

@@ -15,7 +15,7 @@ contested: false
 
 # Forked Agent Pattern
 
-A pattern for spawning isolated subagent sessions that share the parent's prompt cache while keeping intermediate output hidden from the parent [1]. Derived from [Claude Code](../entities/claude-code.md) architecture [1].
+A pattern for spawning isolated subagent sessions that share the parent's prompt cache while keeping intermediate output hidden from the parent [1]. Derived from [Claude Code](entities/claude-code.md) architecture [1].
 
 ## Cache-Safe Forking
 
@@ -42,6 +42,6 @@ Fork inherits parent context, so the prompt is a **directive** (what to do), not
 
 ## Related Pages
 
-- [Claude Code](../entities/claude-code.md)
-- [Agent Memory Taxonomy](agent-memory-taxonomy.md)
+- [Claude Code](entities/claude-code.md)
+- [Agent Memory Taxonomy](concepts/agent-memory-taxonomy.md)
 - [[parallel-execution-matrices]]

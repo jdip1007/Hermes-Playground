@@ -15,7 +15,7 @@ contested: false
 
 # Robert G. Webster
 
-**Related:** [Pandemic Influenza Emergence](../concepts/pandemic-influenza-emergence.md), [Yi Guan](yi-guan.md)
+**Related:** [Pandemic Influenza Emergence](concepts/pandemic-influenza-emergence.md), [Yi Guan](entities/yi-guan.md)
 
 ## Overview
 

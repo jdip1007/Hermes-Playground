@@ -15,7 +15,7 @@ contested: false
 
 # Verification-First Workflow
 
-Every task follows: **Run → Verify → Report evidence** [1]. Derived from [Ecc Repo](../entities/ecc-repo.md).
+Every task follows: **Run → Verify → Report evidence** [1]. Derived from [Ecc Repo](entities/ecc-repo.md).
 
 ## Four Steps
 
@@ -38,6 +38,6 @@ Hash fixes and critical changes for integrity verification [1]. Detect unauthori
 
 ## Related Pages
 
-- [Ecc Repo](../entities/ecc-repo.md)
-- [Agent Introspection Debugging](agent-introspection-debugging.md)
-- [Context Compaction Strategies](context-compaction-strategies.md)
+- [Ecc Repo](entities/ecc-repo.md)
+- [Agent Introspection Debugging](concepts/agent-introspection-debugging.md)
+- [Context Compaction Strategies](concepts/context-compaction-strategies.md)

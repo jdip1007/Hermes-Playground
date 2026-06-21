@@ -73,10 +73,10 @@ When accumulated changes affect antigenic or receptor-binding regions, host immu
 
 ## Connections to Other Work
 
-- [Rna Virus Macroevolution](rna-virus-macroevolution.md) — Kitchen et al. (2010) on host-jumping as primary diversification mode; this editorial provides contemporary examples of host adaptation mechanisms
+- [Rna Virus Macroevolution](concepts/rna-virus-macroevolution.md) — Kitchen et al. (2010) on host-jumping as primary diversification mode; this editorial provides contemporary examples of host adaptation mechanisms
 - [[temporal-dynamics-rna-virus-emergence]] — Lu et al. (2024) large-scale analysis of 1,408 genomes showing emergence patterns consistent with reservoir hypothesis discussed here
-- [Phylogenetics Phylodynamics](phylogenetics-phylodynamics.md) — Molecular clock and Bayesian methods used in SARS-CoV-2 TMRCA estimation (Song et al.) and evolutionary rate calculations
-- [Next Generation Sequencing](next-generation-sequencing.md) — Genomic surveillance of emerging viruses depends on NGS platforms for rapid sequencing and variant identification
+- [Phylogenetics Phylodynamics](concepts/phylogenetics-phylodynamics.md) — Molecular clock and Bayesian methods used in SARS-CoV-2 TMRCA estimation (Song et al.) and evolutionary rate calculations
+- [Next Generation Sequencing](concepts/next-generation-sequencing.md) — Genomic surveillance of emerging viruses depends on NGS platforms for rapid sequencing and variant identification
 
 ## References
 

@@ -183,7 +183,7 @@ and memory(action=remove) to delete the original.]
 
 > Silently dropping 会**对用户隐藏攻击**，违反 Hermes 的可见性原则。BLOCKED 占位向 agent 与用户都明示了"曾经有内容在这里且被拦"[1]。
 
-**Prefix cache 不变量保持**：scan 是 deterministic from disk bytes，snapshot 整 session 稳定 → 与冻结快照（[Prompt Caching Optimization](prompt-caching-optimization.md)）兼容[1]。
+**Prefix cache 不变量保持**：scan 是 deterministic from disk bytes，snapshot 整 session 稳定 → 与冻结快照（[Prompt Caching Optimization](concepts/prompt-caching-optimization.md)）兼容[1]。
 
 **威胁模型覆盖（poison 来源）**：
 
@@ -608,12 +608,12 @@ session_search(query="nginx 配置")
 ## 相关页面
 - [[Agent Loop And Prompt Assembly|agent-loop-and-prompt-assembly]]
 
-- [Memory System Architecture](memory-system-architecture.md) — MemoryStore 核心类详细 API（本页）
-- [Security Defense System](security-defense-system.md) — 记忆内容安全扫描
-- [Skills And Memory Interaction](skills-and-memory-interaction.md) — 技能与记忆的交互决策树
-- [Context Compressor Architecture](context-compressor-architecture.md) — 压缩前 `on_pre_compress`（`flush_memories` 已在 v2026.4.30 移除，由 background-review fork 替代）
-- [Prompt Caching Optimization](prompt-caching-optimization.md) — 冻结快照如何保护 prefix cache
-- [Session Search And Sessiondb](session-search-and-sessiondb.md) — Session Search 工具（FTS5 + LLM 摘要）
+- [Memory System Architecture](concepts/memory-system-architecture.md) — MemoryStore 核心类详细 API（本页）
+- [Security Defense System](concepts/security-defense-system.md) — 记忆内容安全扫描
+- [Skills And Memory Interaction](concepts/skills-and-memory-interaction.md) — 技能与记忆的交互决策树
+- [Context Compressor Architecture](concepts/context-compressor-architecture.md) — 压缩前 `on_pre_compress`（`flush_memories` 已在 v2026.4.30 移除，由 background-review fork 替代）
+- [Prompt Caching Optimization](concepts/prompt-caching-optimization.md) — 冻结快照如何保护 prefix cache
+- [Session Search And Sessiondb](concepts/session-search-and-sessiondb.md) — Session Search 工具（FTS5 + LLM 摘要）
 
 ## 相关文件
 

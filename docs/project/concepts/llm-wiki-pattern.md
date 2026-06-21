@@ -41,7 +41,7 @@ Ask questions against the compiled wiki. LLM searches relevant pages, reads them
 
 ### Lint
 
-Periodic health-checks: contradictions between pages, stale claims superseded by newer sources, orphan pages with no inbound links, important concepts lacking their own page, missing cross-references, data gaps fillable via web search [1]. See [Llm Wiki Lint Workflow](llm-wiki-lint-workflow.md) for a specific implementation.
+Periodic health-checks: contradictions between pages, stale claims superseded by newer sources, orphan pages with no inbound links, important concepts lacking their own page, missing cross-references, data gaps fillable via web search [1]. See [Llm Wiki Lint Workflow](concepts/llm-wiki-lint-workflow.md) for a specific implementation.
 
 ## Indexing and Logging
 
@@ -72,5 +72,5 @@ Personal knowledge management, research deep-dives, book companion wikis (like T
 
 ## Related Pages
 
-- [Agent Architecture Patterns](agent-architecture-patterns.md)
-- [Llm Wiki Lint Workflow](llm-wiki-lint-workflow.md)
+- [Agent Architecture Patterns](concepts/agent-architecture-patterns.md)
+- [Llm Wiki Lint Workflow](concepts/llm-wiki-lint-workflow.md)

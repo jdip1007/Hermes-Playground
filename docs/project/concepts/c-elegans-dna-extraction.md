@@ -27,6 +27,6 @@ Method to extract HMW genomic DNA from *C. elegans* strain SX3254 (descendent fr
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Colony Pcr Dna Extraction](colony-pcr-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Colony Pcr Dna Extraction](concepts/colony-pcr-dna-extraction.md)
 

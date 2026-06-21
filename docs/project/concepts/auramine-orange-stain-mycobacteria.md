@@ -78,4 +78,4 @@ This retrospective case series evaluates the effectiveness of auramine orange (A
 
 ## Cross-References
 
-See also: [Antimicrobial Resistance](antimicrobial-resistance.md), [Crispr Amr Diagnostics](crispr-amr-diagnostics.md)
+See also: [Antimicrobial Resistance](concepts/antimicrobial-resistance.md), [Crispr Amr Diagnostics](concepts/crispr-amr-diagnostics.md)

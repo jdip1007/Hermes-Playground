@@ -28,6 +28,6 @@ Method to extract HMW genomic DNA from rabbit liver tissue using QIAGEN Blood an
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Buffy Coat Dna Extraction](buffy-coat-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Buffy Coat Dna Extraction](concepts/buffy-coat-dna-extraction.md)
 

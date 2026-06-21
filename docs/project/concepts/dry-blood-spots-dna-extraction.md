@@ -27,6 +27,6 @@ Method to extract genomic DNA from human blood collected on Whatman FTA cards us
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[High Output Human Blood Sequencing](high-output-human-blood-sequencing.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[High Output Human Blood Sequencing](concepts/high-output-human-blood-sequencing.md)
 

@@ -69,7 +69,7 @@ if findings:
     content = f"[BLOCKED: {filename} contained potential prompt injection: {', '.join(findings)}]"
 ```
 
-**Scope 三分**（详见 [Security Defense System](security-defense-system.md)）：
+**Scope 三分**（详见 [Security Defense System](concepts/security-defense-system.md)）：
 
 - `"all"` — 经典 prompt injection / exfiltration（`ignore previous instructions` / `system prompt override` / `curl $KEY` 等），所有扫描器都用[1]。
 - `"context"`（**Prompt Builder 默认**）— 上面 + 角色扮演 / 身份覆盖 / C2 verbiage（`name yourself X` / `register as a node` / `heartbeat to` / `pull tasking` / `unset CLAUDE|HERMES` / `praxis|cobalt strike|sliver|brainworm`）[1]。
@@ -311,16 +311,16 @@ PR #35276 / `61268ff7a`，关闭 #34667（"哪个块吃掉了我的 token budget
 - "为什么我的 first-token latency 增加？" —— skills index 是嫌疑点（每次都重发，prefix cache 复用至关重要）。
 - "为什么 my smaller-context model 拒绝接 prompt？" —— 看 system + tool-schema 总和。
 
-[Cli Architecture](cli-architecture.md)
+[Cli Architecture](concepts/cli-architecture.md)
 
 ---
 
 ## 与其他系统的关系
 
-- [Tool Registry Architecture](tool-registry-architecture.md) — 技能条件激活依赖可用工具集
-- [Context Compressor Architecture](context-compressor-architecture.md) — 压缩后的消息列表传给 prompt builder 重建提示
-- [Memory System Architecture](memory-system-architecture.md) — memory 指导是提示的一部分
-- [Agent Loop And Prompt Assembly](agent-loop-and-prompt-assembly.md) — prompt builder 被 agent 循环调用
+- [Tool Registry Architecture](concepts/tool-registry-architecture.md) — 技能条件激活依赖可用工具集
+- [Context Compressor Architecture](concepts/context-compressor-architecture.md) — 压缩后的消息列表传给 prompt builder 重建提示
+- [Memory System Architecture](concepts/memory-system-architecture.md) — memory 指导是提示的一部分
+- [Agent Loop And Prompt Assembly](concepts/agent-loop-and-prompt-assembly.md) — prompt builder 被 agent 循环调用
 
 ## Related Pages
 

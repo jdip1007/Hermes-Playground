@@ -51,7 +51,7 @@ Ericsson himself later acknowledged his work was massively misinterpreted. After
 
 **Key experiment (1969):** Participants rating words on pleasantness remembered them as well or better than participants whose explicit goal was to remember and understand the same list — because rating forced comparison with prior experiences, creating mini-knowledge networks [1].
 
-**Takeaway:** Memory and understanding are *byproducts* of deep processing (making comparisons, evaluations, forming knowledge networks). Real learning is about the process, not the intent [1]. Cross-references: [Learning Strategies Schema Building](learning-strategies-schema-building.md)
+**Takeaway:** Memory and understanding are *byproducts* of deep processing (making comparisons, evaluations, forming knowledge networks). Real learning is about the process, not the intent [1]. Cross-references: [Learning Strategies Schema Building](concepts/learning-strategies-schema-building.md)
 
 ## Rule 4: "To remember what you learn, write it down"
 
@@ -71,7 +71,7 @@ Ericsson himself later acknowledged his work was massively misinterpreted. After
 
 **Why it's wrong:** Difficulty *is* where learning happens. The value comes from developing the ability to think about difficult things in ways that make them manageable. Analogy: a heavy weight at the gym is hard because it's heavy — that's not the manufacturer's fault, that's the point [1].
 
-Getting something easier removes the learning. The process of struggling with difficulty and building new mental frameworks *is* the learning [1]. Cross-references: [Learning Strategies Schema Building](learning-strategies-schema-building.md) (desirable difficulty)
+Getting something easier removes the learning. The process of struggling with difficulty and building new mental frameworks *is* the learning [1]. Cross-references: [Learning Strategies Schema Building](concepts/learning-strategies-schema-building.md) (desirable difficulty)
 
 ## Rule 6: "If you can't explain it simply, you don't understand it"
 
@@ -92,8 +92,8 @@ True expertise involves holding complexity in mind and knowing when simplificati
 
 ## Related Concepts
 
-[Learning Strategies Schema Building](learning-strategies-schema-building.md) — 5 learning myths debunked + schema building framework (Bjork, Vygotsky, Dunlosky)
-[Productivity General](productivity-general.md) — General productivity principles from neuroscience and behavioral psychology
-[Critical Thinking](critical-thinking.md) — Dual process theory connected to deep vs shallow processing quality
+[Learning Strategies Schema Building](concepts/learning-strategies-schema-building.md) — 5 learning myths debunked + schema building framework (Bjork, Vygotsky, Dunlosky)
+[Productivity General](concepts/productivity-general.md) — General productivity principles from neuroscience and behavioral psychology
+[Critical Thinking](concepts/critical-thinking.md) — Dual process theory connected to deep vs shallow processing quality
 
 [1]: raw/articles/youtube-ancient-learning-rules-TEDCHgZKXSY.txt

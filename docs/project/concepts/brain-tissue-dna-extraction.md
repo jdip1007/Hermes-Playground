@@ -27,7 +27,7 @@ Method to extract HMW genomic DNA from human brain tissue using QIAGEN MagAttrac
 
 ## Related Topics
 
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Frog Muscle Dna Extraction](frog-muscle-dna-extraction.md)
-[Lizard Tissue Dna Extraction](lizard-tissue-dna-extraction.md)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Frog Muscle Dna Extraction](concepts/frog-muscle-dna-extraction.md)
+[Lizard Tissue Dna Extraction](concepts/lizard-tissue-dna-extraction.md)
 

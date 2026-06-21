@@ -117,11 +117,11 @@ Approximately 70% clinically grounded, 20% plausible but oversimplified, 10% pop
 
 ## Related Concepts
 
-[Rumination Psychology](../concepts/rumination-psychology.md) — Core construct of rumination vs reflection
-[Default Mode Network Depression](../concepts/default-mode-network-depression.md) — DMN hyperactivity research
-[Metacognitive Therapy Wells](../concepts/metacognitive-therapy-wells.md) — Wells' S-REF model and treatment approach
-[Flow State And Self Consciousness](../concepts/flow-state-and-self-consciousness.md) — Flow state requirements and self-awareness incompatibility
-[Hypervigilance Childhood Trauma](../concepts/hypervigilance-childhood-trauma.md) — Hypervigilance as adaptation from unstable environments
-[Empathic Distress Compassion Fatigue](../concepts/empathic-distress-compassion-fatigue.md) — Empathic distress vs compassion fatigue distinction
-[Anhedonia And Depression](../concepts/anhedonia-and-depression.md) — Depression presenting as numbness rather than sadness
-[Private Self Consciousness](../concepts/private-self-consciousness.md) — Self-surveillance and private self-consciousness trait
+[Rumination Psychology](concepts/rumination-psychology.md) — Core construct of rumination vs reflection
+[Default Mode Network Depression](concepts/default-mode-network-depression.md) — DMN hyperactivity research
+[Metacognitive Therapy Wells](concepts/metacognitive-therapy-wells.md) — Wells' S-REF model and treatment approach
+[Flow State And Self Consciousness](concepts/flow-state-and-self-consciousness.md) — Flow state requirements and self-awareness incompatibility
+[Hypervigilance Childhood Trauma](concepts/hypervigilance-childhood-trauma.md) — Hypervigilance as adaptation from unstable environments
+[Empathic Distress Compassion Fatigue](concepts/empathic-distress-compassion-fatigue.md) — Empathic distress vs compassion fatigue distinction
+[Anhedonia And Depression](concepts/anhedonia-and-depression.md) — Depression presenting as numbness rather than sadness
+[Private Self Consciousness](concepts/private-self-consciousness.md) — Self-surveillance and private self-consciousness trait

@@ -62,7 +62,7 @@ Fragment size assessed via Femto Pulse.[1] Libraries prepared using the Ligation
 
 ## Related Topics
 
-[Human Cell Line Dna Puregene Extraction](human-cell-line-dna-puregene-extraction.md) — Alternative Oxford Nanopore protocol using QIAGEN Puregene Cell Kit (smaller scale, 5 × 10⁶ cells)
-[Nanopore Sequencing Minion](nanopore-sequencing-minion.md)
-[Blood Culture Broth Dna Extraction](blood-culture-broth-dna-extraction.md)
-[Next Generation Sequencing](next-generation-sequencing.md)
+[Human Cell Line Dna Puregene Extraction](concepts/human-cell-line-dna-puregene-extraction.md) — Alternative Oxford Nanopore protocol using QIAGEN Puregene Cell Kit (smaller scale, 5 × 10⁶ cells)
+[Nanopore Sequencing Minion](concepts/nanopore-sequencing-minion.md)
+[Blood Culture Broth Dna Extraction](concepts/blood-culture-broth-dna-extraction.md)
+[Next Generation Sequencing](concepts/next-generation-sequencing.md)

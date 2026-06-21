@@ -118,8 +118,8 @@ This is called **cognitive offload** — using external tools to reduce working 
 
 ## Cross-References
 
-- [Justin Sung Learning Guide](justin-sung-learning-guide.md) — The broader 4-hour learning framework (Three Pillars, PACER, GRIND, RAIL) that this memory model supports
-- [Learning Strategies Schema Building](learning-strategies-schema-building.md) — Bjork's desirable difficulty and schema building theory that underpin the encoding strategies discussed here
+- [Justin Sung Learning Guide](concepts/justin-sung-learning-guide.md) — The broader 4-hour learning framework (Three Pillars, PACER, GRIND, RAIL) that this memory model supports
+- [Learning Strategies Schema Building](concepts/learning-strategies-schema-building.md) — Bjork's desirable difficulty and schema building theory that underpin the encoding strategies discussed here
 
 ## Notes
 

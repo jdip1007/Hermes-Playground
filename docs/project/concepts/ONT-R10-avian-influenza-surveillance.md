@@ -114,9 +114,9 @@ The HA multibasic cleavage site is a **homopolymer of basic amino acids** (argin
 
 ## Cross-References
 
-- [Clinical Metagenomics Viral Detection](clinical-metagenomics-viral-detection.md) — broader clinical metagenomics context  
-- [Pandemic Influenza Emergence](pandemic-influenza-emergence.md) — influenza pandemic preparedness framework  
-- [Next Generation Sequencing](next-generation-sequencing.md) — sequencing technology comparison  
+- [Clinical Metagenomics Viral Detection](concepts/clinical-metagenomics-viral-detection.md) — broader clinical metagenomics context  
+- [Pandemic Influenza Emergence](concepts/pandemic-influenza-emergence.md) — influenza pandemic preparedness framework  
+- [Next Generation Sequencing](concepts/next-generation-sequencing.md) — sequencing technology comparison  
 
 ## Confidence Assessment
 
