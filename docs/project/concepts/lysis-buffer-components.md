@@ -43,7 +43,7 @@ Chaotropic salts disrupt hydrogen bonding networks in water, denaturing proteins
 
 **Limitations:** Can inhibit some downstream enzymatic reactions if not fully removed. Maximum solubility limits concentration ceiling (~6 M). May clump during storage due to moisture absorption.
 
-### Guanidine Isothiocyanate (GuSCN)
+### Guanidine Isothiocyanate (GuSCN) / Guanidinium Thiocyanate (GITC/GTC)
 
 - **CAS:** 508-52-3
 - **Formula:** CH₄N₃S
@@ -51,18 +51,25 @@ Chaotropic salts disrupt hydrogen bonding networks in water, denaturing proteins
 - **Appearance:** White crystalline solid
 - **Solubility in water:** ~7 M at room temperature
 
-**Mechanism:** Similar chaotropic action to GuHCl but with an additional isothiocyanate group (-N=C=S) that provides enhanced protein denaturation through covalent modification of amino groups. The thiocyanate moiety can react with lysine residues, adding a layer of irreversible inactivation beyond simple denaturation.
+**Mechanism:** Similar chaotropic action to GuHCl but with an additional isothiocyanate group (-N=C=S) that provides enhanced protein denaturation through covalent modification of amino groups. The thiocyanate moiety can react with lysine residues, adding a layer of irreversible inactivation beyond simple denaturation.[1] Both the guanidinium cation AND the isothiocyanate anion are chaotropic, making GITC one of the strongest protein denaturants known.[2]
 
 **Kit applications:**
 - Qiagen AL Buffer (~5 M GuSCN + detergent) — equalizes chaotropic conditions for silica binding across all sample types
 - QIAamp DNA Mini Kit (tissue lysis step)
 - QIAamp DNA Stool Mini Kit Lysis Buffer A
+- TRIzol/AGPC RNA extraction protocols (4 M GITC)
 
-**Safety:** More hazardous than GuHCl. H302 (harmful if swallowed), H315, H319, H335. The isothiocyanate group can release toxic hydrogen cyanide upon heating or acidification. Requires careful handling in a fume hood.
+**Safety:** More hazardous than GuHCl. H302 (harmful if swallowed), H315, H319, H335. The isothiocyanate group can release toxic hydrogen cyanide upon heating or acidification. Requires careful handling in a fume hood.[2]
 
-**Advantages:** Stronger chaotrope than GuHCl (~5 M vs ~4 M typical), broader protein denaturation spectrum, effective for tough tissue samples and stool matrices containing complex inhibitors.
+**Advantages:** Stronger chaotrope than GuHCl (~5 M vs ~4 M typical), broader protein denaturation spectrum, effective for tough tissue samples and stool matrices containing complex inhibitors. Superior RNase inactivation compared to GuHCl alone.[1][2]
 
 **Limitations:** Higher toxicity profile, more expensive, potential cyanide release hazard, can interfere with downstream applications if carryover occurs.
+
+### Guanidine Hydrochloride (GuHCl) / Guanidinium Chloride (GdmCl/Gdm·Cl)
+
+- **CAS:** 50-01-1
+- **Formula:** CH₅N₃·HCl
+- **Molecular weight:** 95.53 g/mol
 
 ### Sodium Dodecyl Sulfate (SDS) / Sodium Lauryl Sulphate (SLS)
 
@@ -392,9 +399,15 @@ Chelators bind metal ions that serve as cofactors for nucleases and other degrad
 
 ---
 
+## Related Topics
+
+[Guanidine Based Cell Lysis](concepts/guanidine-based-cell-lysis.md) — Comprehensive guide to guanidine-based cell lysis mechanisms and protocols
+[Atl Al Cell Lysis Buffers](concepts/atl-al-cell-lysis-buffers.md) — Qiagen ATL/AL buffer compositions and mechanisms
+
 ## References
 
-1. Sigma-Aldrich (Merck). Guanidine Hydrochloride Product Information Sheet (G7153, G4505). https://www.sigmaaldrich.com/deepweb/assets/sigmaaldrich/product/documents/252/554/g7153pis.pdf
+1. BenchChem Technical Support Team. "The Principle of Guanidine-Based Cell Lysis: An In-depth Technical Guide." BenchChem, April 2026. https://www.benchchem.com/product/b092328/docs
+2. Sigma-Aldrich (Merck). Guanidine Hydrochloride Product Information Sheet (G7153, G4505). https://www.sigmaaldrich.com/deepweb/assets/sigmaaldrich/product/documents/252/554/g7153pis.pdf
 2. Sigma-Aldrich (Merck). Triton X-100 Product Information Sheet (T8532, X100). https://www.merckmillipore.com/deepweb/assets/sigmaaldrich/product/documents/160/855/t8532pis.pdf
 3. Sigma-Aldrich (Merck). Lysozyme from Chicken Egg White Product Information Sheet. https://www.sigmaaldrich.com/deepweb/assets/sigmaaldrich/product/documents/319/164/23193256rev0325-ms.pdf
 4. Thermo Fisher Scientific. Detergents for Cell Lysis and Protein Extraction (Pierce). https://www.thermofisher.com/us/en/home/life-science/protein-biology/protein-biology-learning-center/protein-biology-resource-library/pierce-protein-methods/detergents-cell-lysis-protein-extraction.html

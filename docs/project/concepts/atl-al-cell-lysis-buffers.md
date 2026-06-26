@@ -122,7 +122,18 @@ Proteinase K (a broad-spectrum serine protease from *Engyodontium album*) requir
 
 **For tissue samples:** ATL alone is insufficient for dense connective tissues. Mechanical homogenization or extended Proteinase K digestion overnight at 56°C is recommended.[2]
 
+## Viral Inactivation Efficacy
+
+Guanidinium-based lysis buffers (ATL, AL) are highly effective at inactivating viruses during sample processing:
+
+**Enveloped animal viruses:** Complete inactivation of CAV-2 and CCoV achieved within 1-minute contact times using Qiagen AL/AVL or Roche MPLB buffers.[4] Even at lower-than-recommended concentrations, these buffers achieve ≥99.99% inactivation.
+
+**Non-enveloped human viruses (HAV):** All tested guanidinium buffers reduced HAV titre by ≥4.5 log₁₀, but residual infectivity remained. Only the combination of Buffer AL + heat treatment achieved highly efficient complete inactivation.[4]
+
+**SARS-CoV-2:** Guanidinium isothiocyanate + detergent + isopropanol achieves ≥1×10⁵ TCID₅₀/mL inactivation. Detergent alone without isopropanol yields incomplete inactivation (1×10⁴ reduction only).[1]
+
 ## Related Topics
 
 [Blood Culture Broth Dna Extraction](concepts/blood-culture-broth-dna-extraction.md)
 [Lysis Buffer Components](concepts/lysis-buffer-components.md)
+[Guanidine Based Cell Lysis](concepts/guanidine-based-cell-lysis.md)
