@@ -55,6 +55,36 @@ The video notes the garlic oil is versatile[1]:
 
 Chaoshan beef soup represents the Chaoshan culinary philosophy: superior ingredients need minimal seasoning. The dish is closely related to Chaoshan beef hotpot (潮汕牛肉火锅), but focuses on a soup/broth preparation rather than the communal hotpot dining style. The key distinguishing feature is the emphasis on clear, clean broth over complex spice profiles.
 
+### Original Chinese Transcript (原文)
+
+OCR-extracted text overlays from the video[1]:
+
+| Time | Chinese Text |
+|------|-------------|
+| 0s | 潮汕牛肉汤 |
+| 5s | 这是我们每个潮汕妈妈 |
+| 10s | 亚洲三大名汤之一 |
+| 15s | 毫无保留的分享给大家 |
+| 25s | 老话说的好 |
+| 35s | 口感嫩滑 |
+| 40s | 不要提前放盐 |
+| 45s | 掩盖住清甜味 |
+| 50s | 这样烫出来的牛肉啊 |
+| 60s | 刷到视频就是缘分 |
+| 65s | 真的谢谢大家了 |
+| 70s | 芹菜段 |
+| 75s | 喝起来清爽鲜美 |
+| 80s | 这个蒜头酥啊 |
+| 85s | 调配好的蒜头酥油 |
+| 90s | 蒸云吞。拌面 |
+| 100s | 非常的方便 |
+| 105s | 放入孩子爱吃的青菜 |
+| 115s | 这里要注意时间 |
+| 120s | 水开后烫个10秒断生啊 |
+| 125s | 还有这锅 |
+| 130s | 我们给它撇净浮沫 |
+| 140s | 汤色清亮通透 |
+
 ### Related Topics
 
 *No related wiki pages yet — potential future entries: Chaoshan cuisine, Chinese beef dishes, Guangdong cuisine*
