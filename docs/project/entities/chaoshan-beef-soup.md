@@ -1,91 +1,60 @@
 ---
 title: "Chaoshan Beef Soup (潮汕牛肉汤)"
-summary: "Traditional Chaoshan-style clear beef soup — a Guangdong regional specialty featuring fresh-cut beef in a clean, aromatic broth with minimal seasoning to highlight the meat's natural flavor"
+summary: "Traditional Chaoshan-style clear beef soup — one of Asia's three famous soups. Features fresh-cut beef in a clean, aromatic broth with crispy garlic oil and minimal seasoning."
+tags: [food, chinese-cuisine, guangdong, chaoshan, recipe, soup]
 created: 2026-06-27
 updated: 2026-06-27
-type: entity
-tags: [chaoshan, guangdong, chinese-cuisine, beef-soup, hotpot, recipe]
 sources:
-  - type: video
-    url: "https://youtube.com/shorts/7YSQI0hFs4c"
-    title: "潮汕牛肉汤教程 (Chaoshan Beef Soup Tutorial)"
-    author: "三分钟美食 (Three-Minute Meals)"
-    date: 2026-06-27
-confidence: medium
-contested: false
+  - type: youtube
+    url: https://youtube.com/shorts/7YSQI0hFs4c
+    title: "潮汕牛肉汤教程"
+    channel: "三分钟美食 (Three-Minute Meals)"
+    views: 470K
 ---
 
-## Overview
+## Chaoshan Beef Soup (潮汕牛肉汤)
 
-**Chaoshan beef soup** (潮汕牛肉汤, *Cháoshàn niúròu tāng*) is a traditional dish from the Chaoshan region of eastern Guangdong province, China. It features fresh-cut beef simmered in a clear, clean broth with minimal seasoning — the philosophy being that superior ingredients need little embellishment [1].
+A traditional dish from eastern Guangdong province[1]. The video calls it **one of Asia's three famous soups** (亚洲三大名汤之一)[1]. Every Chaoshan mother has her own version — this tutorial shares the recipe without reservation[1].
 
-The dish is closely related to Chaoshan beef hotpot (潮汕牛肉火锅), but focuses on a soup/broth preparation rather than the communal hotpot dining style. The key distinguishing feature is the emphasis on beef quality and precise cutting techniques over complex spice profiles [1].
+### Ingredients
 
-## Ingredients
+* **Beef** — fresh-cut, thin slices
+* **Ginger** — sliced
+* **Scallions** — cut into segments (葱段)
+* **Celery** — cut into segments (芹菜段)
+* **Garlic oil** — pre-made crispy garlic oil (蒜头酥油)[1]
+* **Green vegetables** — for children (青菜)
+* **Salt** — added at the end only
 
-### Main
-- **Beef** — 500g, preferably fresh-cut (not frozen). Traditional cuts include:
-  - Brisket (牛腩) — for richer flavor
-  - Shank (牛腱) — for texture
-  - Tenderloin (牛里脊) — for tenderness
-- **Water** — 1.5–2L for the broth base
+### Method
 
-### Aromatics
-- **Ginger** — 3–4 slices, lightly smashed
-- **Scallions** (大葱/小葱) — 2 stalks, cut into sections
-- **Cooking wine** (料酒) — 1 tbsp, for blanching
+1. **Prepare broth base** — Add ginger and scallion segments to water, bring to a boil[1]
+2. **Add beef** — The old saying goes: blanching gives tender, smooth texture (口感嫩滑)[1]
+3. **Skim impurities** — Remove all floating foam from the surface (撇净浮沫) for clear broth[1]
+4. **Season at the end** — Do not add salt early; it masks the natural sweetness of the beef (不要提前放盐，掩盖住清甜味)[1]
+5. **Add vegetables** — Put in green vegetables children love to eat (放入孩子爱吃的青菜)[1]
+6. **Blanch time matters** — Once water boils, blanch for just 10 seconds until barely cooked through (水开后烫个10秒断生)[1]
+7. **Finish with garlic oil** — Drizzle pre-made crispy garlic oil over the soup (调配好的蒜头酥油)[1]
 
-### Seasonings
-- **Salt** — to taste (added at the end)
-- **White pepper** — a pinch, optional
-- **Sesame oil** — a few drops, drizzled before serving
+### Key Principles
 
-### Garnish (optional)
-- Fresh cilantro (香菜)
-- Chopped scallions
-- Thinly sliced green onion
+* **Clear broth** — The final soup should be clear and transparent (汤色清亮通透), refreshing and savory (清爽鲜美)[1]
+* **Salt last** — Adding salt early masks the natural sweetness of the beef[1]
+* **Quick blanching** — 10 seconds is enough; overcooking ruins texture[1]
+* **Garlic oil** — Pre-made crispy garlic oil adds depth without clouding the broth[1]
 
-## Method
+### Uses for Garlic Oil (蒜头酥油)
 
-### Step 1: Prepare the Beef [1]
-1. Cut beef into uniform pieces (~2–3 cm cubes or thin slices, depending on cut)
-2. Soak in cold water for 20–30 minutes to draw out excess blood — this ensures a clear broth
-3. Drain and pat dry
+The video notes the garlic oil is versatile[1]:
+* Drizzle over soup
+* Steam wontons (蒸云吞)[1]
+* Toss with noodles (拌面)[1]
+* Very convenient to have on hand (非常的方便)[1]
 
-### Step 2: Blanch the Beef [1]
-1. Bring a pot of water to a boil
-2. Add beef pieces, 1 tbsp cooking wine, and ginger slices
-3. Boil for 2–3 minutes until scum forms on surface
-4. Remove beef, discard blanching water, rinse beef under cold water
-5. This step removes impurities and ensures a clean-tasting final broth
+### Cultural Context
 
-### Step 3: Build the Broth [1]
-1. In a clean pot, add fresh water (1.5–2L)
-2. Add blanched beef, ginger slices, and scallion sections
-3. Bring to a boil over high heat, then reduce to a gentle simmer
-4. Skim off any remaining foam that rises to the surface
-5. Simmer for 40–60 minutes (longer for tougher cuts like brisket)
+Chaoshan beef soup represents the Chaoshan culinary philosophy: superior ingredients need minimal seasoning. The dish is closely related to Chaoshan beef hotpot (潮汕牛肉火锅), but focuses on a soup/broth preparation rather than the communal hotpot dining style. The key distinguishing feature is the emphasis on clear, clean broth over complex spice profiles.
 
-### Step 4: Finish and Serve [1]
-1. Remove scallion stalks from the broth
-2. Season with salt to taste — add white pepper if desired
-3. Ladle into bowls, ensuring each serving has both broth and beef pieces
-4. Drizzle a few drops of sesame oil
-5. Garnish with fresh cilantro and chopped scallions
-
-## Key Principles [1]
-
-- **Clarity over complexity** — The broth should be clear and clean-tasting, not cloudy or heavily spiced
-- **Beef quality is paramount** — Fresh, high-quality beef is the star; frozen or low-grade meat will not produce good results
-- **Minimal seasoning** — Salt is added only at the end to preserve the natural beef flavor
-- **Blanching is essential** — Skipping this step results in a cloudy, gamey-tasting broth
-
-## Variations [1]
-
-- **With noodles** — Add rice noodles (河粉) or wheat noodles to the soup for a heartier meal
-- **With vegetables** — Add bok choy, napa cabbage, or winter melon during the last 10 minutes of simmering
-- **Hotpot style** — Serve the broth in a hotpot with raw beef slices for diners to cook at the table
-
-## Related Topics
+### Related Topics
 
 *No related wiki pages yet — potential future entries: Chaoshan cuisine, Chinese beef dishes, Guangdong cuisine*
