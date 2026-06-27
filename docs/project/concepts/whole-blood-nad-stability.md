@@ -10,6 +10,14 @@ sources:
     url: "https://www.nature.com/natmetab/"
     title: "Whole-blood NAD+ levels do not vary with age or lifestyle interventions" (Trętowicz et al., Nature Metabolism, 2026)
     date: 2026-01-01
+  - type: wiki
+    url: "https://en.wikipedia.org/wiki/Nicotinamide_adenine_dinucleotide"
+    title: "Nicotinamide adenine dinucleotide" (Wikipedia)
+    date: 2026-06-27
+  - type: wiki
+    url: "https://en.wikipedia.org/wiki/Sirtuin"
+    title: "Sirtuin" (Wikipedia)
+    date: 2026-06-27
 confidence: high
 contested: true
 ---
@@ -58,6 +66,24 @@ The findings raise questions about the rationale behind NAD+-boosting supplement
 
 Whole-blood NAD+ should not be used as an aging biomarker or intervention readout in clinical trials.[1] The study highlights the importance of distinguishing between compartmentalized metabolite pools — blood measurements may not reflect tissue-level changes that are more relevant to aging phenotypes.[1]
 
+## Background: The NAD+ Decline Hypothesis
+
+### Historical Context
+
+The "NAD World" hypothesis was proposed by Shin-ichiro Imai in 2009, postulating that key regulators of aging and longevity in mammals are sirtuin 1 (SIRT1) and the primary NAD+ synthesizing enzyme nicotinamide phosphoribosyltransferase (NAMPT).[2] In 2016, Imai expanded this to "NAD World 2.0," which postulates that extracellular NAMPT from adipose tissue maintains NAD+ in the hypothalamus (the control center) in conjunction with myokines from skeletal muscle cells.[2]
+
+### Mechanistic Basis
+
+Li et al. found that NAD+ directly regulates protein-protein interactions, showing that one of the causes of age-related decline in DNA repair may be increased binding of the protein DBC1 (Deleted in Breast Cancer 1) to PARP1 (poly[ADP–ribose] polymerase 1) as NAD+ levels decline during aging.[2] The decline in cellular concentrations of NAD+ during aging likely contributes to the aging process and to the pathogenesis of chronic diseases of aging.[2]
+
+### Sirtuins and NAD+ Dependence
+
+Sirtuins are a family of signaling proteins involved in metabolic regulation. Unlike other known protein deacetylases, which simply hydrolyze acetyl-lysine residues, sirtuin-mediated deacetylation couples lysine deacetylation to NAD+ hydrolysis.[3] This hydrolysis yields O-acetyl-ADP-ribose, the deacetylated substrate and nicotinamide (which is itself an inhibitor of sirtuin activity).[3] Sirtuins are particularly interesting targets for anti-aging drugs since activation of these NAD+-dependent deacetylases extends lifespan in some animal models.[2]
+
+### Evidence Status
+
+Wikipedia notes that "evidence for age-associated NAD+ decline in humans remains inconsistent and may depend on the tissue or biological compartment examined, with recent studies reporting stable whole-blood NAD+ levels across age and lifestyle interventions."[2] This directly contextualizes the Trętowicz et al. findings within the broader literature.[1][2]
+
 ## Caveats and Limitations
 
 **Whole blood does not equal tissue levels.** Blood NAD+ stability does not rule out NAD+ decline in specific tissues (brain, muscle, liver, immune cells) where most aging-related NAD+ research has focused.[1] Intracellular compartments may behave differently from the extracellular/blood pool.
@@ -70,6 +96,6 @@ Whole-blood NAD+ should not be used as an aging biomarker or intervention readou
 
 ## Related Topics
 
-[Nad Precursors Supplementation](concepts/nad-precursors-supplementation.md)
+[[nad-precursors-supplementation]]
 [[hallmarks-of-aging-metabolic-dysfunction]]
 [[sirtuins-nad-dependent-deacetylases]]

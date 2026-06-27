@@ -10,6 +10,14 @@ sources:
     url: "https://www.nature.com/natmetab/"
     title: "Whole-blood NAD+ levels do not vary with age or lifestyle interventions" (Trętowicz et al., Nature Metabolism, 2026)
     date: 2026-01-01
+  - type: wiki
+    url: "https://en.wikipedia.org/wiki/Nicotinamide_adenine_dinucleotide"
+    title: "Nicotinamide adenine dinucleotide" (Wikipedia)
+    date: 2026-06-27
+  - type: wiki
+    url: "https://en.wikipedia.org/wiki/Sirtuin"
+    title: "Sirtuin" (Wikipedia)
+    date: 2026-06-27
 confidence: medium
 contested: true
 ---
@@ -85,9 +93,33 @@ The study does not rule out tissue-specific NAD+ decline — it specifically add
 - Blood measurements are poor proxies for target tissues[1]
 - Supplementation strategies may need to be tissue-targeted rather than systemic[1]
 
-### 3. Mechanism of Action Reassessment
+## Mechanism of Action Reassessment
 
 If NAD+ precursors work through mechanisms beyond simply "boosting NAD+ levels" (e.g., modulating sirtuin activity, affecting NAMPT expression, or influencing circadian rhythms), then the focus on blood NAD+ as a primary readout may be misplaced.[1]
+
+## NMN/NR Supplement Evidence from Literature
+
+### Slc12a8 Transporter Controversy
+
+NMN absorption in mice depends on the Slc12a8 transporter, which is absent in humans. This raises questions about whether oral NMN supplementation achieves meaningful intracellular concentrations in human tissues.[4] The absence of this transporter suggests that NMN may be degraded extracellularly by CD38 enzyme before reaching target cells.[4]
+
+### Clinical Trial Results
+
+- **Insulin sensitivity:** Some trials report modest improvements, but results are inconsistent across studies
+- **Aerobic capacity:** Limited evidence for improved VO2 max or exercise performance in healthy adults
+- **6-minute walk test:** Mixed results in older populations; some studies show no significant improvement over placebo
+- **Blood NAD+ elevation:** Consistently demonstrated, but functional relevance remains unclear[4]
+
+### CD38 Enzyme Degradation
+
+CD38 is an NAD+-consuming enzyme expressed on immune cells and endothelial cells. It degrades extracellular NMN before it can reach target tissues.[4] This may explain why oral NMN supplementation shows limited efficacy in humans despite promising results in mouse models lacking CD38 expression patterns similar to humans.[4]
+
+### Regulatory Status and Market Claims
+
+- **NR:** Generally recognized as safe (GRAS) status in some jurisdictions; sold as dietary supplement
+- **NMN:** FDA issued warning letters (2022) stating NMN cannot be marketed as a dietary supplement because it entered clinical trials first — creating regulatory uncertainty[1]
+- **Quality control:** Supplement industry self-regulated; independent testing reveals significant variability in actual NAD+ precursor content across brands
+- **High-cost unlicensed infusions:** In the UK, NAD+ infusions have been claimed to be "clinically proven" and "effective" treatment for alcoholism and drug abuse — but NAD+ is not approved or licensed for medical use[2]
 
 ## Open Questions
 
@@ -98,6 +130,6 @@ If NAD+ precursors work through mechanisms beyond simply "boosting NAD+ levels" 
 
 ## Related Topics
 
-[Whole Blood Nad Stability](concepts/whole-blood-nad-stability.md)
+[[whole-blood-nad-stability]]
 [[sirtuins-nad-dependent-deacetylases]]
 [[hallmarks-of-aging-metabolic-dysfunction]]
