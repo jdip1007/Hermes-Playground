@@ -130,6 +130,6 @@ CD38 is an NAD+-consuming enzyme expressed on immune cells and endothelial cells
 
 ## Related Topics
 
-[[whole-blood-nad-stability]]
+[Whole Blood Nad Stability](concepts/whole-blood-nad-stability.md)
 [[sirtuins-nad-dependent-deacetylases]]
 [[hallmarks-of-aging-metabolic-dysfunction]]

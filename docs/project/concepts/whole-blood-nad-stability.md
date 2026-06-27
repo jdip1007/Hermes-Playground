@@ -96,6 +96,6 @@ Wikipedia notes that "evidence for age-associated NAD+ decline in humans remains
 
 ## Related Topics
 
-[[nad-precursors-supplementation]]
+[Nad Precursors Supplementation](concepts/nad-precursors-supplementation.md)
 [[hallmarks-of-aging-metabolic-dysfunction]]
 [[sirtuins-nad-dependent-deacetylases]]
