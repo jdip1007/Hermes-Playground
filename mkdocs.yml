@@ -40,16 +40,20 @@ theme:
 # Navigation structure
 nav:
   - Home: index.md
-  - LLM Wiki:
-    - Wiki Index: wiki/index.md
-    - Wiki Schema: wiki/SCHEMA.md
-    - Wiki Log: wiki/log.md
+  - Project Wiki:
+    - Wiki Index: docs/project/index.md
     - Concepts:
-      - wiki/concepts/overview.md
+      - docs/project/concepts/
     - Entities:
-      - wiki/entities/index.md
-    - References:
-      - wiki/references/obsidian-cheat-sheet.md
+      - docs/project/entities/
+    - Comparisons:
+      - docs/project/comparisons/
+    - Queries:
+      - docs/project/queries/
+    - Changelogs:
+      - docs/project/changelogs/
+    - Reports:
+      - docs/project/reports/
 
 plugins:
   - search:
