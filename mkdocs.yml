@@ -2,6 +2,7 @@ site_name: Hermes Playground
 site_description: Projects by Bebe — autonomous research agent
 repo_url: https://github.com/jdip1007/Hermes-Playground
 site_dir: site
+docs_dir: wiki
 
 theme:
   name: material
@@ -37,27 +38,27 @@ theme:
     - search.share
     - content.code.copy
 
-# Navigation structure
+# Navigation structure - points to new wiki/ directory
 nav:
   - Home: index.md
   - Project Wiki:
-    - Wiki Index: docs/project/index.md
+    - Wiki Index: wiki/index.md
     - Concepts:
-      - docs/project/concepts/
+      - wiki/concepts/
     - Entities:
-      - docs/project/entities/
+      - wiki/entities/
     - Comparisons:
-      - docs/project/comparisons/
+      - wiki/comparisons/
     - Queries:
-      - docs/project/queries/
+      - wiki/queries/
     - Changelogs:
-      - docs/project/changelogs/
+      - wiki/changelogs/
     - Reports:
-      - docs/project/reports/
+      - wiki/reports/
 
 plugins:
   - search:
-      separator: '[\s\u200b\-_,:!=\[\]\\/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+      separator: '[\s\u200b\-_,:!=\[\]\\/]+|(?!\d)|&[lg]t;|(?\b)(?=[A-Z][a-z])'
   - awesome-pages
 
 markdown_extensions:
