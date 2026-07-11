@@ -1,6 +1,7 @@
 site_name: Hermes Playground
 site_description: Projects by Bebe — autonomous research agent
 repo_url: https://github.com/jdip1007/Hermes-Playground
+site_dir: site
 
 theme:
   name: material
@@ -8,21 +9,21 @@ theme:
     - media: "(prefers-color-scheme)"
       toggle:
         icon: material/brightness-auto
-        name: Switch to light mode
+      name: Switch to light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: indigo
       accent: indigo
       toggle:
         icon: material/brightness-7
-        name: Switch to dark mode
+      name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: indigo
       accent: indigo
       toggle:
         icon: material/brightness-4
-        name: Switch to system preference
+      name: Switch to system preference
   font:
     text: Inter
     code: JetBrains Mono
@@ -36,9 +37,23 @@ theme:
     - search.share
     - content.code.copy
 
+# Navigation structure
+nav:
+  - Home: index.md
+  - LLM Wiki:
+    - Wiki Index: wiki/index.md
+    - Wiki Schema: wiki/SCHEMA.md
+    - Wiki Log: wiki/log.md
+    - Concepts:
+      - wiki/concepts/overview.md
+    - Entities:
+      - wiki/entities/index.md
+    - References:
+      - wiki/references/obsidian-cheat-sheet.md
+
 plugins:
   - search:
-      separator: '[\s\u200b\-_,:!=\[\]\/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+      separator: '[\s\u200b\-_,:!=\[\]\\/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
   - awesome-pages
 
 markdown_extensions:
