@@ -1,0 +1,164 @@
+{
+  "success": [
+    {
+      "video_id": "AQo7qoZoo7U",
+      "title": "What to Do When Life Feels Empty",
+      "filename": "AQo7qoZoo7U-What-to-Do-When-Life-Feels-Empty.md",
+      "entries": 1914
+    },
+    {
+      "video_id": "UK1hwJm-l8Q",
+      "title": "Message from JBP | What You Should Put First in Your Life",
+      "filename": "UK1hwJm-l8Q-Message-from-JBP--What-You-Should-Put-First-in-Your-Life.md",
+      "entries": 2714
+    },
+    {
+      "video_id": "FFxFoHeOQx4",
+      "title": "The Problem That Won't Let You Go",
+      "filename": "FFxFoHeOQx4-The-Problem-That-Wont-Let-You-Go.md",
+      "entries": 2351
+    },
+    {
+      "video_id": "Wv7lEyck2mg",
+      "title": "The Sermon on the Mount | Lecture One (Official) | Peterson Academy",
+      "filename": "Wv7lEyck2mg-The-Sermon-on-the-Mount--Lecture-One-Official--Peterson-Academy.md",
+      "entries": 1745
+    },
+    {
+      "video_id": "IsXdO5RD_NU",
+      "title": "Understanding the True Spirit of Christmas",
+      "filename": "IsXdO5RD_NU-Understanding-the-True-Spirit-of-Christmas.md",
+      "entries": 483
+    },
+    {
+      "video_id": "epoRGnCWyXw",
+      "title": "Personality Psychology | Lecture One (Official) | Peterson Academy",
+      "filename": "epoRGnCWyXw-Personality-Psychology--Lecture-One-Official--Peterson-Academy.md",
+      "entries": 728
+    },
+    {
+      "video_id": "h69SwIn-bA4",
+      "title": "How to Plan Your Life | Lecture One (Official) | Peterson Academy",
+      "filename": "h69SwIn-bA4-How-to-Plan-Your-Life--Lecture-One-Official--Peterson-Academy.md",
+      "entries": 593
+    }
+  ],
+  "failed": [
+    {
+      "video_id": "Nn1Np7mrFck",
+      "title": "Maps of Meaning | Lecture One (Official) | Peterson Academy",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "r9ZCYC1nsvc",
+      "title": "Navigating Education, Ideology, and Children | Answer the Call | EP 572",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "DMUIONL6jK4",
+      "title": "Master Relationships, Improve Your Dating Life, and Make Marriage Work  | Answer the Call | EP 571",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "iDzCsJ72NOc",
+      "title": "How You Should Deal with Stress and Tragedy | Answer the Call | EP 570",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "ovYjdGPE1-4",
+      "title": "Family Conflicts, Difficult Children & Overcoming Resentment | Answer the Call | EP 569",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "S2EcodX9b_I",
+      "title": "Parenting, Social Media, Bullies | Answer the Call | EP 568",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "kS-SY8idpg8",
+      "title": "5 Great Moments From Behind the Paywall | EP 567",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "T2fz9ZhmaQA",
+      "title": "The Meaning Of: There's No Such Thing as a Dragon | EP 566",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "UJGsioQ59AE",
+      "title": "Body Language Expert: How To Overcome Awkwardness | Vanessa Van Edwards | EP 565",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "KUjKdDXz2Bs",
+      "title": "The Meaning Of: Hansel & Gretel | EP 564",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "HxVVz2Jorzk",
+      "title": "Something Non-Human Has Been Here A Long Time | Dr. Garry Nolan | EP 563",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "SDWZa_7WrFg",
+      "title": "What Do We Actually Know About Autism? | Dr. Simon Baron-Cohen | Ep 562",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "TwfJQa-_Y9Q",
+      "title": "Scott Adams and Jordan Peterson | EP 561",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "UBtduYEQ7Fw",
+      "title": "When Does Masculinity Become Toxic? | David French | EP 560",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "86O_tsSUuJ0",
+      "title": "How to Stop Europe's Collapse: Learning from Germany's Mistakes | Christine Anderson | EP 559",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "t427pYWgef4",
+      "title": "The Meaning Of: Snow White | EP 558",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "kQJu-dcg3ts",
+      "title": "Riley vs. Goliath: How To Take On the Woke Mob and WIN | Riley Gaines | EP 557",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "ErVu7ArBMzw",
+      "title": "Tour Live in Omaha: A Night to Change Your Life",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "AflY1CcMkDg",
+      "title": "How Smartphones are Wrecking Your Life | Jonathan Haidt | EP 556",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "yuc807SP_gA",
+      "title": "Jordan Peterson Live on Tour: The Hidden Key to a Fulfilling Life",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "bUA2fUPQ9hY",
+      "title": "How the Internet Is Breaking Our Brains | Sam Harris | EP 555",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "7hyoONj4nEY",
+      "title": "What One Billionaire Knows About Outlasting a Dollar Collapse | Michael Saylor | EP 554",
+      "reason": "HTTP 402"
+    },
+    {
+      "video_id": "Rop6FnLD01o",
+      "title": "Why Do Smart People Double Down On Bad Ideas? | Dr. Gad Saad | EP 553",
+      "reason": "HTTP 402"
+    }
+  ],
+  "errors": []
+}

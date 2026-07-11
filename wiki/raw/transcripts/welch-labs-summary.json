@@ -1,0 +1,72 @@
+[
+  {
+    "video_id": "v_jDvpEGTIg",
+    "title": "Yann LeCun's $1B Bet Against LLMs [Part 2]",
+    "series": "Yann LeCun Interview",
+    "success": true,
+    "filepath": "/home/hermes/wiki/raw/transcripts/welch-labs/yann-lecun's-$1b-bet-against-llms-part-2.md"
+  },
+  {
+    "video_id": "kYkIdXwW2AE",
+    "title": "Yann LeCun's $1B Bet Against LLMs [Part 1]",
+    "series": "Yann LeCun Interview",
+    "success": true,
+    "filepath": "/home/hermes/wiki/raw/transcripts/welch-labs/yann-lecun's-$1b-bet-against-llms-part-1.md"
+  },
+  {
+    "video_id": "2mrGMMmrVNE",
+    "title": "Inside the World's Smartest Robot Brain [VLA]",
+    "series": null,
+    "success": true,
+    "filepath": "/home/hermes/wiki/raw/transcripts/welch-labs/inside-the-world's-smartest-robot-brain-vla.md"
+  },
+  {
+    "video_id": "2hcsmtkSzIw",
+    "title": "Can humans make AI any better?",
+    "series": null,
+    "success": true,
+    "filepath": "/home/hermes/wiki/raw/transcripts/welch-labs/can-humans-make-ai-any-better.md"
+  },
+  {
+    "video_id": "D8GOeCFFby4",
+    "title": "The most complex model we actually understand",
+    "series": null,
+    "success": true,
+    "filepath": "/home/hermes/wiki/raw/transcripts/welch-labs/the-most-complex-model-we-actually-understand.md"
+  },
+  {
+    "video_id": "z64a7USuGX0",
+    "title": "What the Books Get Wrong about AI [Double Descent]",
+    "series": null,
+    "success": true,
+    "filepath": "/home/hermes/wiki/raw/transcripts/welch-labs/what-the-books-get-wrong-about-ai-double-descent.md"
+  },
+  {
+    "video_id": "NUAb6zHXqdI",
+    "title": "These Numbers Can Make AI Dangerous [Subliminal Learning]",
+    "series": null,
+    "success": true,
+    "filepath": "/home/hermes/wiki/raw/transcripts/welch-labs/these-numbers-can-make-ai-dangerous-subliminal-learning.md"
+  },
+  {
+    "video_id": "qx7hirqgfuU",
+    "title": "Why Deep Learning Works Unreasonably Well [How Models Learn Part 3]",
+    "series": "How Models Learn",
+    "success": true,
+    "filepath": "/home/hermes/wiki/raw/transcripts/welch-labs/why-deep-learning-works-unreasonably-well-how-models-learn-part-3.md"
+  },
+  {
+    "video_id": "VkHfRKewkWw",
+    "title": "The F=ma of Artificial Intelligence [Backpropagation, How Models Learn Part 2]",
+    "series": "How Models Learn",
+    "success": true,
+    "filepath": "/home/hermes/wiki/raw/transcripts/welch-labs/the-f=ma-of-artificial-intelligence-backpropagation,-how-models-learn-part-2.md"
+  },
+  {
+    "video_id": "NrO20Jb-hy0",
+    "title": "The Misconception that Almost Stopped AI [How Models Learn Part 1]",
+    "series": "How Models Learn",
+    "success": true,
+    "filepath": "/home/hermes/wiki/raw/transcripts/welch-labs/the-misconception-that-almost-stopped-ai-how-models-learn-part-1.md"
+  }
+]
