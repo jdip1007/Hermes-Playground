@@ -1,11 +1,19 @@
 # Wiki Index
 
-All pages in the wiki, organized by category. Last updated: 2026-07-11 | Total pages: 192
+All pages in the wiki, organized by category. Last updated: 2026-07-11
 
-## Concepts
+## Content by Category
 
-Use the navigation sidebar to browse all 192 concept pages.
+| Category | Pages |
+|----------|-------|
+| **Concepts** | 192 pages |
+| **References** | 1 page |
+| **Raw Content** | 182 pages (transcripts, articles, papers) |
+| **Total** | 375 pages |
 
-## References
+## Navigation
 
-- [Obsidian Cheat Sheet](references/obsidian-cheat-sheet.md)
+Use the sidebar to browse:
+- **Concepts** - AI, ML, Linux, Law, Psychology topics
+- **References** - Documentation and guides
+- **Raw Content** - YouTube transcripts, articles, research papers
