@@ -38,27 +38,9 @@ theme:
     - search.share
     - content.code.copy
 
-# Navigation structure - points to new wiki/ directory
-nav:
-  - Home: index.md
-  - Project Wiki:
-    - Wiki Index: wiki/index.md
-    - Concepts:
-      - wiki/concepts/
-    - Entities:
-      - wiki/entities/
-    - Comparisons:
-      - wiki/comparisons/
-    - Queries:
-      - wiki/queries/
-    - Changelogs:
-      - wiki/changelogs/
-    - Reports:
-      - wiki/reports/
-
 plugins:
   - search:
-      separator: '[\s\u200b\-_,:!=\[\]\\/]+|(?!\d)|&[lg]t;|(?\b)(?=[A-Z][a-z])'
+      separator: '[\s\u200b\-_,:!=\[\]\\/]+|(?!\\d)|&[lg]t;|(?\\b)(?=[A-Z][a-z])'
   - awesome-pages
 
 markdown_extensions:
